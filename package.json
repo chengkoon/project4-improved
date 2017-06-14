@@ -5,7 +5,7 @@
   "author": "chengkoon <chengkoon@gmail.com>",
   "private": true,
   "scripts": {
-    "start": "node build/dev-server.js && cross-env NODE_ENV=development node app.js",
+    "start": "node build/dev-server.js && cross-env NODE_ENV=production node app.js",
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
