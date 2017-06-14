@@ -1,17 +1,28 @@
 <template>
   <div class="success">
     success page
+    User found is: {{ user }}
   </div>
 </template>
 
 <script>
 
+import axios from 'axios'
+
 export default {
   name: 'success',
   data () {
     return {
-      thing: ''
+      thing: '',
+      user: ''
     }
+  },
+  beforeMount () {
+    axios.get('users/profile')
+    .then((response) => {
+      console.log('we have successfully get request from profile')
+      this.user = response.data.user
+    })
   }
 }
 </script>

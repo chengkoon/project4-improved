@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     authenticateUser () {
-      var vm = this
+      let vm = this
       event.preventDefault()
       axios.post('users/authenticate', { username: this.username, password: this.password })
       .then(function (response, err) {

@@ -6,12 +6,8 @@ const User = require('../models/user');
 
 // Register
 router.post('/register', (req, res, next) => {
-  let newUser = new User({
-    name: req.body.name,
-    email: req.body.email,
-    username: req.body.username,
-    password: req.body.password
-  });
+  
+  let newUser = new User(req.body.user);
 
   User.addUser(newUser, (err, user) => {
     if(err){
@@ -58,7 +54,7 @@ router.post('/authenticate', (req, res, next) => {
 });
 
 router.get('/haha', function(req, res) {
-  console.log('we are at hahahaha');
+  console.log('we are at hahahaha2');
   res.json('json message');
 })
 
