@@ -32,7 +32,7 @@ export default {
     authenticateUser () {
       var vm = this
       event.preventDefault()
-      axios.post('http://localhost:3000/users/authenticate', { username: this.username, password: this.password })
+      axios.post('users/authenticate', { username: this.username, password: this.password })
       .then(function (response, err) {
         if (!response.data.success) {
           vm.$router.push('/login')

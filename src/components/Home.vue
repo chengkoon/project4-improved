@@ -18,7 +18,7 @@ export default {
   },
   beforeMount () {
     console.log('before mount')
-    axios.get('http://localhost:3000/users/haha')
+    axios.get('users/haha')
     .then((response) => {
       console.log('we have successfully get request from hahahaha')
       this.thing = response.data

@@ -43,7 +43,7 @@ export default {
   methods: {
     registerNewUser () {
       event.preventDefault()
-      axios.post('http://localhost:3000/users/register', { name: this.name, email: this.email, username: this.username, password: this.password })
+      axios.post('users/register', { name: this.name, email: this.email, username: this.username, password: this.password })
     }
   }
 }
