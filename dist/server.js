@@ -32,7 +32,7 @@ app.use(cors());
 
 // Set Static Folder
 // app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(__dirname));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './index.html'));
+  res.sendFile(path.join(__dirname, '/index.html'));
 })
 
 // Start Server
