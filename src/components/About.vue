@@ -1,16 +1,25 @@
 <template>
   <div class="about">
-    about page
+    about page2
+    parsedToken is {{ parsedToken }}
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'about',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      parsedToken: ''
     }
+  },
+  beforeMount () {
+    let token = localStorage.getItem('id_token')
+    var base64Url = token.split('.')[1]
+    var base64 = base64Url.replace('-', '+').replace('_', '/')
+    this.parsedToken = JSON.parse(window.atob(base64))
   }
 }
 </script>

@@ -9,7 +9,7 @@ module.exports = function(passport){
 
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     console.log("payload received and it is...", jwt_payload);
-    User.getUserById(jwt_payload._doc._id, (err, user) => {
+    User.getUserById(jwt_payload.id, (err, user) => {
       if(err){
         return done(err, false);
       }

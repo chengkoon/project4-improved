@@ -19,7 +19,8 @@ export default {
     }
   },
   beforeMount () {
-    axios.get('users/profile', { headers: auth.getAuthHeader() })
+    let ep = auth.prepEndpoint('users/profile')
+    axios.get(ep, { headers: auth.getAuthHeader() })
     .then((response) => {
       console.log('we have successfully get request from profile')
       this.user = response.data.user

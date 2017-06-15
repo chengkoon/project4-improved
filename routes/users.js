@@ -3,6 +3,14 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const _ = require('lodash');
+
+function createIdToken(user) {
+  let payload = { id: user._id } // not including impt info such as user pw
+  return jwt.sign(payload, process.env.secret, {
+    expiresIn: 604800 // 1 week
+  });
+}
 
 // Register
 router.post('/register', (req, res, next) => {
@@ -32,10 +40,7 @@ router.post('/authenticate', (req, res, next) => {
     User.comparePassword(password, user.password, (err, isMatch) => {
       if(err) throw err;
       if(isMatch){
-        const token = jwt.sign(user, process.env.secret, {
-          expiresIn: 604800 // 1 week
-        });
-
+        const token = createIdToken(user);
         res.json({
           success: true,
           id_token: 'JWT '+token,

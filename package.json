@@ -22,6 +22,7 @@
     "dotenv": "^4.0.0",
     "express": "*",
     "jsonwebtoken": "*",
+    "lodash": "^4.17.4",
     "mongoose": "*",
     "passport": "*",
     "passport-jwt": "*",

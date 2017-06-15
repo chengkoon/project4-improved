@@ -7,13 +7,17 @@ export default {
     authenticated: false
   },
 
+  isDev: true, // change to false before deployment/production
+
   registerNewUser (user) {
-    axios.post('users/register', { user })
+    let ep = this.prepEndpoint('users/register')
+    axios.post(ep, { user })
   },
 
   loginUser (loginCredentials) {
     let vm = this
-    axios.post('users/authenticate', { loginCredentials: loginCredentials })
+    let ep = this.prepEndpoint('users/authenticate')
+    axios.post(ep, { loginCredentials: loginCredentials })
     .then(function (response, err) {
       if (!response.data.success) {
         router.push('/login')
@@ -46,8 +50,17 @@ export default {
     }
   },
 
+  prepEndpoint (ep) {
+    if (this.isDev) {
+      return 'http://localhost:3000/' + ep
+    } else {
+      return ep
+    }
+  },
+
   testtest () {
-    axios.get('users/haha')
+    let ep = this.prepEndpoint('users/haha')
+    axios.get(ep)
     .then((response) => {
       console.log('we are at testtest and response.data is...', response.data)
       router.push('/success')

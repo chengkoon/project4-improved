@@ -7,7 +7,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const url = process.env.MONGOLAB_URI;
+// const url = process.env.MONGOLAB_URI;
+const url = 'mongodb://localhost:27017/meanauth';
 
 mongoose.Promise = global.Promise;
 // Connect To Database
@@ -29,14 +30,14 @@ const app = express();
 const users = require('./routes/users');
 
 // Port Number
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 // CORS Middleware
 app.use(cors());
 
 // Set Static Folder
-// app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, '/dist/')));
+app.use(express.static(path.join(__dirname, './')));
+// app.use(express.static(path.join(__dirname, '/dist/')));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
@@ -55,10 +56,14 @@ app.use('/users', users);
 // });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  // res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 })
 
 // Start Server
 app.listen(port, () => {
   console.log('Server started on port '+port);
+  // for (var thing in process.env) {
+  //   console.log('process.env is '+thing);
+  // }
 });
