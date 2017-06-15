@@ -36,7 +36,8 @@ export default new Router({
     {
       path: '/success',
       name: 'Success',
-      component: Success
+      component: Success,
+      meta: { requiresAuth: true }
     }
   ],
   mode: 'history'

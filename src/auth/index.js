@@ -24,7 +24,7 @@ export default {
       } else if (response.data.success) {
         localStorage.setItem('id_token', response.data.id_token)
         vm.user.authenticated = true
-        router.push('/success')
+        router.push('/home')
       }
     })
   },
@@ -33,6 +33,12 @@ export default {
     localStorage.removeItem('id_token')
     this.user.authenticated = false
     router.push('/login')
+  },
+
+  isLoggedIn () {
+    let jwt = localStorage.getItem('id_token')
+    if (jwt) return true
+    else return false
   },
 
   checkAuth () {
