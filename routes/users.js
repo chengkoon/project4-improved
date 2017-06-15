@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 // Register
 router.post('/register', (req, res, next) => {
-  
+
   let newUser = new User(req.body.user);
 
   User.addUser(newUser, (err, user) => {
@@ -20,8 +20,8 @@ router.post('/register', (req, res, next) => {
 
 // Authenticate
 router.post('/authenticate', (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const username = req.body.loginCredentials.username;
+  const password = req.body.loginCredentials.password;
 
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
@@ -38,7 +38,7 @@ router.post('/authenticate', (req, res, next) => {
 
         res.json({
           success: true,
-          token: 'JWT '+token,
+          id_token: 'JWT '+token,
           user: {
             id: user._id,
             name: user.name,
@@ -60,6 +60,7 @@ router.get('/haha', function(req, res) {
 
 // Profile
 router.get('/profile', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  console.log('get req from /profile authenticated successfully');
   res.json({user: req.user});
 });
 

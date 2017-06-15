@@ -8,6 +8,7 @@
 <script>
 
 import axios from 'axios'
+import auth from '../auth'
 
 export default {
   name: 'success',
@@ -18,7 +19,7 @@ export default {
     }
   },
   beforeMount () {
-    axios.get('users/profile')
+    axios.get('users/profile', { headers: auth.getAuthHeader() })
     .then((response) => {
       console.log('we have successfully get request from profile')
       this.user = response.data.user

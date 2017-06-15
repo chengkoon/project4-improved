@@ -27,7 +27,7 @@
 
 <script>
 
-import axios from 'axios'
+// import axios from 'axios'
 import auth from '../auth'
 
 export default {
@@ -44,19 +44,23 @@ export default {
     }
   },
   methods: {
+    // registerNewUser () {
+    //   let vm = this
+    //   event.preventDefault()
+    //   console.log('new authenticate')
+    //   // axios.post('users/register', { name: this.user.name, email: this.user.email, username: this.user.username, password: this.user.password })
+    //   axios.post('users/register', { user: this.user })
+    //   .then(function (response, err) {
+    //     if (err) {
+    //       vm.$router.push('/register')
+    //     } else {
+    //       vm.$router.push('/login')
+    //     }
+    //   })
+    // }
     registerNewUser () {
-      let vm = this
       event.preventDefault()
-      console.log('new authenticate')
-      // axios.post('users/register', { name: this.user.name, email: this.user.email, username: this.user.username, password: this.user.password })
-      axios.post('users/register', { user: this.user })
-      .then(function (response, err) {
-        if (err) {
-          vm.$router.push('/register')
-        } else {
-          vm.$router.push('/login')
-        }
-      })
+      auth.registerNewUser(this.user)
     }
   }
 }

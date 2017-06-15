@@ -4,11 +4,11 @@
     <form>
       <div class="form-group">
         <label>Username</label>
-        <input type="text" v-model="username" name="username" class="form-control">
+        <input type="text" v-model="loginCredentials.username" name="username" class="form-control">
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" v-model="password" name="password" class="form-control">
+        <input type="password" v-model="loginCredentials.password" name="password" class="form-control">
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" @click="authenticateUser">
     </form>
@@ -18,28 +18,31 @@
 
 <script>
 
-import axios from 'axios'
+// import axios from 'axios'
+import auth from '../auth'
 
 export default {
   name: 'login',
   data () {
     return {
-      username: '',
-      password: ''
+      loginCredentials: {
+        username: '',
+        password: ''
+      }
     }
   },
   methods: {
     authenticateUser () {
-      let vm = this
       event.preventDefault()
-      axios.post('users/authenticate', { username: this.username, password: this.password })
-      .then(function (response, err) {
-        if (!response.data.success) {
-          vm.$router.push('/login')
-        } else if (response.data.success) {
-          vm.$router.push('/success')
-        }
-      })
+      auth.loginUser(this.loginCredentials)
+      // axios.post('users/authenticate', { username: this.username, password: this.password })
+      // .then(function (response, err) {
+      //   if (!response.data.success) {
+      //     vm.$router.push('/login')
+      //   } else if (response.data.success) {
+      //     vm.$router.push('/success')
+      //   }
+      // })
     }
   }
 }
