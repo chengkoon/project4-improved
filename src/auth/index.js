@@ -14,7 +14,7 @@ export default {
     axios.post(ep, { user })
   },
 
-  loginUser (loginCredentials) {
+  loginUser (loginCredentials, redirect) {
     let vm = this
     let ep = this.prepEndpoint('users/authenticate')
     axios.post(ep, { loginCredentials: loginCredentials })
@@ -24,7 +24,8 @@ export default {
       } else if (response.data.success) {
         localStorage.setItem('id_token', response.data.id_token)
         vm.user.authenticated = true
-        router.push('/home')
+        if (redirect) router.push('/' + redirect)
+        else router.push('/home')
       }
     })
   },

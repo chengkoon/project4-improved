@@ -34,7 +34,12 @@ export default {
   methods: {
     authenticateUser () {
       event.preventDefault()
-      auth.loginUser(this.loginCredentials)
+      if (this.$route.query.redirect) {
+        let redirect = this.$route.query.redirect
+        auth.loginUser(this.loginCredentials, redirect)
+      } else {
+        auth.loginUser(this.loginCredentials)
+      }
       // axios.post('users/authenticate', { username: this.username, password: this.password })
       // .then(function (response, err) {
       //   if (!response.data.success) {

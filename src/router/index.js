@@ -15,27 +15,27 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: Home
     },
     {
       path: '/about',
-      name: 'About',
+      name: 'about',
       component: About
     },
     {
       path: '/register',
-      name: 'Register',
+      name: 'register',
       component: Register
     },
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: Login
     },
     {
       path: '/success',
-      name: 'Success',
+      name: 'success',
       component: Success,
       meta: { requiresAuth: true }
     }

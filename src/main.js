@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
     if (!auth.isLoggedIn()) {
       next({
         path: '/login',
-        query: { redirect: to.fullPath }
+        query: { redirect: to.name }
       })
     } else {
       next()
