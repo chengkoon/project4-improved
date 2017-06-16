@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 // User Schema
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String
   },
@@ -22,6 +22,17 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
     default: 'Bidder'
+  }
+}, {
+  toObject: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    }
+  },
+  toJSON: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    }
   }
 });
 
