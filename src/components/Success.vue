@@ -7,7 +7,6 @@
 
 <script>
 
-import axios from 'axios'
 import auth from '../auth'
 
 export default {
@@ -19,11 +18,8 @@ export default {
     }
   },
   beforeMount () {
-    let ep = auth.prepEndpoint('users/profile')
-    axios.get(ep, { headers: auth.getAuthHeader() })
-    .then((response) => {
-      console.log('we have successfully get request from profile')
-      this.user = response.data.user
+    auth.getProfile().then((user) => {
+      this.user = user
     })
   }
 }

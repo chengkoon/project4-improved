@@ -6,7 +6,7 @@ const User = require('../models/user');
 const _ = require('lodash');
 
 function createIdToken(user) {
-  let payload = { id: user._id } // not including impt info such as user pw
+  let payload = { id: user._id, type: 'User' } // not including impt info such as user pw
   return jwt.sign(payload, process.env.secret, {
     expiresIn: 604800 // 1 week
   });
@@ -57,11 +57,6 @@ router.post('/authenticate', (req, res, next) => {
     });
   });
 });
-
-router.get('/haha', function(req, res) {
-  console.log('we are at hahahaha2');
-  res.json('json message');
-})
 
 // Profile
 router.get('/profile', passport.authenticate('jwt', {session:false}), (req, res, next) => {

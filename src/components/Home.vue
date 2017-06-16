@@ -6,9 +6,6 @@
 
 <script>
 
-import axios from 'axios'
-import auth from '../auth'
-
 export default {
   name: 'home',
   data () {
@@ -16,18 +13,6 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       thing: ''
     }
-  },
-  beforeMount () {
-    console.log('before mount')
-    axios.get('users/haha')
-    .then((response) => {
-      console.log('we have successfully get request from hahahaha')
-      this.thing = response.data
-    })
-    .then((response) => {
-      console.log('second then')
-      auth.testtest()
-    })
   }
 }
 </script>

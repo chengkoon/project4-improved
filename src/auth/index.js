@@ -10,13 +10,13 @@ export default {
   isDev: true, // change to false before deployment/production
 
   registerNewUser (user) {
-    let ep = this.prepEndpoint('users/register')
+    let ep = this.prepEndpoint('user/register')
     axios.post(ep, { user })
   },
 
   loginUser (loginCredentials, redirect) {
     let vm = this
-    let ep = this.prepEndpoint('users/authenticate')
+    let ep = this.prepEndpoint('user/authenticate')
     axios.post(ep, { loginCredentials: loginCredentials })
     .then(function (response, err) {
       if (!response.data.success) {
@@ -42,6 +42,16 @@ export default {
     else return false
   },
 
+  getProfile () {
+    let ep = this.prepEndpoint('user/profile')
+    return axios.get(ep, { headers: this.getAuthHeader() })
+    .then((response) => {
+      console.log('we have successfully get request from profile')
+      console.log('response.data is ', response.data.user)
+      return response.data.user
+    })
+  },
+
   checkAuth () {
     let jwt = localStorage.getItem('id_token')
     if (jwt) {
@@ -63,14 +73,5 @@ export default {
     } else {
       return ep
     }
-  },
-
-  testtest () {
-    let ep = this.prepEndpoint('users/haha')
-    axios.get(ep)
-    .then((response) => {
-      console.log('we are at testtest and response.data is...', response.data)
-      router.push('/success')
-    })
   }
 }
