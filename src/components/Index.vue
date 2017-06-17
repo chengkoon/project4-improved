@@ -1,13 +1,19 @@
 <template>
-  <div class="home">
-    Welcome home,
+  <div class="index">
+    <user-modal></user-modal>
+    Index page. Call to action. How-to. Item gallery.
   </div>
 </template>
 
 <script>
 
+import UserModal from './modals/UserModal.vue'
+
 export default {
-  name: 'home',
+  name: 'index',
+  components: {
+    'user-modal': UserModal
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',

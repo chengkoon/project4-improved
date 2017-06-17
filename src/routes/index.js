@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
+import Index from '@/components/Index'
 import About from '@/components/About'
-import User from '@/components/User'
-import Register from '@/components/Register'
-import Login from '@/components/Login'
+// import User from '@/components/User'
+// import Register from '@/components/Register'
+// import Login from '@/components/Login'
 // import flashmessage from '@/components/flashmessage'
-import UserHome from '@/components/UserHome'
+// import UserHome from '@/components/UserHome'
 import Success from '@/components/Success'
 import auth from '../auth'
 // import Bye from '@/components/Bye'
@@ -20,8 +21,14 @@ Vue.use(VueRouter)
 export const routes = [
   {
     path: '/',
+    name: 'index',
+    component: Index
+  },
+  {
+    path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: { requiresUserAuth: true }
   },
   {
     path: '/about',
@@ -29,35 +36,11 @@ export const routes = [
     component: About
   },
   {
-    path: '/user',
-    name: 'user',
-    component: User,
-    redirect: '/user/:name',
-    children: [
-      {
-        path: 'register',
-        name: 'register',
-        component: Register
-      },
-      {
-        path: 'login',
-        name: 'login',
-        component: Login
-      },
-      {
-        path: 'logout',
-        beforeEnter (to, from, next) {
-          auth.logoutUser()
-          next('/')
-        }
-      },
-      {
-        path: ':name',
-        name: 'userhome',
-        component: UserHome,
-        meta: { requiresUserAuth: true }
-      }
-    ]
+    path: '/signout',
+    beforeEnter (to, from, next) {
+      auth.signoutUser()
+      next('/')
+    }
   },
   // {
   //   path: '/sponsor',

@@ -9,10 +9,13 @@ export default {
   isDev: true, // change to false before deployment/production
 
   registerNewUser (user, cb) {
+    let vm = this
     let ep = this.prepEndpoint('user/register')
     axios.post(ep, { user })
     .then(function (response, err) {
       if (response.data.success) {
+        window.localStorage.setItem('id_token', response.data.id_token)
+        vm.user.authenticated = true
         if (cb) cb(true)
         return
       } else {
@@ -21,7 +24,7 @@ export default {
     })
   },
 
-  loginUser (loginCredentials, cb) {
+  signinUser (loginCredentials, cb) {
     let vm = this
     let ep = this.prepEndpoint('user/authenticate')
     axios.post(ep, { loginCredentials: loginCredentials })
@@ -41,7 +44,7 @@ export default {
     return !!window.localStorage.getItem('id_token')
   },
 
-  logoutUser () {
+  signoutUser () {
     window.localStorage.removeItem('id_token')
     this.user.authenticated = false
     // this.$router.push('/user/login')
