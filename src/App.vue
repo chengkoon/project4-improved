@@ -2,16 +2,19 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <nav-bar></nav-bar>
+    <flash-message></flash-message>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Bye from './components/Bye.vue'
+import Navbar from './components/Navbar.vue'
+import flashmessage from './components/flashmessage.vue'
 export default {
   name: 'app',
   components: {
-    'nav-bar': Bye
+    'nav-bar': Navbar,
+    'flash-message': flashmessage
   }
 }
 </script>

@@ -43,13 +43,7 @@ const userController = {
           const token = userController.createIdToken(user);
           res.json({
             success: true,
-            id_token: 'JWT '+token,
-            user: {
-              id: user._id,
-              name: user.name,
-              username: user.username,
-              email: user.email
-            }
+            id_token: 'JWT '+token
           });
         } else {
           return res.json({success: false, msg: 'Wrong password'});

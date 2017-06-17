@@ -1,4 +1,3 @@
-import router from '../router'
 import axios from 'axios'
 
 export default {
@@ -9,35 +8,47 @@ export default {
 
   isDev: true, // change to false before deployment/production
 
-  registerNewUser (user) {
+  registerNewUser (user, cb) {
     let ep = this.prepEndpoint('user/register')
     axios.post(ep, { user })
-  },
-
-  loginUser (loginCredentials, redirect) {
-    let vm = this
-    let ep = this.prepEndpoint('user/authenticate')
-    axios.post(ep, { loginCredentials: loginCredentials })
     .then(function (response, err) {
-      if (!response.data.success) {
-        router.push('/login')
-      } else if (response.data.success) {
-        localStorage.setItem('id_token', response.data.id_token)
-        vm.user.authenticated = true
-        if (redirect) router.push('/' + redirect)
-        else router.push('/home')
+      if (response.data.success) {
+        if (cb) cb(true)
+        return
+      } else {
+        if (cb) cb(false)
       }
     })
   },
 
+  loginUser (loginCredentials, cb) {
+    let vm = this
+    let ep = this.prepEndpoint('user/authenticate')
+    axios.post(ep, { loginCredentials: loginCredentials })
+    .then(function (response, err) {
+      if (response.data.success) {
+        window.localStorage.setItem('id_token', response.data.id_token)
+        vm.user.authenticated = true
+        if (cb) cb(true)
+        return
+      } else {
+        if (cb) cb(false)
+      }
+    })
+  },
+
+  loggedIn () {
+    return !!window.localStorage.getItem('id_token')
+  },
+
   logoutUser () {
-    localStorage.removeItem('id_token')
+    window.localStorage.removeItem('id_token')
     this.user.authenticated = false
-    router.push('/login')
+    // this.$router.push('/user/login')
   },
 
   isLoggedIn () {
-    let jwt = localStorage.getItem('id_token')
+    let jwt = window.localStorage.getItem('id_token')
     if (jwt) return true
     else return false
   },
@@ -53,7 +64,7 @@ export default {
   },
 
   checkAuth () {
-    let jwt = localStorage.getItem('id_token')
+    let jwt = window.localStorage.getItem('id_token')
     if (jwt) {
       this.user.authenticated = true
     } else {
@@ -63,7 +74,7 @@ export default {
 
   getAuthHeader () {
     return {
-      'Authorization': localStorage.getItem('id_token')
+      'Authorization': window.localStorage.getItem('id_token')
     }
   },
 

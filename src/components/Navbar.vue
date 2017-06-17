@@ -16,9 +16,10 @@
           <ul class="nav navbar-nav">
             <router-link to="/" tag="li" active-class="active" exact><a>Home</a></router-link>
             <router-link to="/about" tag="li" active-class="active" exact><a>About</a></router-link>
-            <router-link to="/register" tag="li" active-class="active" exact><a>Register</a></router-link>
-            <router-link to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
-            <li @click="logout"><a>Logout</a></li>
+            <router-link to="/user/register" tag="li" active-class="active" exact><a>Register</a></router-link>
+            <router-link to="/user/login" tag="li" active-class="active" exact><a>Login</a></router-link>
+            <router-link to="/user/logout" tag="li" active-class="active" exact><a>Logout</a></router-link>
+            <!-- <li @click="logout"><a>Logout</a></li> -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -45,20 +46,20 @@
 
 <script>
 
-import auth from '../auth'
+// import auth from '../auth'
 
 export default {
-  name: 'bye',
+  name: 'navbar',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
-  },
-  methods: {
-    logout () {
-      auth.logoutUser()
-    }
   }
+  // methods: {
+  //   logout () {
+  //     auth.logoutUser()
+  //   }
+  // }
 }
 </script>
 

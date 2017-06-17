@@ -10,9 +10,8 @@
         <label>Password</label>
         <input type="password" v-model="loginCredentials.password" name="password" class="form-control">
       </div>
-      <input type="submit" class="btn btn-primary" value="Submit" @click="authenticateUser">
+      <input type="submit" class="btn btn-primary" value="Submit" @click="loginUser">
     </form>
-
   </div>
 </template>
 
@@ -32,22 +31,22 @@ export default {
     }
   },
   methods: {
-    authenticateUser () {
+    loginUser () {
       event.preventDefault()
-      if (this.$route.query.redirect) {
-        let redirect = this.$route.query.redirect
-        auth.loginUser(this.loginCredentials, redirect)
-      } else {
-        auth.loginUser(this.loginCredentials)
-      }
-      // axios.post('users/authenticate', { username: this.username, password: this.password })
-      // .then(function (response, err) {
-      //   if (!response.data.success) {
-      //     vm.$router.push('/login')
-      //   } else if (response.data.success) {
-      //     vm.$router.push('/success')
-      //   }
-      // })
+      auth.loginUser(this.loginCredentials, loggedIn => {
+        if (!loggedIn) {
+          this.$router.push('/user/login') // replace with a data change to reflect error
+        } else {
+          // if (this.$router.hasOwnProperty('query')) {
+          //   let redirect = this.$router.query.redirect
+          //   this.$router.push('/' + redirect)
+          //   // { name: 'userhome', params: { name: response.data.user.name } }
+          // } else {
+          //   this.$router.push('/home')
+          // }
+          this.$router.replace('/' + this.$route.query.redirect || '/home')
+        }
+      })
     }
   }
 }

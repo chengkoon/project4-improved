@@ -5,6 +5,7 @@ const router = express.Router();
 // const jwt = require('jsonwebtoken');
 
 const userController = require('../controllers/user_controller');
+const sponsorController = require('../controllers/sponsor_controller');
 
 /* ------------------------------ User Routes ------------------------------ */
 // register and login functions
@@ -15,5 +16,11 @@ router.post('/user/authenticate', userController.authenticateUser);
 router.get('/user/profile', userController.checkJWT(), userController.userProfile);
 
 /* ------------------------------ Sponsor Routes ------------------------------ */
+// register and login functions
+router.post('/sponsor/register', sponsorController.registerSponsor);
+router.post('/sponsor/authenticate', sponsorController.authenticateSponsor);
+
+// sponsor actions after logging in
+router.get('/sponsor/profile', sponsorController.checkJWT(), sponsorController.sponsorProfile);
 
 module.exports = router

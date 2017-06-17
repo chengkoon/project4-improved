@@ -28,6 +28,17 @@ const SponsorSchema = new mongoose.Schema({
     required: true
   },
   itemsPosted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }]
+}, {
+  toObject: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    }
+  },
+  toJSON: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    }
+  }
 })
 
 const Sponsor = module.exports = mongoose.model('Sponsor', SponsorSchema);
