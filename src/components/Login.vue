@@ -19,6 +19,7 @@
 
 // import axios from 'axios'
 import auth from '../auth'
+// import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'login',

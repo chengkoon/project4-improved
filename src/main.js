@@ -24,8 +24,8 @@ router.beforeEach((to, from, next) => {
     if (!auth.isLoggedIn()) {
       next({
         path: '/user/login',
-        query: { redirect: to.name },
-        props: { message: 'Please log in first!' }
+        query: { redirect: to.name }
+        // props: { message: 'Please log in first!' }
       })
     } else {
       next()

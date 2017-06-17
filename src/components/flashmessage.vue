@@ -2,21 +2,30 @@
 
   <div class="alert alert-warning alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <span class="message"><strong>Hey!</strong>The message passed down is: {{ message }}</span>
+    <span class="message"><strong>Hey!</strong> User is {{ message }}</span>
   </div>
 
 </template>
 
 <script>
+
+import { EventBus } from '../event-bus.js'
+
 export default {
   name: 'flashmessage',
-  props: ['message'],
+  // props: ['message'],
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      message: ''
     }
   },
   methods: {
+  },
+  created () {
+    EventBus.$on('user-status', message => {
+      this.message = message
+    })
   }
 }
 </script>

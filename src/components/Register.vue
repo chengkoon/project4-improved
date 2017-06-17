@@ -29,6 +29,7 @@
 
 // import axios from 'axios'
 import auth from '../auth'
+import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'register',
@@ -51,6 +52,7 @@ export default {
           this.$router.push('/user/register') // replace with some local error msg
         } else {
           // emit event to eventBus
+          EventBus.$emit('user-status', 'registered')
           this.$router.push('/user/login')
         }
       })
