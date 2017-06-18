@@ -1,56 +1,60 @@
 <template>
-  <div class="signup-modal modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sign Up</p>
-      <button class="delete" @click="hideModal"></button>
-    </header>
-    <section class="modal-card-body">
-      <div class="field">
-        <label class="label">Username</label>
-        <p class="control has-icons-left has-icons-right">
-          <input class="input is-success" type="text" placeholder="John"
-           v-model="user.username">
-          <span class="icon is-small is-left">
-            <i class="fa fa-user"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fa fa-check"></i>
-          </span>
-        </p>
-        <p class="help is-success">This username is available</p>
-      </div>
+  <div class="signup-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Sign Up</p>
+        <button class="delete" @click="hideModal"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label">Username</label>
+          <p class="control has-icons-left has-icons-right">
+            <input class="input is-success" type="text" placeholder="John"
+             v-model="user.username">
+            <span class="icon is-small is-left">
+              <i class="fa fa-user"></i>
+            </span>
+            <span class="icon is-small is-right">
+              <i class="fa fa-check"></i>
+            </span>
+          </p>
+          <p class="help is-success">This username is available</p>
+        </div>
 
-      <div class="field">
-        <label class="label">Email</label>
-        <p class="control has-icons-left has-icons-right">
-          <input class="input is-danger" type="text" placeholder="John@gmail.com"
-           v-model="user.email">
-          <span class="icon is-small is-left">
-            <i class="fa fa-envelope"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fa fa-warning"></i>
-          </span>
-        </p>
-        <p class="help is-danger">This email is invalid</p>
-      </div>
-      <div class="field">
-        <label class="label">Password</label>
-        <p class="control has-icons-left has-icons-right">
-          <input class="input is-success" type="password" v-model="user.password">
-          <span class="icon is-small is-left">
-            <i class="fa fa-key"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fa fa-check"></i>
-          </span>
-        </p>
-      </div>
-    </section>
-    <footer class="modal-card-foot">
-      <a class="button is-success" @click="registerNewUser">Sign up</a>
-    </footer>
+        <div class="field">
+          <label class="label">Email</label>
+          <p class="control has-icons-left has-icons-right">
+            <input class="input is-danger" type="text" placeholder="John@gmail.com"
+             v-model="user.email">
+            <span class="icon is-small is-left">
+              <i class="fa fa-envelope"></i>
+            </span>
+            <span class="icon is-small is-right">
+              <i class="fa fa-warning"></i>
+            </span>
+          </p>
+          <p class="help is-danger">This email is invalid</p>
+        </div>
+        <div class="field">
+          <label class="label">Password</label>
+          <p class="control has-icons-left has-icons-right">
+            <input class="input is-success" type="password" v-model="user.password">
+            <span class="icon is-small is-left">
+              <i class="fa fa-key"></i>
+            </span>
+            <span class="icon is-small is-right">
+              <i class="fa fa-check"></i>
+            </span>
+          </p>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <a class="button is-success" @click="registerNewUser">Sign up</a>
+      </footer>
+    </div>
   </div>
+
 </template>
 
 <script>

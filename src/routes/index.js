@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
-import Index from '@/components/Index'
+import Tikam from '@/components/Tikam'
 import About from '@/components/About'
 // import User from '@/components/User'
 // import Register from '@/components/Register'
@@ -21,8 +21,8 @@ Vue.use(VueRouter)
 export const routes = [
   {
     path: '/',
-    name: 'index',
-    component: Index
+    name: 'tikam',
+    component: Tikam
   },
   {
     path: '/home',

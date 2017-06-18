@@ -1,6 +1,5 @@
 <template>
-  <div class="user-modal" v-if="showSignupModal || showSigninModal">
-    <div class="modal-background"></div>
+  <div class="user-modal">
     <signup-modal v-show="showSignupModal"></signup-modal>
     <signin-modal v-show="showSigninModal"></signin-modal>
   </div>

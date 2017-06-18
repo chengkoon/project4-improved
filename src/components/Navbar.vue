@@ -39,14 +39,16 @@
         </div>
       </div>
     </nav> -->
-    <nav class="nav has-shadow">
+    <!-- <nav class="nav has-shadow"> -->
+    <nav class="nav has-shadow" v-bind:class="{ 'nav-fixed-top': fixedBar }">
       <div class="container">
         <div class="nav-left">
           <a class="nav-item">
             <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
           </a>
-          <a class="nav-item is-tab is-hidden-mobile is-active">Tikam!</a>
-          <a class="nav-item is-tab is-hidden-mobile">How it works</a>
+          <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link>
+          <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link>
+          <!-- <a class="nav-item is-tab is-hidden-mobile">How it works</a> -->
           <a class="nav-item is-tab is-hidden-mobile">About us</a>
         </div>
         <span class="nav-toggle">
@@ -67,7 +69,6 @@
           </a> -->
           <a class="nav-item is-tab" @click="showSignupModal" v-show="!userSignedIn">Sign up</a>
           <a class="nav-item is-tab" @click="showSigninModal" v-show="!userSignedIn">Sign in</a>
-          <a class="nav-item is-tab" v-show="!userSignedIn">For Sponsors</a>
           <!-- when user is sign in -->
           <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
           <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn">Sign out</a>
@@ -89,7 +90,8 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       anyModalOnScreen: false,
       userSignedIn: false,
-      username: ''
+      username: '',
+      fixedBar: false
     }
   },
   methods: {
@@ -108,6 +110,16 @@ export default {
     signoutUser () {
       this.userSignedIn = false
       this.$router.push('/signout')
+    },
+    handleScroll () {
+      if (window.scrollY > 49) {
+        this.fixedBar = true
+      } else {
+        this.fixedBar = false
+      }
+    },
+    test () {
+      console.log(12345)
     }
   },
   created () {
@@ -117,16 +129,22 @@ export default {
     EventBus.$on('user-signedInStatus', (status) => {
       this.userSignedIn = true
     })
+    window.addEventListener('scroll', this.handleScroll)
   },
-  watch: {
-    userSignedIn: function () {
-
-    }
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.nav-fixed-top {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+/* ^ since bulma doesnt have a fixed navbar option
+however this needs to be offset by a padding of the body */
 </style>
