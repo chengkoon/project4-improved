@@ -51,8 +51,8 @@ const userController = {
   },
 
   userProfile: (req, res, next) => {
-    console.log('get req from /profile authenticated successfully');
-    res.json({user: req.user});
+    console.log('get req from /profile authenticated successfully')
+    res.json({user: req.user})
   }
 
 }

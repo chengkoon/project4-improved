@@ -8,9 +8,11 @@ export default {
 
   isDev: true, // change to false before deployment/production
 
-  registerNewUser (user, cb) {
+  registerNewUser (user, type, cb) {
     let vm = this
-    let ep = this.prepEndpoint('user/register')
+    let ep
+    if (type === 'User') ep = this.prepEndpoint('user/register')
+    else if (type === 'Sponsor') ep = this.prepEndpoint('sponsor/register')
     axios.post(ep, { user })
     .then(function (response, err) {
       if (response.data.success) {

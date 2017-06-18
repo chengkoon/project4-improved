@@ -1,10 +1,10 @@
 <template>
-  <div class="signin-modal">
-    <div class="modal-background"></div>
+  <div class="signin-modal modal" :class="{ 'is-active': showThisModal }">
+    <div class="modal-background" @click="showThisModal = false"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Sign in</p>
-        <button class="delete" @click="hideModal"></button>
+        <p class="modal-card-title">Sign in as {{userOrSponsor}}</p>
+        <button class="delete" @click="showThisModal = false"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
@@ -52,7 +52,9 @@ export default {
       loginCredentials: {
         username: '',
         password: ''
-      }
+      },
+      showThisModal: false,
+      userOrSponsor: ''
     }
   },
   methods: {
@@ -63,16 +65,26 @@ export default {
           // trigger shake animation instead of below
           this.$router.push('/user/login')
         } else {
-          this.hideModal()
           EventBus.$emit('user-signedInStatus', true)
+          this.showThisModal = false
           this.$router.replace('/' + this.$route.query.redirect || '/')
         }
       })
-    },
-    hideModal () {
-      EventBus.$emit('signin-modal', false)
-      EventBus.$emit('any-modal-on-screen', false)
     }
+  },
+  created () {
+    EventBus.$on('signin-modal', (status) => {
+      this.userOrSponsor = 'User'
+      this.showThisModal = status
+    })
+    EventBus.$on('sponsor-signin-modal', (status) => {
+      this.userOrSponsor = 'Sponsor'
+      this.showThisModal = status
+    })
+    EventBus.$on('clear-form-data', () => {
+      this.loginCredentials.username = ''
+      this.loginCredentials.password = ''
+    })
   }
 }
 </script>
