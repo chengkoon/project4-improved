@@ -5,7 +5,9 @@
     <flash-message></flash-message>
     <signup-modal></signup-modal>
     <signin-modal></signin-modal>
+    <post-item-modal></post-item-modal>
     <!-- <router-view></router-view> -->
+
     <tikam id="tikam"></tikam>
     <how-it-works id="how-it-works"></how-it-works>
     <about-us id="about-us"></about-us>
@@ -24,6 +26,7 @@ import SponsorUs from './components/SponsorUs.vue'
 import flashmessage from './components/flashmessage.vue'
 import SignupModal from './components/modals/SignupModal.vue'
 import SigninModal from './components/modals/SigninModal.vue'
+import PostItemModal from './components/modals/PostItemModal.vue'
 
 export default {
   name: 'app',
@@ -32,6 +35,7 @@ export default {
     'flash-message': flashmessage,
     'signup-modal': SignupModal,
     'signin-modal': SigninModal,
+    'post-item-modal': PostItemModal,
     'tikam': Tikam,
     'how-it-works': HowItWorks,
     'about-us': AboutUs,
@@ -39,26 +43,17 @@ export default {
   },
   data () {
     return {
+      position: {
+        scrollTop: 0,
+        scrollLeft: 0
+      }
+    }
+  },
+  methods: {
+    onScroll: function (e, position) {
+      this.position = position
     }
   }
-  // created () {
-  //   EventBus.$on('signup-modal', (status) => {
-  //     this.userOrSponsor = 'User'
-  //     this.showSignupModal = status
-  //   })
-  //   EventBus.$on('signin-modal', (status) => {
-  //     this.userOrSponsor = 'User'
-  //     this.showSigninModal = status
-  //   })
-  //   EventBus.$on('sponsor-signup-modal', (status) => {
-  //     this.userOrSponsor = 'Sponsor'
-  //     this.showSigninModal = status
-  //   })
-  //   EventBus.$on('sponsor-signin-modal', (status) => {
-  //     this.userOrSponsor = 'Sponsor'
-  //     this.showSigninModal = status
-  //   })
-  // }
 }
 </script>
 

@@ -5,7 +5,7 @@
         <a class="nav-item" href="/">
           <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
         </a>
-        <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link>
+        <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" :class="{ 'is-active': isactive.tikam }" exact>Tikam!</router-link>
         <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link>
         <router-link to="#about-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>About us</router-link>
         <router-link to="#sponsor-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Sponsor us!</router-link>
@@ -28,11 +28,12 @@
           </figure>
           Profile
         </a> -->
-        <a class="nav-item is-tab" @click="showSignupModal" v-show="!userSignedIn">Sign up</a>
-        <a class="nav-item is-tab" @click="showSigninModal" v-show="!userSignedIn">Sign in</a>
+        <a class="nav-item is-tab" @click="showSignupModal" v-show="!userSignedIn && !sponsorSignedIn">Sign up</a>
+        <a class="nav-item is-tab" @click="showSigninModal" v-show="!userSignedIn && !sponsorSignedIn">Sign in</a>
         <!-- when user is sign in -->
         <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
-        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn">Sign out</a>
+        <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn">Post Item</a>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
       </div>
     </div>
   </nav>
@@ -49,8 +50,11 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       userSignedIn: false,
-      username: '',
-      fixedBar: false
+      sponsorSignedIn: false,
+      fixedBar: false,
+      isactive: {
+        tikam: false
+      }
     }
   },
   methods: {
@@ -60,12 +64,18 @@ export default {
     showSigninModal () {
       EventBus.$emit('signin-modal', true)
     },
+    showPostItemModal () {
+      console.log(123455)
+      EventBus.$emit('post-item-modal', true)
+    },
     signoutUser () {
       this.userSignedIn = false
+      this.sponsorSignedIn = false
       EventBus.$emit('clear-form-data')
       this.$router.push('/signout')
     },
     handleScroll () {
+      console.log('current Y position', window.scrollY)
       if (window.scrollY > 49) {
         this.fixedBar = true
       } else {
@@ -76,6 +86,9 @@ export default {
   created () {
     EventBus.$on('user-signedInStatus', (status) => {
       this.userSignedIn = true
+    })
+    EventBus.$on('sponsor-signedInStatus', (status) => {
+      this.sponsorSignedIn = true
     })
     window.addEventListener('scroll', this.handleScroll)
   },

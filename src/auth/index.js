@@ -8,12 +8,13 @@ export default {
 
   isDev: true, // change to false before deployment/production
 
-  registerNewUser (user, type, cb) {
+  registerNewUser (signupCredentials, type, cb) {
     let vm = this
     let ep
     if (type === 'User') ep = this.prepEndpoint('user/register')
     else if (type === 'Sponsor') ep = this.prepEndpoint('sponsor/register')
-    axios.post(ep, { user })
+    console.log('ep is...', ep)
+    axios.post(ep, { signupCredentials })
     .then(function (response, err) {
       if (response.data.success) {
         window.localStorage.setItem('id_token', response.data.id_token)
@@ -26,10 +27,12 @@ export default {
     })
   },
 
-  signinUser (loginCredentials, cb) {
+  signinUser (signinCredentials, type, cb) {
     let vm = this
-    let ep = this.prepEndpoint('user/authenticate')
-    axios.post(ep, { loginCredentials: loginCredentials })
+    let ep
+    if (type === 'User') ep = this.prepEndpoint('user/authenticate')
+    else if (type === 'Sponsor') ep = this.prepEndpoint('sponsor/authenticate')
+    axios.post(ep, { signinCredentials })
     .then(function (response, err) {
       if (response.data.success) {
         window.localStorage.setItem('id_token', response.data.id_token)

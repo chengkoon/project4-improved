@@ -2,7 +2,7 @@
   <div class="tikam"> <!-- list of items -->
     tikam page. Call to action. How-to. Item gallery.
     <div class="big-box">
-      something
+      {{myheight}}
     </div>
   </div>
 </template>
@@ -18,7 +18,12 @@ export default {
   },
   data () {
     return {
+      myheight: ''
     }
+  },
+  mounted () {
+    this.myheight = this.$el.offsetHeight
+    console.log('hihihihihihihi', this.$el.scrollHeight)
   }
 }
 </script>
@@ -29,7 +34,7 @@ export default {
   display: block;
   content: " ";
   margin-top: -285px;
-  height: 285px; 
+  height: 285px;
   visibility: hidden;
 }
 .big-box {

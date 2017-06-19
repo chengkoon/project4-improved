@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 
 // User Schema
 const UserSchema = new mongoose.Schema({
@@ -26,28 +26,28 @@ const UserSchema = new mongoose.Schema({
 }, {
   toObject: {
     transform: function (doc, ret) {
-      delete ret.password;
+      delete ret.password
     }
   },
   toJSON: {
     transform: function (doc, ret) {
-      delete ret.password;
+      delete ret.password
     }
   }
-});
+})
 
-const User = module.exports = mongoose.model('User', UserSchema);
+const User = module.exports = mongoose.model('User', UserSchema)
 
-module.exports.getUserById = function(id, callback){
-  User.findById(id, callback);
+module.exports.getUserById = function(id, callback) {
+  User.findById(id, callback)
 }
 
-module.exports.addUser = function(newUser, callback){
+module.exports.addUser = function(newUser, callback) {
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newUser.password, salt, (err, hash) => {
-      if(err) throw err;
-      newUser.password = hash;
-      newUser.save(callback);
+      if (err) throw err
+      newUser.password = hash
+      newUser.save(callback)
     });
   });
 }

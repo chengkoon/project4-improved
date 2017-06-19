@@ -10,7 +10,7 @@
         <div class="field">
           <label class="label">Username</label>
           <p class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" v-model="loginCredentials.username">
+            <input class="input is-success" type="text" v-model="signinCredentials.username">
             <span class="icon is-small is-left">
               <i class="fa fa-user"></i>
             </span>
@@ -23,7 +23,7 @@
         <div class="field">
           <label class="label">Password</label>
           <p class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="password" v-model="loginCredentials.password">
+            <input class="input is-success" type="password" v-model="signinCredentials.password">
             <span class="icon is-small is-left">
               <i class="fa fa-key"></i>
             </span>
@@ -49,7 +49,7 @@ export default {
   name: 'signup-modal',
   data () {
     return {
-      loginCredentials: {
+      signinCredentials: {
         username: '',
         password: ''
       },
@@ -60,14 +60,16 @@ export default {
   methods: {
     signinUser () {
       event.preventDefault()
-      auth.signinUser(this.loginCredentials, loggedIn => {
+      auth.signinUser(this.signinCredentials, this.userOrSponsor, loggedIn => {
         if (!loggedIn) {
           // trigger shake animation instead of below
           this.$router.push('/user/login')
         } else {
-          EventBus.$emit('user-signedInStatus', true)
+          if (this.userOrSponsor === 'User') EventBus.$emit('user-signedInStatus', true)
+          else if (this.userOrSponsor === 'Sponsor') EventBus.$emit('sponsor-signedInStatus', true)
           this.showThisModal = false
-          this.$router.replace('/' + this.$route.query.redirect || '/')
+          if (this.$route.query.hasOwnProperty('redirect')) this.$router.push('/' + this.$route.query.redirect)
+          else this.$router.push('/')
         }
       })
     }
@@ -82,8 +84,8 @@ export default {
       this.showThisModal = status
     })
     EventBus.$on('clear-form-data', () => {
-      this.loginCredentials.username = ''
-      this.loginCredentials.password = ''
+      this.signinCredentials.username = ''
+      this.signinCredentials.password = ''
     })
   }
 }

@@ -17,10 +17,11 @@ const userController = {
   },
 
   registerUser: (req, res, next) => {
-    let newUser = new User(req.body.user)
+    let newUser = new User(req.body.signupCredentials)
+    console.log('newUser is...', newUser)
     User.addUser(newUser, (err, user) => {
       if (err) {
-        res.json({success: false, msg:'Failed to register user'})
+        res.json({success: false, msg: 'Failed to register user'})
       } else {
         const token = userController.createIdToken(user)
         res.json({success: true, id_token: 'JWT ' + token})
@@ -29,8 +30,8 @@ const userController = {
   },
 
   authenticateUser: (req, res, next) => {
-    const username = req.body.loginCredentials.username
-    const password = req.body.loginCredentials.password
+    const username = req.body.signinCredentials.username
+    const password = req.body.signinCredentials.password
 
     User.getUserByUsername(username, (err, user) => {
       if (err) throw err

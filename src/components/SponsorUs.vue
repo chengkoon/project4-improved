@@ -28,13 +28,17 @@ export default {
       EventBus.$emit('sponsor-signup-modal', true)
     },
     sponsorSignIn () {
-      EventBus.$emit('sponsor-signup-modal', true)
+      EventBus.$emit('sponsor-signin-modal', true)
     }
   },
   created () {
     // EventBus.$on('any-modal-on-screen', (status) => {
     //   this.anyModalOnScreen = status
     // })
+  },
+  mounted () {
+    this.myheight = this.$el.offsetHeight
+    console.log('hihihi', this.$el.scrollTop)
   }
 }
 </script>

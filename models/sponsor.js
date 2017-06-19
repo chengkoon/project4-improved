@@ -5,7 +5,7 @@ const bcrypt   = require('bcryptjs');
 const SponsorSchema = new mongoose.Schema({
   company: {
     type: String,
-    required: true
+    required: false
   },
   email: {
     type: String,
@@ -25,7 +25,7 @@ const SponsorSchema = new mongoose.Schema({
   },
   profileDescription: {
     type: String,
-    required: true
+    required: false
   },
   itemsPosted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }]
 }, {
@@ -36,23 +36,23 @@ const SponsorSchema = new mongoose.Schema({
   },
   toJSON: {
     transform: function (doc, ret) {
-      delete ret.password;
+      delete ret.password
     }
   }
 })
 
-const Sponsor = module.exports = mongoose.model('Sponsor', SponsorSchema);
+const Sponsor = module.exports = mongoose.model('Sponsor', SponsorSchema)
 
-module.exports.getSponsorById = function(id, callback){
-  Sponsor.findById(id, callback);
+module.exports.getSponsorById = function (id, callback) {
+  Sponsor.findById(id, callback)
 }
 
-module.exports.addSponsor = function(newSponsor, callback){
+module.exports.addSponsor = function (newSponsor, callback) {
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newSponsor.password, salt, (err, hash) => {
-      if(err) throw err;
-      newSponsor.password = hash;
-      newSponsor.save(callback);
+      if (err) throw err
+      newSponsor.password = hash
+      newSponsor.save(callback)
     });
   });
 }

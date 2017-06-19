@@ -17,7 +17,7 @@ const sponsorController = {
   },
 
   registerSponsor: (req, res, next) => {
-    let newSponsor = new Sponsor(req.body.sponsor)
+    let newSponsor = new Sponsor(req.body.signupCredentials)
     Sponsor.addSponsor(newSponsor, (err, sponsor) => {
       if (err) {
         res.json({success: false, msg: 'Failed to register sponsor'})
@@ -29,8 +29,8 @@ const sponsorController = {
   },
 
   authenticateSponsor: (req, res, next) => {
-    const username = req.body.loginCredentials.username
-    const password = req.body.loginCredentials.password
+    const username = req.body.signinCredentials.username
+    const password = req.body.signinCredentials.password
 
     Sponsor.getSponsorByUsername(username, (err, sponsor) => {
       if (err) throw err
