@@ -1,3 +1,4 @@
+const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/user');
@@ -6,6 +7,7 @@ module.exports = function(passport){
   let opts = {};
   opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
   opts.secretOrKey = process.env.secret;
+  console.log('hiiiii we are inside passport JWT strat');
 
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     console.log("payload received and it is...", jwt_payload);

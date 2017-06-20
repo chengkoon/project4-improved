@@ -10,7 +10,7 @@
         <div class="field">
           <label class="label">Username</label>
           <p class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" v-model="signinCredentials.username">
+            <input class="input is-success" type="text" autofocus="autofocus" v-model="signinCredentials.username">
             <span class="icon is-small is-left">
               <i class="fa fa-user"></i>
             </span>
@@ -67,9 +67,10 @@ export default {
         } else {
           if (this.userOrSponsor === 'User') EventBus.$emit('user-signedInStatus', true)
           else if (this.userOrSponsor === 'Sponsor') EventBus.$emit('sponsor-signedInStatus', true)
+
           this.showThisModal = false
           if (this.$route.query.hasOwnProperty('redirect')) this.$router.push('/' + this.$route.query.redirect)
-          else this.$router.push('/')
+          else this.$router.push('/#tikam')
         }
       })
     }

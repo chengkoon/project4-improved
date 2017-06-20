@@ -7,14 +7,16 @@ const userController = {
 
   createIdToken: (user) => {
     let payload = { id: user._id, type: 'User' } // not including impt info such as user pw
-    return jwt.sign(payload, process.env.secret, {
-      expiresIn: 604800 // 1 week
-    })
+    // return jwt.sign(payload, process.env.secret, {
+    //   expiresIn: 604800 // 1 week
+    // })
+    return jwt.sign(payload, process.env.secret);
   },
 
-  checkJWT: () => {
-    return passport.authenticate('jwt', {session: false})
-  },
+  // checkJWT: () => {
+  //   console.log('we are right before passport.authenticate');
+  //   return passport.authenticate('jwt', {session: false})
+  // },
 
   registerUser: (req, res, next) => {
     let newUser = new User(req.body.signupCredentials)
@@ -43,7 +45,11 @@ const userController = {
         if (err) throw err
         if (isMatch) {
           const token = userController.createIdToken(user)
-          res.json({success: true, id_token: 'JWT ' + token})
+          res.json({
+            success: true,
+            id_token: 'Bearer ' + token,
+            username: user.username
+          })
         } else {
           return res.json({success: false, msg: 'Wrong password'})
         }
@@ -53,7 +59,8 @@ const userController = {
 
   userProfile: (req, res, next) => {
     console.log('get req from /profile authenticated successfully')
-    res.json({user: req.user})
+    console.log('req is currently...', req.user);
+    res.json({user: 'lolol'})
   }
 
 }

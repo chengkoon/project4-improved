@@ -49,10 +49,22 @@ export default {
       }
     }
   },
+  watch: {
+    // call again the method if the route changes
+    '$route.hash': 'fetchData'
+  },
   methods: {
     onScroll: function (e, position) {
       this.position = position
+    },
+    fetchData () {
+      console.log('yes watcher on route.hash change is activated')
+      console.log('$route.hash is...', this.$route.hash)
+      if (this.$route.hash === '#tikam') return // getItems
     }
+  },
+  created () {
+    console.log('app.vue has been created')
   }
 }
 </script>

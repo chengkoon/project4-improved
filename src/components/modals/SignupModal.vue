@@ -10,8 +10,7 @@
         <div class="field">
           <label class="label">Username</label>
           <p class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" placeholder="John"
-             v-model="signupCredentials.username">
+            <input class="input is-success" type="text" placeholder="John" autofocus="autofocus" v-model="signupCredentials.username">
             <span class="icon is-small is-left">
               <i class="fa fa-user"></i>
             </span>

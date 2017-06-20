@@ -1,15 +1,19 @@
 const express = require('express');
+const jwt = require('express-jwt');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const userRoutes = require('./routes/users');
+const sponsorRoutes = require('./routes/sponsors');
 dotenv.config();
+
+const app = express();
 
 // const url = process.env.MONGOLAB_URI;
 const url = 'mongodb://localhost:27017/meanauth';
-
 mongoose.Promise = global.Promise;
 // Connect To Database
 // mongoose.connect(config.database);
@@ -25,11 +29,9 @@ mongoose.connection.on('error', (err) => {
   console.log('Database error: '+err);
 });
 
-const app = express();
-
 // const users = require('./routes/users');
 // const sponsors = require('./routes/sponsors');
-const allRoutes = require('./routes/allRoutes');
+// const allRoutes = require('./routes/allRoutes');
 
 // Port Number
 const port = process.env.PORT || 3000;
@@ -48,11 +50,13 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./config/passport')(passport);
+// require('./config/passport')(passport); //replaced by express-jwt
 
 // app.use('/users', users);
 // app.use('/sponsors', sponsors);
-app.use('/', allRoutes);
+// app.use('/', allRoutes);
+app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), userRoutes);
+app.use('/', sponsorRoutes);
 
 // Index Route
 // app.get('/', (req, res) => {

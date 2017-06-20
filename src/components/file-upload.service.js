@@ -13,8 +13,8 @@ import axios from 'axios'
 //     //   img, { url: `${BASE_URL}/images/${img.id}` })))
 // }
 
-function upload (fileName) {
-  return axios.post('http://localhost:3000/newImage', { fileName: fileName })
+function upload (myFile) {
+  return axios.post('http://localhost:3000/newImage')
   .then(res => {
     console.log(res)
   }).catch(err => {

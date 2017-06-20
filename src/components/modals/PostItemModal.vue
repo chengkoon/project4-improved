@@ -1,104 +1,105 @@
 <template>
-  <div class="post-item-modal modal columns" :class="{ 'is-active': true }">
+  <div id="modal" class="modal" :class="{ 'is-active': showThisModal }">
   <div class="modal-background"></div>
-  <div class="card column is-half">
-    <div class="card-image">
-      <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-        <div class="dropbox" v-if="isInitial">
-          <input type="file" multiple :name="uploadFieldName"
-          :disabled="isSaving"
-          @change="filesChange($event.target);
-          fileCount = $event.target.files.length"
-          accept="image/*" class="input-file">
-            <p v-if="isInitial">
-              Drag your image here to begin<br> or click to browse
-            </p>
-        </div>
-        <div class="dropbox" v-if="isSaving">
-          <p>
-            Uploading your image...
-          </p>
-        </div>
-      </form>
-      <form enctype="multipart/form-data" action="/" method="POST">
-        <input type="file" @change="filesChange($event.target)" name="myFile">
-        <input type="submit" class="btn btn-primary">
-      </form>
-      <figure class="image is-2by1" v-if="isSuccess">
-        <img :src="resizedImgURL" :alt="uploadedImg.original_filename">
-      </figure>
-    </div>
-    <div class="card-content">
-      <div class="content">
-        <div class="field">
-          <label class="label is-small">Product Name</label>
-          <p class="control">
-            <input class="input is-small" type="text" placeholder="T138 Headphones">
-          </p>
-        </div>
-      </div>
-      <div class="content">
-        <div class="field">
-          <label class="label is-small">Product URL</label>
-          <p class="control">
-            <input class="input is-small" type="text" placeholder="https://www.XYZ.com/t138">
-          </p>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label is-small">Message</label>
-        <p class="control">
-          <textarea class="textarea is-small" placeholder="Textarea"></textarea>
-        </p>
-      </div>
-      <div class="columns">
-        <div class="field column is-half">
-          <label class="label is-small">Start of Bidding</label>
-          <p class="control">
-            <span class="select is-small">
-              <select>
-                <option>Date</option>
-                <option>options</option>
-              </select>
-            </span>
-          </p>
-        </div>
-        <div class="field column">
-          <label class="label is-small">To</label>
-          <p class="control">
-            <span class="select is-small">
-              <select>
-                <option>Date</option>
-                <option>options</option>
-              </select>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <footer class="card-footer">
-      <p class="card-footer-item">
-        <span>
-          View on <a href="https://twitter.com/codinghorror/status/506010907021828096">Twitter</a>
-        </span>
-      </p>
-      <p class="card-footer-item">
-        <span>
-          Share on <a href="#">Facebook</a>
-        </span>
-      </p>
-    </footer>
-    <!-- <header class="modal-card-head">
+  <div class="modal-card">
+    <header class="modal-card-head">
       <p class="modal-card-title">Post Item</p>
-      <button class="delete"></button>
+      <button class="delete" @click="showThisModal = false"></button>
     </header>
     <section class="modal-card-body">
+      <div class="content">
+        <div class="card-image">
+          <form enctype="multipart/form-data" id="myForm" @change="uploadImg($event.target)" novalidate v-if="isInitial || isSaving || isImageMounted" action="http://localhost:3000/newImage" method="POST">
+            <div class="dropbox" v-if="isInitial || isSaving || isImageMounted">
+              <input type="file" name="myFile"
+              :disabled="isSaving"
+              accept="image/*" class="input-file">
+              <p v-if="isInitial">
+                <!-- Preview your image here -->
+                Click to upload image
+              </p>
+              <p v-if="isSaving">
+                Uploading your image...
+              </p>
+            </div>
+          </form>
+          <div class="dropbox" v-if="isSuccess">
+            <img :src="itemDetails.imgURL" alt="">
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="content">
+            <div class="field">
+              <label class="label">Product Name (this will appear at the top)</label>
+              <p class="control">
+                <input class="input" type="text" placeholder="T138 Headphones" v-model="itemDetails.name">
+              </p>
+            </div>
+          </div>
+          <div class="content">
+            <div class="field">
+              <label class="label">Product URL</label>
+              <p class="control">
+                <input class="input" type="text" placeholder="https://www.XYZ.com/t138" v-model="itemDetails.productURL">
+              </p>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Product Description</label>
+            <p class="control">
+              <textarea class="textarea" placeholder="Textarea" v-model="itemDetails.description"></textarea>
+            </p>
+          </div>
+          <div class="columns">
+            <div class="field column is-half">
+              <label class="label">Start of Bidding</label>
+              <p class="control">
+                <span class="select">
+                  <select v-model="itemDetails.bidStart">
+                    <option>Date</option>
+                    <option>options</option>
+                  </select>
+                </span>
+              </p>
+            </div>
+            <div class="field column">
+              <label class="label">To</label>
+              <p class="control">
+                <span class="select">
+                  <select v-model="itemDetails.bidEnd">
+                    <option>Date</option>
+                    <option>options</option>
+                  </select>
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Choice of Charity Organisation</label>
+            <p class="control">
+              <span class="select">
+                <select v-model="itemDetails.receipientCharity">
+                  <option>Animal Concerns Research and Education Society</option>
+                  <option>Children's Aid Society</option>
+                  <option>Humanitarian Organization for Migration Economics</option>
+                  <option>Make-A-Wish Foundation</option>
+                  <option>Movement for the Intellectually Disabled of Singapore</option>
+                  <option>National Kidney Foundation</option>
+                  <option>Ren Ci Hospital and Medicare Centre</option>
+                  <option>Salvation Army</option>
+                  <option>Singapore Association of the Visually Handicapped</option>
+                </select>
+              </span>
+            </p>
+          </div>
+        </div>
 
+      </div>
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-success">Save changes</a>
+      <a class="button is-success" @click="submitItem">Put item up for bidding!</a>
       <a class="button">Cancel</a>
-    </footer> -->
+    </footer>
   </div>
 </div>
 </template>
@@ -106,22 +107,29 @@
 <script>
 
 import { EventBus } from '../../event-bus.js'
-import { upload } from '../file-upload.service'
+// import { upload } from '../file-upload.service'
+import axios from 'axios'
 
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2
 const STATUS_FAILED = 3
+const STATUS_IMAGE_MOUNTED = 4
 
 export default {
   name: 'post-item-modal',
   data () {
     return {
       itemDetails: {
-
+        name: '',
+        imgURL: '',
+        productURL: '',
+        description: '',
+        bidStart: '',
+        bidEnd: '',
+        receipientCharity: ''
       },
       showThisModal: false,
-      uploadedImg: {},
       uploadError: null,
       currentStatus: null,
       uploadFieldName: 'photos'
@@ -131,6 +139,9 @@ export default {
     isInitial () {
       return this.currentStatus === STATUS_INITIAL
     },
+    isImageMounted () {
+      return this.currentStatus === STATUS_IMAGE_MOUNTED
+    },
     isSaving () {
       return this.currentStatus === STATUS_SAVING
     },
@@ -139,71 +150,33 @@ export default {
     },
     isFailed () {
       return this.currentStatus === STATUS_FAILED
-    },
-    resizedImgURL () {
-      return `http://res.cloudinary.com/drkrmbkx3/image/upload/c_imagga_crop/${this.uploadedImg.public_id}.${this.uploadedImg.format}`
     }
   },
   methods: {
     reset () {
       // reset form to initial state
       this.currentStatus = STATUS_INITIAL
-      this.uploadedImg = {}
       this.uploadError = null
+      this.receivedImgURL = ''
     },
-    save (formData) {
-      // upload data to the server
+    uploadImg (eventTarget) {
       this.currentStatus = STATUS_SAVING
 
-      // upload(formData) // from file-upload.service.js
-        // .then(x => {
-        //   this.uploadedFiles = [].concat(x)
-        //   this.currentStatus = STATUS_SUCCESS
-        // })
-        // .catch(err => {
-        //   this.uploadError = err.response
-        //   this.currentStatus = STATUS_FAILED
-        // })
-      upload(formData)
+      const formData = new FormData()
+      formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
+
+      axios.post('http://localhost:3000/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(res => {
         console.log('res is...', res)
-        this.uploadedImg = res
+        this.itemDetails.imgURL = res.data.url
         this.currentStatus = STATUS_SUCCESS
-      })
-      .catch(err => {
-        console.log('error is...', err)
+      }).catch(err => {
+        console.log('err is...', err)
+        this.currentStatus = STATUS_FAILED
       })
     },
-    // filesChange (fieldName, fileList) {
-    //   // handle file changes
-    //   const formData = new FormData()
-    //   if (!fileList.length) return
-    //
-    //   // append the files to FormData
-    //   Array
-    //     .from(Array(fileList.length).keys())
-    //     .map(x => {
-    //       formData.append(fieldName, fileList[x], fileList[x].name)
-    //     })
-    //   console.log('formData is now...', formData)
-    //
-    //   // save it
-    //   this.save(formData)
-    // }
-    filesChange (eventTarget) {
-      // console.log('process.env is ...', process.env)
-      // console.log('eventTarget is...', eventTarget)
-      // console.log('eventTarget.files is...', eventTarget.files[0].name)
-      // const formData = new FormData()
-      // console.log('clean formData is...', formData)
-      // formData.append('file', eventTarget.files[0])
-      // formData.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET)
-      // console.log('formData is now...', formData)
-      // this.save(formData)
-
-      console.log(eventTarget.files[0])
-      // let fileName = eventTarget.files[0].name
-      // upload(fileName)
+    submitItem () {
+      console.log('item to be submitted is...', this.itemDetails)
     }
   },
   mounted () {
@@ -259,7 +232,12 @@ a {
   position: absolute;
   left: 0px;
   cursor: pointer;
+  z-index: 900;
 }
+/*.top-layer {
+  position: absolute;
+  z-index: 1000;
+}*/
 
 .dropbox:hover {
   background: lightblue; /* when mouse over to the drop zone, change color */
@@ -268,8 +246,10 @@ a {
 .dropbox p {
   font-size: 1.2em;
   text-align: center;
-  padding: 50px 0;
+  padding: 60px 0;
+  vertical-align: middle;
 }
+
 .label {
   text-align: left;
 }

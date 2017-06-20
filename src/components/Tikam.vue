@@ -2,7 +2,8 @@
   <div class="tikam"> <!-- list of items -->
     tikam page. Call to action. How-to. Item gallery.
     <div class="big-box">
-      {{myheight}}
+      user is {{user}}
+      <button type="button" @click="testGetProfile">test</button>
     </div>
   </div>
 </template>
@@ -11,6 +12,8 @@
 
 // import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
+import auth from '../auth'
+// import axios from 'axios'
 
 export default {
   name: 'tikam',
@@ -18,12 +21,15 @@ export default {
   },
   data () {
     return {
-      myheight: ''
+      myheight: '',
+      user: 'hehe'
     }
   },
-  mounted () {
-    this.myheight = this.$el.offsetHeight
-    console.log('hihihihihihihi', this.$el.scrollHeight)
+  methods: {
+    testGetProfile () {
+      console.log('heheheh')
+      auth.getProfile()
+    }
   }
 }
 </script>

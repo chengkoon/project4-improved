@@ -3,7 +3,8 @@ import axios from 'axios'
 export default {
 
   user: {
-    authenticated: false
+    authenticated: false,
+    username: ''
   },
 
   isDev: true, // change to false before deployment/production
@@ -37,6 +38,7 @@ export default {
       if (response.data.success) {
         window.localStorage.setItem('id_token', response.data.id_token)
         vm.user.authenticated = true
+        vm.user.username = response.data.username
         if (cb) cb(true)
         return
       } else {
@@ -63,6 +65,7 @@ export default {
 
   getProfile () {
     let ep = this.prepEndpoint('user/profile')
+    console.log('we are at client side getProfile()')
     return axios.get(ep, { headers: this.getAuthHeader() })
     .then((response) => {
       console.log('we have successfully get request from profile')

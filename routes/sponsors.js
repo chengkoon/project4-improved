@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const Sponsor = require('../models/sponsor');
-const _ = require('lodash');
+const sponsorController = require('../controllers/sponsor_controller');
 
+// register and login functions
+router.post('/sponsor/register', sponsorController.registerSponsor);
+router.post('/sponsor/authenticate', sponsorController.authenticateSponsor);
 
+// sponsor actions after logging in
+router.get('/sponsor/profile', sponsorController.checkJWT(), sponsorController.sponsorProfile);
 
-module.exports = router;
+module.exports = router

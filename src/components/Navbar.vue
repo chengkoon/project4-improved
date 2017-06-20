@@ -32,7 +32,8 @@
         <a class="nav-item is-tab" @click="showSigninModal" v-show="!userSignedIn && !sponsorSignedIn">Sign in</a>
         <!-- when user is sign in -->
         <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
-        <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn">Post Item</a>
+        <router-link to="/item/" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
+        <!-- <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn">Post Item</a> -->
         <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
       </div>
     </div>
@@ -41,7 +42,7 @@
 
 <script>
 
-// import auth from '../auth'
+import auth from '../auth'
 import { EventBus } from '../event-bus.js'
 
 export default {
@@ -50,6 +51,7 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       userSignedIn: false,
+      username: '',
       sponsorSignedIn: false,
       fixedBar: false,
       isactive: {
@@ -84,13 +86,21 @@ export default {
     }
   },
   created () {
+    if (auth.isLoggedIn()) {
+      this.userSignedIn = true
+      this.username = auth.user.username
+    }
     EventBus.$on('user-signedInStatus', (status) => {
       this.userSignedIn = true
+      this.username = auth.user.username
+      console.log('this.userSignedIn and username are ', this.userSignedIn, this.username)
     })
     EventBus.$on('sponsor-signedInStatus', (status) => {
       this.sponsorSignedIn = true
+      console.log('this.sponsorSignedIn is ', this.sponsorSignedIn)
     })
     window.addEventListener('scroll', this.handleScroll)
+    console.log('navbar has been created and this.userSignedIn is ', this.userSignedIn)
   },
   destroyed () {
     window.removeEventListener('scroll', this.handleScroll)

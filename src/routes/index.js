@@ -8,7 +8,7 @@ import About from '@/components/About'
 // import Login from '@/components/Login'
 // import flashmessage from '@/components/flashmessage'
 // import UserHome from '@/components/UserHome'
-import Success from '@/components/Success'
+// import Success from '@/components/Success'
 import auth from '../auth'
 // import Bye from '@/components/Bye'
 // import 'bootstrap/dist/css/bootstrap.css'
@@ -41,7 +41,7 @@ export const routes = [
       auth.signoutUser()
       next('/')
     }
-  },
+  }
   // {
   //   path: '/sponsor',
   //   name: 'sponsor',
@@ -69,12 +69,12 @@ export const routes = [
   //   name: 'login',
   //   component: Login
   // },
-  {
-    path: '/success',
-    name: 'success',
-    component: Success,
-    meta: { requiresUserAuth: true }
-  }
+  // {
+  //   path: '/success',
+  //   name: 'success',
+  //   component: Success,
+  //   meta: { requiresUserAuth: true }
+  // }
 ]
 //   mode: 'history'
 // })
