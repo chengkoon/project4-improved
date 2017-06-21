@@ -28,13 +28,13 @@
           </figure>
           Profile
         </a> -->
-        <a class="nav-item is-tab" @click="showSignupModal" v-show="!userSignedIn && !sponsorSignedIn">Sign up</a>
-        <a class="nav-item is-tab" @click="showSigninModal" v-show="!userSignedIn && !sponsorSignedIn">Sign in</a>
+        <a class="nav-item is-tab" @click="showSignupModal" v-show="!type">Sign up</a>
+        <a class="nav-item is-tab" @click="showSigninModal" v-show="!type">Sign in</a>
         <!-- when user is sign in -->
-        <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
-        <router-link to="/item/" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link>
-        <!-- <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn">Post Item</a> -->
-        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
+        <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="type === 'User'">Dashboard</a></router-link>
+        <!-- <router-link to="/item/" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link> -->
+        <a class="nav-item is-tab" @click="showPostItemModal" v-show="type === 'Sponsor'">Post Item</a>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="type">Sign out</a>
       </div>
     </div>
   </nav>
@@ -47,6 +47,7 @@ import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'navbar',
+  props: ['type'],
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -67,7 +68,6 @@ export default {
       EventBus.$emit('signin-modal', true)
     },
     showPostItemModal () {
-      console.log(123455)
       EventBus.$emit('post-item-modal', true)
     },
     signoutUser () {
@@ -86,10 +86,13 @@ export default {
     }
   },
   created () {
-    if (auth.isLoggedIn()) {
-      this.userSignedIn = true
-      this.username = auth.user.username
-    }
+    // if (auth.user.authenticated) {
+    //   this.userSignedIn = true
+    //   this.username = auth.user.username
+    // } else if (auth.sponsor.authenticated) {
+    //   this.sponsorSignedIn = true
+    //   this.username = auth.sponsor.username
+    // }
     EventBus.$on('user-signedInStatus', (status) => {
       this.userSignedIn = true
       this.username = auth.user.username

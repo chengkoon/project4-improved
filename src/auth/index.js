@@ -7,6 +7,12 @@ export default {
     username: ''
   },
 
+  sponsor: {
+    authenticated: false,
+    username: '',
+    test: ''
+  },
+
   isDev: true, // change to false before deployment/production
 
   registerNewUser (signupCredentials, type, cb) {
@@ -38,7 +44,14 @@ export default {
       if (response.data.success) {
         window.localStorage.setItem('id_token', response.data.id_token)
         vm.user.authenticated = true
-        vm.user.username = response.data.username
+        if (type === 'User') {
+          vm.user.authenticated = true
+          vm.user.username = response.data.username
+        } else if (type === 'Sponsor') {
+          vm.sponsor.authenticated = true
+          vm.sponsor.username = response.data.username
+        }
+
         if (cb) cb(true)
         return
       } else {

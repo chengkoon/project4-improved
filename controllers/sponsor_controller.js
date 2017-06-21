@@ -12,10 +12,6 @@ const sponsorController = {
     })
   },
 
-  checkJWT: () => {
-    return passport.authenticate('jwt', {session: false})
-  },
-
   registerSponsor: (req, res, next) => {
     let newSponsor = new Sponsor(req.body.signupCredentials)
     Sponsor.addSponsor(newSponsor, (err, sponsor) => {
@@ -23,7 +19,7 @@ const sponsorController = {
         res.json({success: false, msg: 'Failed to register sponsor'})
       } else {
         const token = sponsorController.createIdToken(sponsor)
-        res.json({success: true, id_token: 'JWT' + token})
+        res.json({success: true, id_token: 'Bearer' + token})
       }
     })
   },
@@ -42,7 +38,11 @@ const sponsorController = {
         if (err) throw err
         if (isMatch) {
           const token = sponsorController.createIdToken(sponsor)
-          res.json({success: true, id_token: 'JWT ' + token})
+          res.json({
+            success: true,
+            id_token: 'Bearer ' + token,
+            username: sponsor.username
+          })
         } else {
           return res.json({success: false, msg: 'Wrong password'})
         }

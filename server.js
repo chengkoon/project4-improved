@@ -6,9 +6,11 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+dotenv.config();
 const userRoutes = require('./routes/users');
 const sponsorRoutes = require('./routes/sponsors');
-dotenv.config();
+const itemRoutes = require('./routes/items');
+
 
 const app = express();
 
@@ -55,8 +57,9 @@ app.use(passport.session());
 // app.use('/users', users);
 // app.use('/sponsors', sponsors);
 // app.use('/', allRoutes);
-app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), userRoutes);
 app.use('/', sponsorRoutes);
+app.use('/', itemRoutes);
+app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), userRoutes);
 
 // Index Route
 // app.get('/', (req, res) => {

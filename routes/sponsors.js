@@ -7,6 +7,6 @@ router.post('/sponsor/register', sponsorController.registerSponsor);
 router.post('/sponsor/authenticate', sponsorController.authenticateSponsor);
 
 // sponsor actions after logging in
-router.get('/sponsor/profile', sponsorController.checkJWT(), sponsorController.sponsorProfile);
+router.get('/sponsor/profile', sponsorController.sponsorProfile);
 
 module.exports = router

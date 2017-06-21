@@ -7,16 +7,10 @@ const userController = {
 
   createIdToken: (user) => {
     let payload = { id: user._id, type: 'User' } // not including impt info such as user pw
-    // return jwt.sign(payload, process.env.secret, {
-    //   expiresIn: 604800 // 1 week
-    // })
-    return jwt.sign(payload, process.env.secret);
+    return jwt.sign(payload, process.env.secret, {
+      expiresIn: 604800 // 1 week
+    })
   },
-
-  // checkJWT: () => {
-  //   console.log('we are right before passport.authenticate');
-  //   return passport.authenticate('jwt', {session: false})
-  // },
 
   registerUser: (req, res, next) => {
     let newUser = new User(req.body.signupCredentials)
@@ -26,7 +20,7 @@ const userController = {
         res.json({success: false, msg: 'Failed to register user'})
       } else {
         const token = userController.createIdToken(user)
-        res.json({success: true, id_token: 'JWT ' + token})
+        res.json({success: true, id_token: 'Bearer ' + token})
       }
     })
   },

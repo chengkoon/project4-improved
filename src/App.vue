@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <nav-bar></nav-bar>
+    <nav-bar :type='typeOfUser'></nav-bar>
     <flash-message></flash-message>
     <signup-modal></signup-modal>
     <signin-modal></signin-modal>
@@ -46,7 +46,8 @@ export default {
       position: {
         scrollTop: 0,
         scrollLeft: 0
-      }
+      },
+      typeOfUser: ''
     }
   },
   watch: {
@@ -60,11 +61,24 @@ export default {
     fetchData () {
       console.log('yes watcher on route.hash change is activated')
       console.log('$route.hash is...', this.$route.hash)
-      if (this.$route.hash === '#tikam') return // getItems
+      if (this.$route.hash === '#tikam') {
+        // refresh getItems again
+      }
+      this.typeOfUser = this.parseJwt()
+    },
+    parseJwt () {
+      console.log('parsing token...')
+      let token = window.localStorage.getItem('id_token')
+      if (!token) return false
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace('-', '+').replace('_', '/')
+      let parsedToken = JSON.parse(window.atob(base64))
+      return parsedToken.type
     }
   },
   created () {
     console.log('app.vue has been created')
+    this.typeOfUser = this.parseJwt()
   }
 }
 </script>

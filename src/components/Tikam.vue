@@ -1,9 +1,43 @@
 <template>
   <div class="tikam"> <!-- list of items -->
-    tikam page. Call to action. How-to. Item gallery.
-    <div class="big-box">
-      user is {{user}}
-      <button type="button" @click="testGetProfile">test</button>
+    <button type="button" @click="testGetProfile">test</button>
+    <div class="columns is-10">
+      <div class="card column is-one-quarter" v-for="item in items">
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img :src="item.imgURL" alt="Image">
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="http://bulma.io/images/placeholders/96x96.png" alt="Image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <a :href="item.productURL"><p class="title is-4">{{item.name}}</p></a>
+              <p class="subtitle is-6">@johnsmith</p>
+            </div>
+          </div>
+
+          <div class="content">
+            {{item.description}}
+          </div>
+        </div>
+        <footer class="card-footer">
+          <p class="card-footer-item">
+            <span>
+              Donations go to {{item.receipientCharity}}
+            </span>
+          </p>
+          <p class="card-footer-item">
+            <span>
+              <a>Bid Now!</a>
+            </span>
+          </p>
+        </footer>
+      </div>
     </div>
   </div>
 </template>
@@ -12,7 +46,7 @@
 
 // import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
-import auth from '../auth'
+import services from '../services'
 // import axios from 'axios'
 
 export default {
@@ -22,13 +56,16 @@ export default {
   data () {
     return {
       myheight: '',
-      user: 'hehe'
+      user: 'hehe',
+      items: {}
     }
   },
   methods: {
     testGetProfile () {
-      console.log('heheheh')
-      auth.getProfile()
+      services.getItems().then(items => {
+        this.items = items
+        console.log('this.items are...', this.items)
+      })
     }
   }
 }

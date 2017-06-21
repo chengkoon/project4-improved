@@ -107,7 +107,7 @@
 <script>
 
 import { EventBus } from '../../event-bus.js'
-// import { upload } from '../file-upload.service'
+import services from '../../services'
 import axios from 'axios'
 
 const STATUS_INITIAL = 0
@@ -164,8 +164,8 @@ export default {
 
       const formData = new FormData()
       formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
-
-      axios.post('http://localhost:3000/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      console.log('inside uploadImg')
+      axios.post('http://localhost:3000/item/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(res => {
         console.log('res is...', res)
         this.itemDetails.imgURL = res.data.url
@@ -177,6 +177,7 @@ export default {
     },
     submitItem () {
       console.log('item to be submitted is...', this.itemDetails)
+      services.createItem(this.itemDetails)
     }
   },
   mounted () {
