@@ -56,8 +56,7 @@
               <p class="control">
                 <span class="select">
                   <select v-model="itemDetails.bidStart">
-                    <option>Date</option>
-                    <option>options</option>
+                    <option v-for="time in timeStart">{{time}}</option>
                   </select>
                 </span>
               </p>
@@ -66,9 +65,8 @@
               <label class="label">To</label>
               <p class="control">
                 <span class="select">
-                  <select v-model="itemDetails.bidEnd">
-                    <option>Date</option>
-                    <option>options</option>
+                  <select v-model="itemDetails.bidEnd"> <!-- v-for... -->
+                    <option v-for="time in getBidEndTime">{{time}}</option>
                   </select>
                 </span>
               </p>
@@ -109,6 +107,7 @@
 import { EventBus } from '../../event-bus.js'
 import services from '../../services'
 import axios from 'axios'
+import moment from 'moment'
 
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
@@ -132,7 +131,8 @@ export default {
       showThisModal: false,
       uploadError: null,
       currentStatus: null,
-      uploadFieldName: 'photos'
+      uploadFieldName: 'photos',
+      timeStart: []
     }
   },
   computed: {
@@ -150,6 +150,14 @@ export default {
     },
     isFailed () {
       return this.currentStatus === STATUS_FAILED
+    },
+    getBidEndTime () {
+      let timeEnd = []
+      for (let i = 0; i < 14; i++) {
+        timeEnd.push(moment(this.itemDetails.bidStart, 'ddd DD-MM-YYYY HH:mm:ss').add(i, 'days').endOf('day').format('ddd DD-MM-YYYY HH:mm:ss'))
+      }
+      return timeEnd
+      // let haha = moment(this.itemDetails.bidStart, 'ddd DD-MM-YYYY HH:mm:ss').endOf('day').format('ddd DD-MM-YYYY HH:mm:ss')
     }
   },
   methods: {
@@ -187,6 +195,13 @@ export default {
     EventBus.$on('post-item-modal', (status) => {
       this.showThisModal = status
     })
+    // var startString = Date()
+    // this.timeStart = moment(startString, 'ddd MMM DD YYYY HH:mm:ss')
+    // this.timeStart = moment(startString, 'dddd MMM DD YYYY HH:mm:ss').add(1, 'days').startOf('day')
+    // this.timeEnd = moment().add(1, 'days').endOf('day').format('ddd DD-MM-YYYY HH:m:ss')
+    for (let i = 1; i < 14; i++) {
+      this.timeStart.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY HH:mm:ss'))
+    }
   }
 }
 </script>

@@ -27,6 +27,16 @@ export default {
     })
   },
 
+  getItemDetail (itemId) {
+    let ep = this.prepEndpoint('item/' + itemId)
+    return axios.get(ep)
+    .then(res => {
+      return res.data.item
+    }).catch(err => {
+      console.log('getItemDetail err is...', err)
+    })
+  },
+
   getAuthHeader () {
     return {
       'Authorization': window.localStorage.getItem('id_token')

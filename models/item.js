@@ -8,10 +8,8 @@ const ItemSchema = new mongoose.Schema({
   productURL: { type: String, required: true },
   imgURL: { type: String, required: true },
   description: { type: String, required: true },
-  bidStart: { type: String, required: true },
-  // bidStartUTC: { type: Number, required: true },
-  bidEnd: { type: String, required: true} ,
-  // bidEndUTC: { type: Number, required: true },
+  bidStart: { type: String, required: true }, // momentjs
+  bidEnd: { type: String, required: true} , // momentjs
   // receipientCharity: { type: mongoose.Schema.Types.ObjectId, ref: 'Charity' }
   receipientCharity: { type: String, required: true }
 })

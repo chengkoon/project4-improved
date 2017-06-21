@@ -33,7 +33,7 @@
           </p>
           <p class="card-footer-item">
             <span>
-              <a>Bid Now!</a>
+              <a @click="showItemDetails(item._id)">Bid Now!</a>
             </span>
           </p>
         </footer>
@@ -44,7 +44,7 @@
 
 <script>
 
-// import { EventBus } from '../event-bus.js'
+import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
 import services from '../services'
 // import axios from 'axios'
@@ -66,6 +66,9 @@ export default {
         this.items = items
         console.log('this.items are...', this.items)
       })
+    },
+    showItemDetails (itemId) {
+      EventBus.$emit('item-details-modal', itemId)
     }
   }
 }

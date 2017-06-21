@@ -18,7 +18,14 @@ const itemController = {
   },
 
   getItem: (req, res, next) => {
-
+    console.log('server side getItem - req.body is...', req.body);
+    Item.findById(req.params.id, (err, item) => {
+      if (err) res.json({success: false, msg: 'Failed to find item'})
+      else {
+        console.log('item detail got successfully and it is...', item)
+        res.json({item: item})
+      }
+    })
   },
 
   createItem: (req, res, next) => {
