@@ -14,6 +14,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "agenda": "^0.9.1",
     "axios": "^0.16.2",
     "bcryptjs": "*",
     "body-parser": "*",

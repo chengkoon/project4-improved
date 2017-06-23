@@ -61,7 +61,7 @@
                 </span>
               </p>
               <p class="help is-success">This email is correct</p> -->
-              <a class="button is-focused" @click="submitBid(item.id)">Submit Bid!</a>
+              <a class="button is-focused" @click="submitBid(item._id)">Submit Bid!</a>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     submitBid (itemId) {
-
+      services.submitBid(itemId, this.bidAmount)
     }
   },
   created () {
@@ -114,6 +114,7 @@ export default {
       this.showThisModal = true
       services.getItemDetail(itemId).then(item => {
         this.item = item
+        console.log('this.item is ...', this.item)
       })
     })
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="tikam"> <!-- list of items -->
-    <button type="button" @click="testGetProfile">test</button>
+    <button type="button" @click="getItems">getItems</button>
     <div class="columns is-10">
       <div class="card column is-one-quarter" v-for="item in items">
         <div class="card-image">
@@ -35,6 +35,9 @@
             <span>
               <a @click="showItemDetails(item._id)">Bid Now!</a>
             </span>
+            <span>
+              <a @click="determineWinner(item._id)">determine winner</a>
+            </span>
           </p>
         </footer>
       </div>
@@ -47,7 +50,7 @@
 import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
 import services from '../services'
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'tikam',
@@ -61,7 +64,7 @@ export default {
     }
   },
   methods: {
-    testGetProfile () {
+    getItems () {
       services.getItems().then(items => {
         this.items = items
         console.log('this.items are...', this.items)
@@ -69,6 +72,10 @@ export default {
     },
     showItemDetails (itemId) {
       EventBus.$emit('item-details-modal', itemId)
+    },
+    determineWinner (itemId) {
+      console.log('DW client')
+      axios.post('http://localhost:3000/item/determineWinner', { itemId: itemId })
     }
   }
 }

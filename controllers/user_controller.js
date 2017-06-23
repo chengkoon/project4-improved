@@ -2,6 +2,23 @@ const User = require('../models/user')
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
 // const _ = require('lodash')
+const agenda = require('../agenda.js');
+
+agenda.define('change name3', function(job, done) {
+  User.findOneAndUpdate({
+    _id: job.attrs.data.userId
+  }, {
+    name: 'hahahhaa'
+  }, (err, user) => {
+    if (err) throw err
+    else {
+      job.remove(function(err) {
+        if(!err) console.log('Successfully removed job from collection');
+      })
+      done();
+    }
+  })
+ });
 
 const userController = {
 
@@ -38,6 +55,9 @@ const userController = {
       User.comparePassword(password, user.password, (err, isMatch) => {
         if (err) throw err
         if (isMatch) {
+          // let dateObj = new Date(1498198930000)
+          // agenda.schedule({1498199110000}, 'change name3', { userId: user._id })
+          // agenda.start()
           const token = userController.createIdToken(user)
           res.json({
             success: true,

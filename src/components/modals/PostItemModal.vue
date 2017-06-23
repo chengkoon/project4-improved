@@ -52,21 +52,53 @@
           </div>
           <div class="columns">
             <div class="field column is-half">
-              <label class="label">Start of Bidding</label>
+              <label class="label">Bidding Start Date</label>
               <p class="control">
                 <span class="select">
-                  <select v-model="itemDetails.bidStart">
-                    <option v-for="time in timeStart">{{time}}</option>
+                  <select v-model="itemDetails.selectedStartDate">
+                    <option disabled>Pick a starting date</option>
+                    <option v-for="date in fullDateRange">{{date}}</option>
                   </select>
                 </span>
               </p>
             </div>
             <div class="field column">
-              <label class="label">To</label>
+              <label class="label">Start Time</label>
               <p class="control">
                 <span class="select">
-                  <select v-model="itemDetails.bidEnd"> <!-- v-for... -->
-                    <option v-for="time in getBidEndTime">{{time}}</option>
+                  <select v-if="!itemDetails.selectedStartDate">
+                    <option>Pick a start date first</option>
+                  </select>
+                  <select v-model="itemDetails.selectedStartTime" v-if="itemDetails.selectedStartDate">
+                    <option disabled>Pick a starting time</option>
+                    <option v-for="time in computedStartTimeRange">{{time}}</option>
+                  </select>
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="field column is-half">
+              <label class="label">Bidding End Date</label>
+              <p class="control">
+                <span class="select">
+                  <select v-model="itemDetails.selectedEndDate">
+                    <option disabled>Pick an end date</option>
+                    <option v-for="date in computedEndDateRange">{{date}}</option>
+                  </select>
+                </span>
+              </p>
+            </div>
+            <div class="field column">
+              <label class="label">End Time</label>
+              <p class="control">
+                <span class="select">
+                  <select v-if="!itemDetails.selectedEndDate">
+                    <option>Pick an end date first</option>
+                  </select>
+                  <select v-model="itemDetails.selectedEndTime" v-if="itemDetails.selectedEndDate">
+                    <option disabled>Pick an end time</option>
+                    <option v-for="time in computedEndTimeRange">{{time}}</option>
                   </select>
                 </span>
               </p>
@@ -124,15 +156,20 @@ export default {
         imgURL: '',
         productURL: '',
         description: '',
-        bidStart: '',
-        bidEnd: '',
+        selectedStartDate: '',
+        selectedStartTime: '',
+        selectedEndDate: '',
+        selectedEndTime: '',
+        bidStartMS: '',
+        bidEndMS: '',
         receipientCharity: ''
       },
       showThisModal: false,
       uploadError: null,
       currentStatus: null,
       uploadFieldName: 'photos',
-      timeStart: []
+      fullDateRange: [],
+      fullTimeRange: []
     }
   },
   computed: {
@@ -151,13 +188,35 @@ export default {
     isFailed () {
       return this.currentStatus === STATUS_FAILED
     },
-    getBidEndTime () {
-      let timeEnd = []
-      for (let i = 0; i < 14; i++) {
-        timeEnd.push(moment(this.itemDetails.bidStart, 'ddd DD-MM-YYYY HH:mm:ss').add(i, 'days').endOf('day').format('ddd DD-MM-YYYY HH:mm:ss'))
+    computedStartTimeRange () {
+      if (this.itemDetails.selectedStartDate !== this.fullDateRange[0]) { // if sponsor did not choose today
+        return this.fullTimeRange
+      } else {
+        // if sponsor chose today as start date, slice away the timeslots that has/have passed
+        let dateNow = new Date()
+        let minutesPassed = (dateNow.getHours() * 60) + (dateNow.getMinutes())
+        let indexesToBeSliced = ((minutesPassed / 15) | 0)
+        return this.fullTimeRange.slice(indexesToBeSliced + 1, this.fullTimeRange.length)
       }
-      return timeEnd
-      // let haha = moment(this.itemDetails.bidStart, 'ddd DD-MM-YYYY HH:mm:ss').endOf('day').format('ddd DD-MM-YYYY HH:mm:ss')
+    },
+    computedEndDateRange () {
+      let indexOfSelectedStartDate = this.fullDateRange.indexOf(this.itemDetails.selectedStartDate)
+      if (this.itemDetails.selectedStartTime === '23:59') {
+        return this.fullDateRange.slice(indexOfSelectedStartDate + 1, this.fullDateRange.length)
+      } else if (this.itemDetails.selectedStartDate !== this.fullDateRange[0]) {
+        return this.fullDateRange.slice(indexOfSelectedStartDate, this.fullDateRange.length)
+      } else { // or if sponsor has chosen today as start date AND selected start time is NOT 23:59
+        return this.fullDateRange
+      }
+    },
+    computedEndTimeRange () {
+      if (this.itemDetails.selectedEndDate === this.itemDetails.selectedStartDate) { // if sponsor chose today for both start and end dates,
+        // we need to check what he has chosen for selectedStartTime and determine endTimeRange from there
+        let indexOfSelectedStartTime = this.fullTimeRange.indexOf(this.itemDetails.selectedStartTime)
+        return this.fullTimeRange.slice(indexOfSelectedStartTime + 1, this.fullTimeRange.length)
+      } else {
+        return this.fullTimeRange
+      }
     }
   },
   methods: {
@@ -184,8 +243,18 @@ export default {
       })
     },
     submitItem () {
+      this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
+      this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
       console.log('item to be submitted is...', this.itemDetails)
       services.createItem(this.itemDetails)
+      .then(res => {
+        if (res.success) {
+          this.showThisModal = false
+          this.$router.push('/#tikam')
+        } else {
+          console.log('client - error message is ', res.msg)
+        }
+      })
     }
   },
   mounted () {
@@ -195,13 +264,20 @@ export default {
     EventBus.$on('post-item-modal', (status) => {
       this.showThisModal = status
     })
-    // var startString = Date()
-    // this.timeStart = moment(startString, 'ddd MMM DD YYYY HH:mm:ss')
-    // this.timeStart = moment(startString, 'dddd MMM DD YYYY HH:mm:ss').add(1, 'days').startOf('day')
-    // this.timeEnd = moment().add(1, 'days').endOf('day').format('ddd DD-MM-YYYY HH:m:ss')
-    for (let i = 1; i < 14; i++) {
-      this.timeStart.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY HH:mm:ss'))
+    // generate an array of 31 dates
+    for (let i = 0; i < 31; i++) {
+      this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))
     }
+    // generate a full array of time - 00:00 to 23:59 - takes up to around 20 milliseconds
+    let timeOfNextQuarter = moment().startOf('day').format('HH:mm')
+    let timeOfNextQuarterMS = moment().startOf('day').valueOf()
+    let endOfTheDayMS = moment().endOf('day').valueOf()
+    while (timeOfNextQuarterMS < endOfTheDayMS) {
+      this.fullTimeRange.push(timeOfNextQuarter)
+      timeOfNextQuarter = moment(timeOfNextQuarter, 'HH:mm').add(15, 'minutes').format('HH:mm')
+      timeOfNextQuarterMS = timeOfNextQuarterMS + (15 * 60 * 1000)
+    }
+    this.fullTimeRange.push('23:59')
   }
 }
 </script>

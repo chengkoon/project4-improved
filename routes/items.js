@@ -15,7 +15,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
   // api_secret: "s9zSYSSICdA_EOOPR2I5Ve-lwIo"
 });
-
+router.post('/item/determineWinner', itemController.determineWinner);
 router.get('/items', itemController.getItems);
 router.get('/item/:id', itemController.getItem);
 
@@ -28,7 +28,9 @@ router.post('/item/newImage', upload.single('myFile'), function(req, res) {
       eager: { crop: "crop", width: 320, height: 160 }
     });
  });
+
+router.post('/item/:id/bid', jwt({secret: process.env.secret}), itemController.bidItem);
 router.post('/items/create', jwt({secret: process.env.secret}), itemController.createItem);
-router.post('/item/:id/bid', itemController.bidItem);
+
 
 module.exports = router

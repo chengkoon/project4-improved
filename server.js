@@ -10,6 +10,7 @@ dotenv.config();
 const userRoutes = require('./routes/users');
 const sponsorRoutes = require('./routes/sponsors');
 const itemRoutes = require('./routes/items');
+// const Agenda = require('agenda');
 
 
 const app = express();
@@ -30,6 +31,17 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', (err) => {
   console.log('Database error: '+err);
 });
+
+// const agenda = new Agenda({db: {address: url}});
+//
+// agenda.define('hahaha', function(job, done) {
+//   console.log('agenda set up successfully');
+// });
+//
+// agenda.on('ready', function() {
+//   agenda.every('5 seconds', 'hahaha');
+//   agenda.start();
+// });
 
 // const users = require('./routes/users');
 // const sponsors = require('./routes/sponsors');

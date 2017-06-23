@@ -4,12 +4,12 @@ export default {
 
   isDev: true, // change to false before deployment/production
 
-  createItem (itemDetails, cb) {
+  createItem (itemDetails) {
     let ep = this.prepEndpoint('items/create')
     console.log('inside createItem at client side')
-    axios.post(ep, { itemDetails: itemDetails }, { headers: this.getAuthHeader() })
+    return axios.post(ep, { itemDetails: itemDetails }, { headers: this.getAuthHeader() })
     .then(res => {
-      console.log('res is...', res)
+      return res.data
     }).catch(err => {
       console.log('err is...', err)
     })
@@ -34,6 +34,17 @@ export default {
       return res.data.item
     }).catch(err => {
       console.log('getItemDetail err is...', err)
+    })
+  },
+
+  submitBid (itemId, bidAmount) {
+    let tempEp = 'item/' + itemId + '/bid'
+    let ep = this.prepEndpoint(tempEp)
+    return axios.post(ep, { bidAmount: bidAmount }, { headers: this.getAuthHeader() })
+    .then(res => {
+      return res.data
+    }).catch(err => {
+      console.log('submitBid err is...', err)
     })
   },
 
