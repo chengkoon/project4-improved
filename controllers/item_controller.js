@@ -1,22 +1,28 @@
 const Item = require('../models/item')
+const Sponsor = require('../models/sponsor')
 const Bid = require('../models/bid')
 const agenda = require('../agenda.js')
 
-agenda.define('determine winner', function(job, done) {
-  Item.findOneAndUpdate({
-    _id: job.attrs.data.itemId
-  }, {
-    imgURL: 'winner process structure is up'
-  }, (err, item) => {
-    if (err) throw err
-    else {
-      job.remove(function(err) {
-        if (!err) console.log('Successfully removed item-winner job from collection');
-      })
-      done();
-    }
+agenda.define('determine winner', function (job, done) {
+  // Item.findOneAndUpdate({
+  //   _id: job.attrs.data.itemId
+  // }, {
+  //   imgURL: 'winner process structure is up'
+  // }, (err, item) => {
+  //   if (err) throw err
+  //   else {
+  //     job.remove(function (err) {
+  //       if (!err) console.log('Successfully removed item-winner job from collection')
+  //     })
+  //     done()
+  //   }
+  // })
+  itemController.determineWinner(job.attrs.data.itemId)
+  job.remove(function (err) {
+    if (!err) console.log('Successfully removed item-winner job from collection')
   })
- });
+  done()
+})
 
 const itemController = {
 
@@ -46,31 +52,26 @@ const itemController = {
   },
 
   createItem: (req, res, next) => {
-    // if (!req.user.type !== 'Sponsor') return false;
-    req.body.itemDetails.sponsor = req.user.id; // sponsor's id
-    let newItem = new Item(req.body.itemDetails);
-    console.log('we are at createItem server side, newItem is...', newItem);
-    Item.addItem(newItem, (err, item) => {
-      if (err) {
-        res.json({success: false, msg: 'Failed to add item'})
-      } else {
-        let timeToExecJob = new Date(item.bidEndMS)
-        agenda.schedule(timeToExecJob, 'determine winner', { itemId: item._id })
-        agenda.start()
-        res.json({success: true})
-      }
-    })
+    req.body.itemDetails.sponsor = req.user.id // sponsor's id
+
+    Item.create(req.body.itemDetails).then(item => {
+      let timeToExecJob = new Date(item.bidEndMS)
+      agenda.schedule(timeToExecJob, 'determine winner', { itemId: item._id })
+      agenda.start()
+      return Sponsor.findOneAndUpdate({_id: req.user.id}, {$push: {itemsPosted: item._id}})
+    }).then(sponsor => res.json({success: true}))
+    .catch(err => res.json({success: false, msg: 'Failed to add item, reason - ', err}))
   },
 
   bidItem: (req, res, next) => {
-    console.log('we are at server side bidItem', req.user);
+    console.log('we are at server side bidItem', req.user)
     let newBid = new Bid({
       amount: req.body.bidAmount,
       item: req.params.id,
       bidder: req.user.id
     })
     Bid.addBid(newBid, (err, bid) => {
-      if (err) console.log('server - bid err is...', err);
+      if (err) console.log('server - bid err is...', err)
       else {
         Item.findOneAndUpdate({
           _id: req.params.id
@@ -78,22 +79,20 @@ const itemController = {
           $push: { bids: bid._id }
         }, (err, item) => {
           if (err) throw err
-          else console.log('we are done and item is...', item);
+          else console.log('we are done and item is...', item)
         })
       }
     })
   },
 
-  determineWinner: (req, res, next) => {
-    console.log('we are at determineWinner - server', req.body);
-    Item.findOne({_id: req.body.itemId})
+  determineWinner: (itemId) => {
+    Item.findOne({_id: itemId})
     .populate('bids', '_id amount')
-    .exec((err, items) => {
-      console.log('items.bids are...', items.bids);
-      console.log('typeof items.bids are...', typeof items.bids);
+    .exec()
+    .then(item => {
       let consolidatedBids = {} // object of bid amount paired with no. of occurrence
       // let arrayOfAllBidAmounts = []
-      for (let bid of items.bids) {
+      for (let bid of item.bids) {
         if (!consolidatedBids[bid.amount]) {
           consolidatedBids[bid.amount] = 1
           // arrayOfAllBidAmounts.push(bid.amount)
@@ -101,21 +100,36 @@ const itemController = {
           consolidatedBids[bid.amount]++
         }
       }
+
       // check for unique bid
       let arrayOfBidOccurrence = Object.values(consolidatedBids)
-      console.log('array is ', arrayOfBidOccurrence);
-      Array.min = function( array ){
-        return Math.min.apply( Math, array );
-      };
+      Array.min = function (array) {
+        return Math.min.apply(Math, array)
+      }
       let smallestOccurrence = Array.min(arrayOfBidOccurrence)
-
+      let winningBidAmount = ''
+      let currentHighestUniqueBid = 0
       // find out which bid amount occurred that number of time(s)
-      for (let bid in consolidatedBids) {
-        if (consolidatedBids[bid] === smallestOccurrence) {
-          
+      for (let bidAmount in consolidatedBids) {
+        if ((consolidatedBids[bidAmount] === smallestOccurrence) && (parseFloat(bidAmount) > currentHighestUniqueBid)) {
+          currentHighestUniqueBid = parseFloat(bidAmount)
+        }
+        winningBidAmount = currentHighestUniqueBid
+      }
+      let arrayOfWinners = [] // 'array' as there could be more than 1 potential winners
+      // if there is ZERO unique bid
+      for (let bid of item.bids) {
+        if (bid.amount === winningBidAmount) {
+          arrayOfWinners.push(bid)
         }
       }
-    })
+      if (arrayOfWinners.length === 1) {
+        item.winningBid = arrayOfWinners[0]
+      } else {
+        item.winningBid = arrayOfWinners[Math.floor(Math.random() * arrayOfWinners.length)]
+      }
+      item.save()
+    }).catch(err => err)
   }
 }
 

@@ -22,10 +22,6 @@ const ItemSchema = new mongoose.Schema({
 
 const Item = module.exports = mongoose.model('Item', ItemSchema)
 
-module.exports.addItem = function (newItem, callback) {
-  newItem.save(callback)
-}
-
 module.exports.getAllItems = function (condition, callback) {
-  Item.find(condition).limit(4).exec(callback);
+  Item.find(condition).limit(4).exec(callback)
 }
