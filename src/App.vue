@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <nav-bar :type='typeOfUser'></nav-bar>
-    <!-- <flash-message></flash-message> -->
+    <flash-message></flash-message>
     <signup-modal></signup-modal>
     <signin-modal></signin-modal>
     <post-item-modal></post-item-modal>

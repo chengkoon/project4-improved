@@ -69,8 +69,9 @@ export default {
           else if (this.userOrSponsor === 'Sponsor') EventBus.$emit('sponsor-signedInStatus', true)
 
           this.showThisModal = false
+          EventBus.$emit('flash', 'Signed in successfully!')
           if (this.$route.query.hasOwnProperty('redirect')) this.$router.push('/' + this.$route.query.redirect)
-          else this.$router.push('/#tikam')
+          else this.$router.push('/')
         }
       })
     }

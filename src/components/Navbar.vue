@@ -28,13 +28,13 @@
           </figure>
           Profile
         </a> -->
-        <a class="nav-item is-tab" @click="showSignupModal" v-show="!type">Sign up</a>
-        <a class="nav-item is-tab" @click="showSigninModal" v-show="!type">Sign in</a>
+        <a class="nav-item is-tab" @click="showSignupModal" v-show="userSignedIn === false && sponsorSignedIn === false">Sign up</a>
+        <a class="nav-item is-tab" @click="showSigninModal" v-show="userSignedIn === false && sponsorSignedIn === false">Sign in</a>
         <!-- when user is sign in -->
-        <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="type === 'User'">Dashboard</a></router-link>
+        <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn === true">Dashboard</a></router-link>
         <!-- <router-link to="/item/" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link> -->
-        <a class="nav-item is-tab" @click="showPostItemModal" v-show="type === 'Sponsor'">Post Item</a>
-        <a class="nav-item is-tab" @click="signoutUser" v-show="type">Sign out</a>
+        <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn === true">Post Item</a>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn === true || sponsorSignedIn === true">Sign out</a>
       </div>
     </div>
   </nav>
@@ -51,8 +51,8 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      userSignedIn: false,
       username: '',
+      userSignedIn: false,
       sponsorSignedIn: false,
       fixedBar: false,
       isactive: {
@@ -74,6 +74,7 @@ export default {
       this.userSignedIn = false
       this.sponsorSignedIn = false
       EventBus.$emit('clear-form-data')
+      EventBus.$emit('flash', 'Signed out successfully!')
       this.$router.push('/signout')
     },
     handleScroll () {
