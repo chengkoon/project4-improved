@@ -9,9 +9,17 @@
           </span>
         </p>
       </div>
+      <div class="field column is-2">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" v-model="hasEnded">
+            has ended
+          </label>
+        </div>
+      </div>
     </div>
     <div class="columns is-10">
-      <div class="card column is-one-quarter" v-for="item in filteredList">
+      <div class="card column is-one-quarter" v-for="(item, index) in filteredList" v-if="(index < currentPage * 4) && (index >= (currentPage - 1) * 4)">
         <div class="card-image">
           <figure class="image is-4by3">
             <img :src="item.imgURL" alt="Image">
@@ -28,7 +36,6 @@
               <!-- <a :href="item.productURL"><p class="title is-4">{{item.name}}</p></a> -->
               <a :href="item.productURL"><p class="title is-4"><span v-html="highlight(item.name)"></span></p></a>
               <p class="subtitle is-6">@johnsmith</p>
-              <!-- <span v-html="rawHTML"></span> -->
             </div>
           </div>
 
@@ -53,6 +60,16 @@
         </footer>
       </div>
     </div>
+
+    <div class="pagination" v-if="filteredList.length > 4">
+      <a class="pagination-previous" @click="goToPage('prev')">Previous</a>
+      <a class="pagination-next" @click="goToPage('next')">Next page</a>
+      <ul class="pagination-list">
+        <li v-for="n in numberOfPages">
+          <a class="pagination-link" :class="{'is-current': checkIfCurrentPage(n)}" @click="goToPage(n)">{{n}}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -73,30 +90,23 @@ export default {
       user: 'hehe',
       searchTerm: '',
       items: [],
-      rawHTML: '<span class=\'highlight\'>hahaha</span>',
-      test: 'hahahehe'
+      test: 'hahahehe',
+      hasEnded: false,
+      currentPage: 1
     }
   },
   computed: {
     filteredList () {
+      this.currentPage = 1 // w/o this, there will be a bug when the user searches while currentPage === 2 or greater
       return this.items.filter((item) => {
-        return item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)
+        if (this.hasEnded) return (item.hasOwnProperty('winningBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
+        else if (!this.hasEnded) return item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)
       })
+    },
+    numberOfPages () {
+      return (((this.filteredList.length / 4) | 0) + 1)
     }
   },
-  // filters: {
-  //   highlight (value) {
-  //     // if (!value) return ''
-  //     // // value = value.toString()
-  //     // console.log('capitalize value is...', typeof value)
-  //     // // return value.charAt(0).toUpperCase() + value.slice(1)
-  //     // return ('<span class=\'highlight\'>' + value + '</span>')
-  //     var iQuery = new RegExp(this.searchTerm, 'ig')
-  //     return value.toString().replace(iQuery, matchedTxt => {
-  //       return ('<span class=\'highlight\'>' + matchedTxt + '</span>')
-  //     })
-  //   }
-  // },
   methods: {
     showItemDetails (itemId) {
       EventBus.$emit('item-details-modal', itemId)
@@ -110,6 +120,19 @@ export default {
       }
       console.log('text is now ', text)
       return `<span>${text}</span>`
+    },
+    goToPage (pageNumber) {
+      if (pageNumber === 'next') {
+        this.currentPage++
+      } else if (pageNumber === 'prev') {
+        this.currentPage--
+      } else {
+        this.currentPage = pageNumber
+      }
+    },
+    checkIfCurrentPage (thisPage) {
+      if (thisPage === this.currentPage) return true
+      else return false
     },
     determineWinner (itemId) {
       console.log('DW client')

@@ -23,5 +23,5 @@ const ItemSchema = new mongoose.Schema({
 const Item = module.exports = mongoose.model('Item', ItemSchema)
 
 module.exports.getAllItems = function (condition, callback) {
-  Item.find(condition).limit(4).exec(callback)
+  Item.find(condition).exec(callback)
 }
