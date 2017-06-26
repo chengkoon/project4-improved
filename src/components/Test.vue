@@ -1,15 +1,16 @@
 <template>
-  <div class="signin-modal modal" :class="{ 'is-active': showThisModal }">
+  <div class="test-modal modal is-active">
     <div class="modal-background" @click="showThisModal = false"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Sign in as {{userOrSponsor}}</p>
-        <button class="delete" @click="closeThisModal"></button>
+        <p class="modal-card-title">Sign in</p>
       </header>
-      <form id="signinForm">
+      <button type="button" name="button" @click="makeFocus">make focus</button>
+      <form id="userSigninForm">
         <section class="modal-card-body">
           <div class="field">
             <label class="label">Username</label>
+            <button class="delete" @click="closeThisModal"></button>
             <p class="control has-icons-left has-icons-right">
               <input type="text" ref="usernameInput" class="input is-success" v-model="signinCredentials.username">
               <span class="icon is-small is-left">
@@ -44,19 +45,21 @@
 
 <script>
 
-import auth from '../../auth'
-import { EventBus } from '../../event-bus.js'
+import auth from '../auth'
+import { EventBus } from '../event-bus.js'
 
 export default {
-  name: 'signup-modal',
+  name: 'test-modal',
   data () {
     return {
       signinCredentials: {
         username: '',
         password: ''
       },
-      showThisModal: false,
-      userOrSponsor: ''
+      showThisModal: true,
+      userOrSponsor: '',
+      showAutofocus: false,
+      userSigninForm: false
     }
   },
   methods: {
@@ -80,6 +83,9 @@ export default {
     closeThisModal () {
       this.showThisModal = false
       this.$router.push('/')
+    },
+    makeFocus () {
+      this.$refs.usernameInput.focus()
     }
   },
   created () {
@@ -96,6 +102,12 @@ export default {
       this.signinCredentials.password = ''
     })
   },
+  destroyed () {
+    console.log('destroyed')
+  },
+  beforeMounted () {
+    this.showAutofocus = true
+  },
   mounted () {
     console.log('mounted')
     this.$refs.usernameInput.focus()
@@ -105,6 +117,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.test {
+  position: fixed;
+}
+.big-box {
+  height: 500px;
+  border: 2px solid black;
+}
 h1, h2 {
   font-weight: normal;
 }

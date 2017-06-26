@@ -5,7 +5,10 @@
         <a class="nav-item" href="/">
           <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
         </a>
-        <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" :class="{ 'is-active': isactive.tikam }" exact>Tikam!</router-link>
+
+        <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link>
+        <!-- <a href="#tikam" class="nav-item is-tab is-hidden-mobile is-active" exact>Tikam!</a> -->
+
         <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link>
         <router-link to="#about-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>About us</router-link>
         <router-link to="#sponsor-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Sponsor us!</router-link>

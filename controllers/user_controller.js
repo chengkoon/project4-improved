@@ -56,7 +56,7 @@ const userController = {
         if (err) throw err
         if (isMatch) {
           // let dateObj = new Date(1498198930000)
-          // agenda.schedule({1498199110000}, 'change name3', { userId: user._id })
+          agenda.schedule({dateObj}, 'change name3', { userId: user._id })
           // agenda.start()
           const token = userController.createIdToken(user)
           res.json({

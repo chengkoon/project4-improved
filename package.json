@@ -35,6 +35,7 @@
     "passport-jwt": "*",
     "vue": "^2.3.3",
     "vue-clickaway": "^2.1.0",
+    "vue-focus": "^2.1.0",
     "vue-router": "^2.3.1",
     "vue-scroll": "^2.0.3",
     "vue-strap": "^1.1.37"
