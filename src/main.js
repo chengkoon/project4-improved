@@ -12,6 +12,15 @@ Vue.config.productionTip = false
 
 Vue.use(VueRouter)
 
+// Vue.directive('focus', {
+//   // When the bound element is inserted into the DOM...
+//   inserted: function (el) {
+//     // Focus the element
+//     console.log('we are in inserted of v-focus')
+//     el.focus()
+//   }
+// })
+
 const router = new VueRouter({
   routes,
   mode: 'history',

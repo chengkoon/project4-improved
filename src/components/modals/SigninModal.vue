@@ -4,13 +4,13 @@
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Sign in as {{userOrSponsor}}</p>
-        <button class="delete" @click="showThisModal = false"></button>
+        <button class="delete" @click="closeThisModal"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
           <label class="label">Username</label>
           <p class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" autofocus="autofocus" v-model="signinCredentials.username">
+            <input class="input is-success" type="text" v-model="signinCredentials.username">
             <span class="icon is-small is-left">
               <i class="fa fa-user"></i>
             </span>
@@ -54,7 +54,8 @@ export default {
         password: ''
       },
       showThisModal: false,
-      userOrSponsor: ''
+      userOrSponsor: '',
+      showAutofocus: false
     }
   },
   methods: {
@@ -74,6 +75,10 @@ export default {
           else this.$router.push('/')
         }
       })
+    },
+    closeThisModal () {
+      this.showThisModal = false
+      this.$router.push('/')
     }
   },
   created () {
@@ -89,6 +94,10 @@ export default {
       this.signinCredentials.username = ''
       this.signinCredentials.password = ''
     })
+  },
+  beforeUpdate () {
+    console.log('updated')
+    this.showAutofocus = false
   }
 }
 </script>
