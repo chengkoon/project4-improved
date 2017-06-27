@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     about page2
-    parsedToken is {{ parsedToken }}
+    <router-view></router-view>
   </div>
 </template>
 

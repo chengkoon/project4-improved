@@ -18,8 +18,8 @@ export default {
   registerNewUser (signupCredentials, type, cb) {
     let vm = this
     let ep
-    if (type === 'User') ep = this.prepEndpoint('user/register')
-    else if (type === 'Sponsor') ep = this.prepEndpoint('sponsor/register')
+    if (type === 'user') ep = this.prepEndpoint('user/register')
+    else if (type === 'sponsor') ep = this.prepEndpoint('sponsor/register')
     console.log('ep is...', ep)
     axios.post(ep, { signupCredentials })
     .then(function (response, err) {
@@ -37,17 +37,19 @@ export default {
   signinUser (signinCredentials, type, cb) {
     let vm = this
     let ep
-    if (type === 'User') ep = this.prepEndpoint('user/authenticate')
-    else if (type === 'Sponsor') ep = this.prepEndpoint('sponsor/authenticate')
+    if (type === 'user') ep = this.prepEndpoint('user/authenticate')
+    else if (type === 'sponsor') ep = this.prepEndpoint('sponsor/authenticate')
     axios.post(ep, { signinCredentials })
     .then(function (response, err) {
       if (response.data.success) {
         window.localStorage.setItem('id_token', response.data.id_token)
-        vm.user.authenticated = true
-        if (type === 'User') {
+        // vm.user.authenticated = true
+        if (type === 'user') {
+          window.localStorage.setItem('user', true)
           vm.user.authenticated = true
           vm.user.username = response.data.username
-        } else if (type === 'Sponsor') {
+        } else if (type === 'sponsor') {
+          window.localStorage.setItem('sponsor', true)
           vm.sponsor.authenticated = true
           vm.sponsor.username = response.data.username
         }
@@ -63,11 +65,18 @@ export default {
   loggedIn () {
     return !!window.localStorage.getItem('id_token')
   },
+  isUserSignedIn () {
+    return !!window.localStorage.getItem('id_token') && !!window.localStorage.getItem('user')
+  },
+  isSponsorSignedIn () {
+    return !!window.localStorage.getItem('id_token') && !!window.localStorage.getItem('sponsor')
+  },
 
   signoutUser () {
     window.localStorage.removeItem('id_token')
+    window.localStorage.removeItem('user')
+    window.localStorage.removeItem('sponsor')
     this.user.authenticated = false
-    // this.$router.push('/user/login')
   },
 
   isLoggedIn () {

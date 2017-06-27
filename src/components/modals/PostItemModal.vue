@@ -1,5 +1,5 @@
 <template>
-  <div id="modal" class="modal" :class="{ 'is-active': showThisModal }">
+  <div class="post-item-modal modal is-active">
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">

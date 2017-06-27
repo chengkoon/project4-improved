@@ -2,10 +2,11 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <nav-bar :type='typeOfUser'></nav-bar>
+    <router-view></router-view>
     <flash-message></flash-message>
-    <signup-modal></signup-modal>
-    <signin-modal></signin-modal>
-    <post-item-modal></post-item-modal>
+    <!-- <signup-modal></signup-modal> -->
+    <!-- <signin-modal></signin-modal> -->
+    <!-- <post-item-modal></post-item-modal> -->
     <item-details-modal></item-details-modal>
     <!-- <router-view></router-view> -->
 
@@ -25,9 +26,9 @@ import HowItWorks from './components/HowItWorks.vue'
 import AboutUs from './components/AboutUs.vue'
 import SponsorUs from './components/SponsorUs.vue'
 import flashmessage from './components/flashmessage.vue'
-import SignupModal from './components/modals/SignupModal.vue'
-import SigninModal from './components/modals/SigninModal.vue'
-import PostItemModal from './components/modals/PostItemModal.vue'
+// import SignupModal from './components/modals/SignupModal.vue'
+// import SigninModal from './components/modals/SigninModal.vue'
+// import PostItemModal from './components/modals/PostItemModal.vue'
 import ItemDetailsModal from './components/modals/ItemDetailsModal.vue'
 
 export default {
@@ -35,9 +36,9 @@ export default {
   components: {
     'nav-bar': Navbar,
     'flash-message': flashmessage,
-    'signup-modal': SignupModal,
-    'signin-modal': SigninModal,
-    'post-item-modal': PostItemModal,
+    // 'signup-modal': SignupModal,
+    // 'signin-modal': SigninModal,
+    // 'post-item-modal': PostItemModal,
     'item-details-modal': ItemDetailsModal,
     'tikam': Tikam,
     'how-it-works': HowItWorks,

@@ -31,13 +31,12 @@
           </figure>
           Profile
         </a> -->
-        <a class="nav-item is-tab" @click="showSignupModal" v-show="userSignedIn === false && sponsorSignedIn === false">Sign up</a>
-        <a class="nav-item is-tab" @click="showSigninModal" v-show="userSignedIn === false && sponsorSignedIn === false">Sign in</a>
+        <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign up</router-link>
+        <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign in</router-link>
         <!-- when user is sign in -->
         <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn === true">Dashboard</a></router-link>
-        <!-- <router-link to="/item/" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn">Dashboard</a></router-link> -->
-        <a class="nav-item is-tab" @click="showPostItemModal" v-show="sponsorSignedIn === true">Post Item</a>
-        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn === true || sponsorSignedIn === true">Sign out</a>
+        <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="sponsorSignedIn" exact>Post Item</router-link>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
       </div>
     </div>
   </nav>
@@ -64,6 +63,10 @@ export default {
     }
   },
   methods: {
+    checkSponsorAuth () {
+      if (!auth.sponsor.authenticated) return false
+      else return true
+    },
     showSignupModal () {
       EventBus.$emit('signup-modal', true)
     },
@@ -90,13 +93,9 @@ export default {
     }
   },
   created () {
-    // if (auth.user.authenticated) {
-    //   this.userSignedIn = true
-    //   this.username = auth.user.username
-    // } else if (auth.sponsor.authenticated) {
-    //   this.sponsorSignedIn = true
-    //   this.username = auth.sponsor.username
-    // }
+    console.log('navbar is reloaded')
+    this.userSignedIn = auth.isUserSignedIn()
+    this.sponsorSignedIn = auth.isSponsorSignedIn()
     EventBus.$on('user-signedInStatus', (status) => {
       this.userSignedIn = true
       this.username = auth.user.username
@@ -108,6 +107,7 @@ export default {
     })
     window.addEventListener('scroll', this.handleScroll)
     console.log('navbar has been created and this.userSignedIn is ', this.userSignedIn)
+    console.log('auth.sponsor.authenticated is ', auth.sponsor.authenticated)
   },
   destroyed () {
     window.removeEventListener('scroll', this.handleScroll)

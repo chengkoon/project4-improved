@@ -1,10 +1,10 @@
 <template>
-  <div class="signin-modal modal" :class="{ 'is-active': showThisModal }">
-    <div class="modal-background" @click="showThisModal = false"></div>
+  <div class="signin-modal modal is-active">
+    <div class="modal-background" @click="closeThisModal"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Sign in as {{userOrSponsor}}</p>
-        <button class="delete" @click="closeThisModal"></button>
+        <p class="modal-card-title">Sign in <span v-if="type === 'sponsor'">as a sponsor</span></p>
+        <!-- <button class="delete" @click="closeThisModal"></button> -->
       </header>
       <form id="signinForm">
         <section class="modal-card-body">
@@ -19,7 +19,6 @@
                 <i class="fa fa-check"></i>
               </span>
             </p>
-            <p class="help is-success">This username is available</p>
           </div>
           <div class="field">
             <label class="label">Password</label>
@@ -33,9 +32,15 @@
               </span>
             </p>
           </div>
+          <div class="field">
+            <a class="button is-success is-small" @click="signinUser">Sign in</a>
+            <a class="button is-small" @click="closeThisModal">Cancel</a>
+          </div>
         </section>
         <footer class="modal-card-foot">
-          <a class="button is-success" @click="signinUser">Sign in</a>
+          <a @click="switchTo('signup')">sign up</a>&nbsp;|&nbsp;
+          <a @click="switchTo('signin', true)" v-if="type === 'user'">sponsor mode</a>
+          <a @click="switchTo('signin', true)" v-if="type === 'sponsor'">user mode</a>
         </footer>
       </form>
     </div>
@@ -49,6 +54,7 @@ import { EventBus } from '../../event-bus.js'
 
 export default {
   name: 'signup-modal',
+  props: ['type'],
   data () {
     return {
       signinCredentials: {
@@ -62,17 +68,17 @@ export default {
   methods: {
     signinUser () {
       event.preventDefault()
-      auth.signinUser(this.signinCredentials, this.userOrSponsor, loggedIn => {
+      auth.signinUser(this.signinCredentials, this.type, loggedIn => {
+        console.log('we are in client side signinUser')
         if (!loggedIn) {
           // trigger shake animation instead of below
-          this.$router.push('/user/login')
+          this.$router.push('/signin?t=user')
         } else {
-          if (this.userOrSponsor === 'User') EventBus.$emit('user-signedInStatus', true)
-          else if (this.userOrSponsor === 'Sponsor') EventBus.$emit('sponsor-signedInStatus', true)
-
+          if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
+          else if (this.type === 'sponsor') EventBus.$emit('sponsor-signedInStatus', true)
           this.showThisModal = false
           EventBus.$emit('flash', 'Signed in successfully!')
-          if (this.$route.query.hasOwnProperty('redirect')) this.$router.push('/' + this.$route.query.redirect)
+          if (this.$route.query.hasOwnProperty('redirect')) this.$router.push(`/${this.$route.query.redirect}`)
           else this.$router.push('/')
         }
       })
@@ -80,6 +86,13 @@ export default {
     closeThisModal () {
       this.showThisModal = false
       this.$router.push('/')
+    },
+    switchTo (route, switchMode) {
+      this.showThisModal = false
+      let switchType
+      if (switchMode) this.type === 'user' ? switchType = 'sponsor' : switchType = 'user'
+      else this.type === 'user' ? switchType = 'user' : switchType = 'sponsor'
+      this.$router.push({path: `/${route}`, query: { t: switchType }})
     }
   },
   created () {
@@ -97,7 +110,6 @@ export default {
     })
   },
   mounted () {
-    console.log('mounted')
     this.$refs.usernameInput.focus()
   }
 }
@@ -105,6 +117,42 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.modal {
+  text-align: left;
+}
+.modal-card {
+  width: 400px;
+}
+.modal-card-head {
+  background-color: inherit;
+  border-color: inherit;
+  text-align: left;
+  padding: 0;
+  padding-bottom: 8px;
+}
+.modal-card-title {
+  color: white;
+}
+.modal-card-body {
+  border-radius: 4px;
+}
+form {
+  background-color: rbga(0,0,0,0);
+}
+.button.is-small {
+  font-size: 14px;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-bottom: 2px;
+}
+footer {
+  background-color: inherit;
+  border-color: rgba(0,0,0,0);
+  color: white;
+  padding-top: 0;
+  justify-content: center;
+}
+
 h1, h2 {
   font-weight: normal;
 }

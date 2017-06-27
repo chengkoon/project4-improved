@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
-import Tikam from '@/components/Tikam'
+// import Tikam from '@/components/Tikam'
 import About from '@/components/About'
+import SigninModal from '@/components/modals/SigninModal.vue'
+import SignupModal from '@/components/modals/SignupModal.vue'
+import PostItemModal from '@/components/modals/PostItemModal.vue'
 // import User from '@/components/User'
 // import Register from '@/components/Register'
 // import Login from '@/components/Login'
@@ -21,8 +24,7 @@ Vue.use(VueRouter)
 export const routes = [
   {
     path: '/',
-    name: 'tikam',
-    component: Tikam
+    name: '/'
   },
   {
     path: '/home',
@@ -31,17 +33,46 @@ export const routes = [
     meta: { requiresUserAuth: true }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: About
+    path: '/signup',
+    name: 'signup',
+    component: SignupModal,
+    props: (route) => ({ type: route.query.t })
   },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: SigninModal,
+    props: (route) => ({ type: route.query.t })
+  },
+  // {
+  //   path: '/about',
+  //   name: 'about',
+  //   component: About
+  // },
   {
     path: '/signout',
     beforeEnter (to, from, next) {
       auth.signoutUser()
       next('/')
     }
+  },
+  {
+    path: '/item',
+    name: 'item',
+    component: About,
+    children: [
+      {
+        path: 'new',
+        name: 'new-item',
+        component: PostItemModal
+      }
+    ]
   }
+  // {
+  //   path: '/item',
+  //   name: 'item',
+  //   component: PostItemModal
+  // }
   // {
   //   path: '/sponsor',
   //   name: 'sponsor',
