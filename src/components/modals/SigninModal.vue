@@ -61,7 +61,7 @@ export default {
         username: '',
         password: ''
       },
-      showThisModal: false,
+      // showThisModal: false,
       userOrSponsor: ''
     }
   },
@@ -76,7 +76,7 @@ export default {
         } else {
           if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
           else if (this.type === 'sponsor') EventBus.$emit('sponsor-signedInStatus', true)
-          this.showThisModal = false
+          // this.showThisModal = false
           EventBus.$emit('flash', 'Signed in successfully!')
           if (this.$route.query.hasOwnProperty('redirect')) this.$router.push(`/${this.$route.query.redirect}`)
           else this.$router.push('/')
@@ -84,11 +84,10 @@ export default {
       })
     },
     closeThisModal () {
-      this.showThisModal = false
       this.$router.push('/')
     },
     switchTo (route, switchMode) {
-      this.showThisModal = false
+      // this.showThisModal = false
       let switchType
       if (switchMode) this.type === 'user' ? switchType = 'sponsor' : switchType = 'user'
       else this.type === 'user' ? switchType = 'user' : switchType = 'sponsor'
@@ -96,14 +95,14 @@ export default {
     }
   },
   created () {
-    EventBus.$on('signin-modal', (status) => {
-      this.userOrSponsor = 'User'
-      this.showThisModal = status
-    })
-    EventBus.$on('sponsor-signin-modal', (status) => {
-      this.userOrSponsor = 'Sponsor'
-      this.showThisModal = status
-    })
+    // EventBus.$on('signin-modal', (status) => {
+    //   this.userOrSponsor = 'User'
+    //   this.showThisModal = status
+    // })
+    // EventBus.$on('sponsor-signin-modal', (status) => {
+    //   this.userOrSponsor = 'Sponsor'
+    //   this.showThisModal = status
+    // })
     EventBus.$on('clear-form-data', () => {
       this.signinCredentials.username = ''
       this.signinCredentials.password = ''

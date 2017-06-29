@@ -6,6 +6,7 @@ import About from '@/components/About'
 import SigninModal from '@/components/modals/SigninModal.vue'
 import SignupModal from '@/components/modals/SignupModal.vue'
 import PostItemModal from '@/components/modals/PostItemModal.vue'
+import ItemDetailsModal from '@/components/modals/ItemDetailsModal.vue'
 // import User from '@/components/User'
 // import Register from '@/components/Register'
 // import Login from '@/components/Login'
@@ -65,6 +66,11 @@ export const routes = [
         path: 'new',
         name: 'new-item',
         component: PostItemModal
+      },
+      {
+        path: ':id',
+        name: 'item-details',
+        component: ItemDetailsModal
       }
     ]
   }

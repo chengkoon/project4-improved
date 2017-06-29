@@ -138,7 +138,8 @@
                 </div>
                 <div class="level-right" v-if="!item.winningBid">
                   <div class="level-item" data-balloon='Click to bid!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                    <i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text"></span>
+                    <!-- <a :href="itemDetailsLink(item._id)"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></a> -->
+                    <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></router-link>
                     <i class="fa fa-commenting-o" v-if="item.userHovered"></i>
                   </div>
                 </div>
@@ -243,6 +244,9 @@ export default {
     },
     changeUserIconColor (item, v) {
       item.userHovered = v
+    },
+    itemDetailsLink (itemId) {
+      return `item/${itemId}`
     }
   },
   created () {
@@ -255,7 +259,10 @@ export default {
       }
       this.items = items
     })
-    console.log('tikam is created')
+    console.log('this is created')
+  },
+  mounted () {
+    console.log('this is mounted')
   }
 }
 </script>

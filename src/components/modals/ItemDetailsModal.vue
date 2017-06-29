@@ -1,10 +1,10 @@
 <template>
-  <div class="modal item-details-modal" :class="{ 'is-active': showThisModal }">
-    <div class="modal-background"></div>
+  <div class="modal item-details-modal is-active">
+    <div class="modal-background" @click="closeThisModal"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Product: {{item.name}}</p>
-        <button class="delete" @click="showThisModal=!showThisModal"></button>
+        <button class="delete" @click="closeThisModal"></button>
       </header>
       <section class="modal-card-body">
         <div class="content">
@@ -74,14 +74,14 @@
 
 <script>
 
-import { EventBus } from '../../event-bus.js'
+// import { EventBus } from '../../event-bus.js'
 import services from '../../services'
 
 export default {
   name: 'item-details-modal',
   data () {
     return {
-      showThisModal: false,
+      // showThisModal: false,
       item: {},
       bidAmount: ''
     }
@@ -107,16 +107,19 @@ export default {
   methods: {
     submitBid (itemId) {
       services.submitBid(itemId, this.bidAmount)
+    },
+    closeThisModal () {
+      this.$router.push('/')
     }
   },
   created () {
-    EventBus.$on('item-details-modal', (itemId) => {
-      this.showThisModal = true
-      services.getItemDetail(itemId).then(item => {
-        this.item = item
-        console.log('this.item is ...', this.item)
-      })
-    })
+    // EventBus.$on('item-details-modal', (itemId) => {
+    //   this.showThisModal = true
+    //   services.getItemDetail(itemId).then(item => {
+    //     this.item = item
+    //     console.log('this.item is ...', this.item)
+    //   })
+    // })
   }
 }
 </script>

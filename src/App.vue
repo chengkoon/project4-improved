@@ -7,7 +7,7 @@
     <!-- <signup-modal></signup-modal> -->
     <!-- <signin-modal></signin-modal> -->
     <!-- <post-item-modal></post-item-modal> -->
-    <item-details-modal></item-details-modal>
+    <!-- <item-details-modal></item-details-modal> -->
     <!-- <router-view></router-view> -->
 
     <tikam id="tikam"></tikam>
@@ -29,7 +29,7 @@ import flashmessage from './components/flashmessage.vue'
 // import SignupModal from './components/modals/SignupModal.vue'
 // import SigninModal from './components/modals/SigninModal.vue'
 // import PostItemModal from './components/modals/PostItemModal.vue'
-import ItemDetailsModal from './components/modals/ItemDetailsModal.vue'
+// import ItemDetailsModal from './components/modals/ItemDetailsModal.vue'
 
 export default {
   name: 'app',
@@ -39,7 +39,7 @@ export default {
     // 'signup-modal': SignupModal,
     // 'signin-modal': SigninModal,
     // 'post-item-modal': PostItemModal,
-    'item-details-modal': ItemDetailsModal,
+    // 'item-details-modal': ItemDetailsModal,
     'tikam': Tikam,
     'how-it-works': HowItWorks,
     'about-us': AboutUs,

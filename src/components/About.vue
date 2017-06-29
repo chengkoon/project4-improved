@@ -14,13 +14,13 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       parsedToken: ''
     }
-  },
-  beforeMount () {
-    let token = localStorage.getItem('id_token')
-    var base64Url = token.split('.')[1]
-    var base64 = base64Url.replace('-', '+').replace('_', '/')
-    this.parsedToken = JSON.parse(window.atob(base64))
   }
+  // beforeMount () {
+  //   let token = localStorage.getItem('id_token')
+  //   var base64Url = token.split('.')[1]
+  //   var base64 = base64Url.replace('-', '+').replace('_', '/')
+  //   this.parsedToken = JSON.parse(window.atob(base64))
+  // }
 }
 </script>
 

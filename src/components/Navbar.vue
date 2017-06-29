@@ -67,15 +67,15 @@ export default {
       if (!auth.sponsor.authenticated) return false
       else return true
     },
-    showSignupModal () {
-      EventBus.$emit('signup-modal', true)
-    },
-    showSigninModal () {
-      EventBus.$emit('signin-modal', true)
-    },
-    showPostItemModal () {
-      EventBus.$emit('post-item-modal', true)
-    },
+    // showSignupModal () {
+    //   EventBus.$emit('signup-modal', true)
+    // },
+    // showSigninModal () {
+    //   EventBus.$emit('signin-modal', true)
+    // },
+    // showPostItemModal () {
+    //   EventBus.$emit('post-item-modal', true)
+    // },
     signoutUser () {
       this.userSignedIn = false
       this.sponsorSignedIn = false

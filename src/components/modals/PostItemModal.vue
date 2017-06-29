@@ -1,10 +1,10 @@
 <template>
   <div class="post-item-modal modal is-active">
-  <div class="modal-background"></div>
+  <div class="modal-background" @click="closeThisModal"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Post Item</p>
-      <button class="delete" @click="showThisModal = false"></button>
+      <button class="delete" @click="closeThisModal"></button>
     </header>
     <section class="modal-card-body">
       <div class="content">
@@ -128,7 +128,7 @@
     </section>
     <footer class="modal-card-foot">
       <a class="button is-success" @click="submitItem">Put item up for bidding!</a>
-      <a class="button">Cancel</a>
+      <a class="button" @click="closeThisModal">Cancel</a>
     </footer>
   </div>
 </div>
@@ -136,7 +136,7 @@
 
 <script>
 
-import { EventBus } from '../../event-bus.js'
+// import { EventBus } from '../../event-bus.js'
 import services from '../../services'
 import axios from 'axios'
 import moment from 'moment'
@@ -164,7 +164,7 @@ export default {
         bidEndMS: '',
         receipientCharity: ''
       },
-      showThisModal: false,
+      // showThisModal: false,
       uploadError: null,
       currentStatus: null,
       uploadFieldName: 'photos',
@@ -249,21 +249,25 @@ export default {
       services.createItem(this.itemDetails)
       .then(res => {
         if (res.success) {
-          this.showThisModal = false
-          this.$router.push('/#tikam')
+          // this.showThisModal = false
+          this.$router.push('/')
         } else {
           console.log('client - error message is ', res.msg)
         }
       })
+    },
+    closeThisModal () {
+      // this.showThisModal = false
+      this.$router.push('/')
     }
   },
   mounted () {
     this.reset()
   },
   created () {
-    EventBus.$on('post-item-modal', (status) => {
-      this.showThisModal = status
-    })
+    // EventBus.$on('post-item-modal', (status) => {
+    //   this.showThisModal = status
+    // })
     // generate an array of 31 dates
     for (let i = 0; i < 31; i++) {
       this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))
