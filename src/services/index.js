@@ -27,7 +27,7 @@ export default {
     })
   },
 
-  getItemDetail (itemId) {
+  getItem (itemId) {
     let ep = this.prepEndpoint('item/' + itemId)
     return axios.get(ep)
     .then(res => {

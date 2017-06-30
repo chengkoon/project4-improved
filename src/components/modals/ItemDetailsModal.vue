@@ -113,13 +113,12 @@ export default {
     }
   },
   created () {
-    // EventBus.$on('item-details-modal', (itemId) => {
-    //   this.showThisModal = true
-    //   services.getItemDetail(itemId).then(item => {
-    //     this.item = item
-    //     console.log('this.item is ...', this.item)
-    //   })
-    // })
+    services.getItem(this.$route.params.id)
+    .then(item => {
+      console.log('returned item is ', item)
+    }).catch(err => {
+      console.log('caughted error from services.getItem is ', err)
+    })
   }
 }
 </script>
