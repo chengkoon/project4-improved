@@ -1,5 +1,5 @@
 <template>
-  <div class="signin-modal modal is-active">
+  <div class="signin-modal modal is-active" tabindex="0" @keyup.esc="closeThisModal">
     <div class="modal-background" @click="closeThisModal"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -23,7 +23,7 @@
           <div class="field">
             <label class="label">Password</label>
             <p class="control has-icons-left has-icons-right">
-              <input class="input is-success" type="password" v-model="signinCredentials.password">
+              <input class="input is-success" type="password" v-model="signinCredentials.password" @keyup.esc="signinUser">
               <span class="icon is-small is-left">
                 <i class="fa fa-key"></i>
               </span>
@@ -33,8 +33,8 @@
             </p>
           </div>
           <div class="field">
-            <a class="button is-success is-small" @click="signinUser">Sign in</a>
-            <a class="button is-small" @click="closeThisModal">Cancel</a>
+            <button type="button" class="button is-success is-small" @click="signinUser">Sign in</button>
+            <button type="button" class="button is-small" @click="closeThisModal">Cancel</button>
           </div>
         </section>
         <footer class="modal-card-foot">
@@ -92,6 +92,9 @@ export default {
       if (switchMode) this.type === 'user' ? switchType = 'sponsor' : switchType = 'user'
       else this.type === 'user' ? switchType = 'user' : switchType = 'sponsor'
       this.$router.push({path: `/${route}`, query: { t: switchType }})
+    },
+    test12 () {
+      console.log('test 12')
     }
   },
   created () {

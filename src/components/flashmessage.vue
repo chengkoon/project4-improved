@@ -4,8 +4,8 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" @click="show = !show">&times;</span></button>
     <span class="message"><strong>Hey!</strong> User is {{ message }}</span>
   </div> -->
-  <transition :name="flashTransition" :duration="{ enter: 500, leave: 800 }">
-    <div class="notification is-primary" v-if="show" @mouseover="resetTimer">
+  <transition :name="flashTransition">
+    <div class="notification is-primary" :class="{'closeThisMsg': buttonClicked}" v-if="show" @mouseover="resetTimer">
       <button class="delete" @click="closeFlash"></button>
       {{message}}
     </div>
@@ -21,7 +21,6 @@ export default {
   // props: ['message'],
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       message: '',
       flashTransition: 'fade',
       show: false,
@@ -31,29 +30,34 @@ export default {
   },
   methods: {
     resetTimer () {
+      console.log('flash msg hovered over')
       if (!this.buttonClicked) {
         clearTimeout(this.flashTimer)
         this.flashTransition = 'snap'
         this.show = true
         this.flashTimer = setTimeout(() => {
+          this.buttonClicked = false
           this.show = false
         }, 3500)
       }
     },
     closeFlash () {
-      this.show = false
-      this.buttonClicked = true
+      console.log('hahahaha3')
+      this.buttonClicked = true // will trigger the display: none styling
+      clearTimeout(this.flashTimer)
+      this.flashTimer = setTimeout(() => {
+        this.buttonClicked = false
+        this.show = false
+      }, 100)
     }
   },
   created () {
-    EventBus.$on('user-status', message => {
-      this.message = message
-    })
     EventBus.$on('flash', message => {
       this.flashTransition = 'fade'
       this.show = true
       this.message = message
       this.flashTimer = setTimeout(() => {
+        this.buttonClicked = false
         this.show = false
       }, 3500)
     })
@@ -74,6 +78,10 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
+.closeThisMsg {
+  display: none;
+}
+
 .fade-enter {
   opacity: 0.2;
 }
@@ -81,29 +89,30 @@ export default {
   opacity: 0.9;
 }
 .fade-enter-active {
-  transition: opacity 2.5s ease;
+  transition: opacity 0.5s ease;
 }
 .fade-leave {
    opacity: 0.9;
 }
 .fade-leave-to {
-   opacity: 0.1;
+   opacity: 0;
 }
 .fade-leave-active {
   transition: opacity 3s ease;
 }
 
 .snap-enter {
-  opacity: 1;
+  opacity: 0.9;
 }
 .snap-enter-active {
   transition: opacity 0.1s;
 }
 .snap-leave {
-   opacity: 1;
+   opacity: 0.9;
 }
 .snap-leave-active {
-  transition: opacity 2s;
-  opacity: 0.1;
+  transition: opacity 3s ease;
+  opacity: 0;
 }
+
 </style>
