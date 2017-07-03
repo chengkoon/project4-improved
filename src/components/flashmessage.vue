@@ -5,7 +5,7 @@
     <span class="message"><strong>Hey!</strong> User is {{ message }}</span>
   </div> -->
   <transition :name="flashTransition">
-    <div class="notification is-primary" :class="{'closeThisMsg': buttonClicked}" v-if="show" @mouseover="resetTimer">
+    <div class="notification" :class="{'closeThisMsg': buttonClicked, 'is-primary': success, 'is-danger': failure}" v-if="show" @mouseover="resetTimer">
       <button class="delete" @click="closeFlash"></button>
       {{message}}
     </div>
@@ -25,7 +25,9 @@ export default {
       flashTransition: 'fade',
       show: false,
       flashTimer: '',
-      buttonClicked: false
+      buttonClicked: false,
+      success: false,
+      failure: false
     }
   },
   methods: {
@@ -53,6 +55,17 @@ export default {
   },
   created () {
     EventBus.$on('flash', message => {
+      this.success = true
+      this.flashTransition = 'fade'
+      this.show = true
+      this.message = message
+      this.flashTimer = setTimeout(() => {
+        this.buttonClicked = false
+        this.show = false
+      }, 3500)
+    })
+    EventBus.$on('flash-failure', message => {
+      this.failure = true
       this.flashTransition = 'fade'
       this.show = true
       this.message = message
@@ -68,7 +81,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .notification {
-  max-width: 50%;
+  max-width: 100%;
+  /*overflow: hidden;*/
+  white-space: nowrap;
   margin: 0 auto;
   text-align: left;
   position: fixed;

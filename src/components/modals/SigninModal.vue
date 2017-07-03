@@ -23,7 +23,7 @@
           <div class="field">
             <label class="label">Password</label>
             <p class="control has-icons-left has-icons-right">
-              <input class="input is-success" type="password" v-model="signinCredentials.password" @keyup.esc="signinUser">
+              <input class="input is-success" type="password" v-model="signinCredentials.password" @keyup.enter="signinUser">
               <span class="icon is-small is-left">
                 <i class="fa fa-key"></i>
               </span>
@@ -60,9 +60,7 @@ export default {
       signinCredentials: {
         username: '',
         password: ''
-      },
-      // showThisModal: false,
-      userOrSponsor: ''
+      }
     }
   },
   methods: {
@@ -98,21 +96,18 @@ export default {
     }
   },
   created () {
-    // EventBus.$on('signin-modal', (status) => {
-    //   this.userOrSponsor = 'User'
-    //   this.showThisModal = status
-    // })
-    // EventBus.$on('sponsor-signin-modal', (status) => {
-    //   this.userOrSponsor = 'Sponsor'
-    //   this.showThisModal = status
-    // })
     EventBus.$on('clear-form-data', () => {
       this.signinCredentials.username = ''
       this.signinCredentials.password = ''
     })
   },
   mounted () {
-    this.$refs.usernameInput.focus()
+    this.$refs.usernameInput.focus() // this also enables the keyup.esc to work right off the bat
+  },
+  watch: {
+    '$route.query': function () { // this is needed as mounted does not sense when user clicks to switch mode
+      this.$refs.usernameInput.focus()
+    }
   }
 }
 </script>

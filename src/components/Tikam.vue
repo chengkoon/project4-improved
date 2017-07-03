@@ -8,7 +8,7 @@
               <div class="columns">
                 <div class="level-item column is-half">
                   <p class="control has-icons-left">
-                    <input class="input" type="text" v-model="searchTerm" placeholder="Do an instant search here">
+                    <input class="input is-focused" type="text" v-model="searchTerm" placeholder="Do an instant search here">
                     <span class="icon is-small is-left">
                       <i class="fa fa-search"></i>
                     </span>
@@ -17,9 +17,11 @@
                 <div class="level-item column">
                   <p class="control">
                     <span class="select">
-                      <select>
-                        <option>Select dropdown</option>
-                        <option>With options</option>
+                      <select v-model="filter">
+                        <option value="allBids">Show all bids</option>
+                        <option value="pastBidsOnly">Show past bids only</option>
+                        <option value="ongoingBidsOnly">Show ongoing bids only</option>
+                        <option value="futureBidsOnly">Show future bids only</option>
                       </select>
                     </span>
                   </p>
@@ -107,26 +109,11 @@
                     <p class="subtitle is-6">@johnsmith</p>
                   </div>
                 </div>
-
                 <div class="content">
                   <span v-html="highlight(item.description)"></span>
                 </div>
               </div>
-              <!-- <footer class="card-footer">
-                <p class="card-footer-item column">
-                  <span>
-                    Donations
-                  </span>
-                </p>
-                <p class="card-footer-item">
-                  <span v-if="!item.winningBid">
-                    <a @click="showItemDetails(item._id)">Bid</a>
-                  </span>
-                  <span v-if="item.winningBid">
-                    <a @click="determineWinner(item._id)">Results!</a>
-                  </span>
-                </p>
-              </footer> -->
+
               <footer class="level">
                 <div class="level-left">
                   <div class="level-item" data-balloon='All bids will be donated to this charity' data-balloon-pos="down" @mouseover="changeHomeIconColor(item, true)" @mouseout="changeHomeIconColor(item, false)">
@@ -136,35 +123,28 @@
                     <i class="fa fa-dollar" :class="{ 'green': item.dollarHovered }"></i><span class="footer-text">112</span>
                   </div>
                 </div>
-                <div class="level-right" v-if="!item.winningBid">
+                <div class="level-right" v-if="item.status === 'ongoingBid'">
                   <div class="level-item" data-balloon='Click to bid!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
                     <!-- <a :href="itemDetailsLink(item._id)"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></a> -->
                     <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></router-link>
-                    <i class="fa fa-commenting-o" v-if="item.userHovered"></i>
+                    <!-- <i class="fa fa-lg fa-commenting-o" v-if="item.userHovered"></i> -->
                   </div>
                 </div>
-                <div class="level-right" v-if="item.winningBid">
+                <div class="level-right" v-if="item.status === 'pastBid'">
                   <div class="level-item" data-balloon='Click to see the winner!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                    <i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i>
+                    <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i></router-link>
+                  </div>
+                </div>
+                <div class="level-right" v-if="item.status === 'futureBid'">
+                  <div class="level-item" data-balloon='This item is not open for bid yet!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
+                    <i class="fa fa-lg fa-user-times" :class="{ 'maroon': item.userHovered }"></i>
                   </div>
                 </div>
               </footer>
             </div>
           </transition-group>
-        <!-- </div> -->
-        <!-- </transition> -->
       </div>
     </div>
-
-    <!-- <div class="pagination" v-if="filteredList.length > 4">
-      <a class="pagination-previous" @click="goToPage('prev')">Previous</a>
-      <a class="pagination-next" @click="goToPage('next')">Next page</a>
-      <ul class="pagination-list">
-        <li v-for="n in numberOfPages">
-          <a class="pagination-link" :class="{'is-current': checkIfCurrentPage(n)}" @click="goToPage(n)">{{n}}</a>
-        </li>
-      </ul>
-    </div> -->
   </div>
 </template>
 
@@ -174,6 +154,7 @@ import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
 import services from '../services'
 import axios from 'axios'
+// import moment from 'moment'
 
 export default {
   name: 'tikam',
@@ -186,7 +167,7 @@ export default {
       searchTerm: '',
       items: [],
       test: 'hahahehe',
-      hasEnded: false,
+      filter: 'allBids',
       currentPage: 1,
       slideLR: 'slideLeft'
     }
@@ -195,16 +176,39 @@ export default {
     filteredList () {
       this.currentPage = 1 // w/o this, there will be a bug when the user searches while currentPage === 2 or greater
       return this.items.filter((item) => {
-        if (this.hasEnded) return (item.hasOwnProperty('winningBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
-        else if (!this.hasEnded) return item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)
+        // if (this.filter === 'pastBidsOnly') return (item.hasOwnProperty('winningBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
+        if (this.filter === 'pastBidsOnly') return ((item.status === 'pastBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
+        else if (this.filter === 'ongoingBidsOnly') return ((item.status === 'ongoingBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
+        else if (this.filter === 'futureBidsOnly') return ((item.status === 'futureBid') && (item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)))
+        else if (this.filter === 'allBids') return item.name.includes(this.searchTerm) || item.description.includes(this.searchTerm)
       })
     },
     numberOfPages () {
       // return (((this.filteredList.length / 3) | 0) + 1)
       return Math.ceil(this.filteredList.length / 3)
+    },
+    timeNow () {
+      return Date.now()
     }
   },
   methods: {
+    fetchData () {
+      services.getItems().then(items => {
+        for (let item of items) {
+          if (item.bidStartMS > this.timeNow) item.status = 'futureBid'
+          else if (item.bidEndMS <= this.timeNow) item.status = 'pastBid'
+          else if ((item.bidStartMS <= this.timeNow) && (item.bidEndMS > this.timeNow)) item.status = 'ongoingBid'
+          this.$set(item, 'homeHovered', false)
+          // item.homeHovered = false
+          this.$set(item, 'dollarHovered', false)
+          // item.dollarHovered = false
+          this.$set(item, 'userHovered', false)
+          // item.userHovered = false
+        }
+
+        this.items = items
+      })
+    },
     showItemDetails (itemId) {
       EventBus.$emit('item-details-modal', itemId)
     },
@@ -212,10 +216,10 @@ export default {
       if (this.searchTerm) {
         let iQuery = new RegExp(this.searchTerm, 'ig')
         text = text.toString().replace(iQuery, matchedTxt => {
-          return ('<span style=\'background-color: yellow\'>' + matchedTxt + '</span>')
+          return ('<span style=\'background-color: yellow\' class="overflow-ellipsis">' + matchedTxt + '</span>')
         })
       }
-      return `<span>${text}</span>`
+      return `<span style="overflow: hidden; text-overflow: ellipsis; height:120px;">${text}</span>`
     },
     goToPage (pageNumber) {
       if (pageNumber === 'next') {
@@ -250,25 +254,34 @@ export default {
     }
   },
   created () {
-    services.getItems().then(items => {
-      for (let item of items) {
-        // item.hovered = false
-        this.$set(item, 'homeHovered', false)
-        this.$set(item, 'dollarHovered', false)
-        this.$set(item, 'userHovered', false)
-      }
-      this.items = items
-    })
-    console.log('this is created')
+    this.fetchData()
+    console.log('tikam is created')
   },
   mounted () {
-    console.log('this is mounted')
+    console.log('tikam is mounted')
+  },
+  watch: {
+    '$route.hash': function () {
+      console.log('inside route.hash watcher')
+      if (this.$route.hash === '#tikam') {
+        console.log('watcher for #tikam activated')
+        this.fetchData()
+      }
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+div.content>span {
+  /*height: 120px;*/
+}
+span.overflow-ellipsis {
+  /*overflow:hidden;
+  text-overflow:ellipsis;*/
+  /*height: 120px;*/
+}
 .tikam:before {
   display: block;
   content: " ";
@@ -304,27 +317,6 @@ div.card-container {
   position: relative;
   width: 100%;
 }
-/*div.card {
-  display: inline-block;
-  *display: inline;
-  zoom: 1;
-  width: 24%;
-  text-align: center;
-}*/
-/*div.card:first-child {
-  margin-left: 7%;
-}
-div.card:nth-child(2) {
-  margin-left: 7%;
-  margin-right: 7%;
-}
-div.card:last-child {
-  margin-right: 7%;
-}*/
-/*div.card {
-  margin-left: 3%;
-  margin-right: 3%;
-}*/
 
 div.content {
   text-align: left;
@@ -345,6 +337,9 @@ i.green {
 }
 i.gold {
   color: gold;
+}
+i.maroon {
+  color: #841515;
 }
 
 .footer-text {

@@ -8,10 +8,9 @@ export default {
     let ep = this.prepEndpoint('items/create')
     console.log('inside createItem at client side')
     return axios.post(ep, { itemDetails: itemDetails }, { headers: this.getAuthHeader() })
-    .then(res => {
+    .then(res => { // including res.data.err if present
+      console.log('we are at then bracket')
       return res.data
-    }).catch(err => {
-      console.log('err is...', err)
     })
   },
 

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 // User Schema
 const UserSchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
   },
   email: {
     type: String,
@@ -12,7 +12,8 @@ const UserSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -35,6 +36,23 @@ const UserSchema = new mongoose.Schema({
     }
   }
 })
+
+UserSchema.pre("save", true, function(next, done) {
+  console.log('we are in pre-save');
+    var self = this;
+    mongoose.models["User"].findOne({username: self.username}, function(err, user) {
+        if(err) {
+            done(err);
+        } else if(user) {
+          console.log('user found!');
+            self.invalidate("username", "username has been taken");
+            done(new Error("username has been taken"));
+        } else {
+            done();
+        }
+    });
+    next();
+});
 
 const User = module.exports = mongoose.model('User', UserSchema)
 

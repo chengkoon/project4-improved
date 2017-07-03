@@ -6,6 +6,7 @@ import App from './App'
 import auth from './auth'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
+// import VeeValidate from 'vee-validate'
 
 Vue.config.productionTip = false
 // Vue.use(BootstrapVue)

@@ -7,7 +7,7 @@ const ItemSchema = new mongoose.Schema({
   sponsor: { type: mongoose.Schema.Types.ObjectId, ref: 'Sponsor' },
   productURL: { type: String, required: true },
   imgURL: { type: String, required: false },
-  description: { type: String, required: true },
+  description: { type: String, minlength: [100, 'minimum description should be 100 characters long'], required: true },
   selectedStartDate: { type: String, required: true }, // momentjs
   selectedStartTime: { type: String, required: true }, // momentjs
   selectedEndDate: { type: String, required: true }, // momentjs

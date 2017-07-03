@@ -1,5 +1,5 @@
 <template>
-  <div class="post-item-modal modal is-active">
+  <div class="post-item-modal modal is-active" tabindex="-100" @keyup.esc="closeThisModal">
   <div class="modal-background" @click="closeThisModal"></div>
   <div class="modal-card">
     <header class="modal-card-head">
@@ -15,7 +15,6 @@
               :disabled="isSaving"
               accept="image/*" class="input-file">
               <p v-if="isInitial">
-                <!-- Preview your image here -->
                 Click to upload image
               </p>
               <p v-if="isSaving">
@@ -30,9 +29,9 @@
         <div class="card-content">
           <div class="content">
             <div class="field">
-              <label class="label">Product Name (this will appear at the top)</label>
+              <label class="label">Product Name</label>
               <p class="control">
-                <input class="input" type="text" placeholder="T138 Headphones" v-model="itemDetails.name">
+                <input class="input" type="text" ref="name" placeholder="T138 Headphones" v-model="itemDetails.name">
               </p>
             </div>
           </div>
@@ -47,7 +46,7 @@
           <div class="field">
             <label class="label">Product Description</label>
             <p class="control">
-              <textarea class="textarea" placeholder="Textarea" v-model="itemDetails.description"></textarea>
+              <textarea class="textarea" ref="description" placeholder="Minimum of 100 characters..." v-model="itemDetails.description"></textarea>
             </p>
           </div>
           <div class="columns">
@@ -109,7 +108,9 @@
             <p class="control">
               <span class="select">
                 <select v-model="itemDetails.receipientCharity">
-                  <option>Animal Concerns Research and Education Society</option>
+                  <option disabled value="Z">Pick a charity organisation</option>
+                  <option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
+                  <!-- <option>Animal Concerns Research and Education Society</option>
                   <option>Children's Aid Society</option>
                   <option>Humanitarian Organization for Migration Economics</option>
                   <option>Make-A-Wish Foundation</option>
@@ -117,8 +118,13 @@
                   <option>National Kidney Foundation</option>
                   <option>Ren Ci Hospital and Medicare Centre</option>
                   <option>Salvation Army</option>
-                  <option>Singapore Association of the Visually Handicapped</option>
+                  <option>Singapore Association of the Visually Handicapped</option> -->
                 </select>
+                <!-- <select v-model="selected">
+                  <option v-for="option in options" v-bind:value="option.value">
+                    {{ option.text }}
+                  </option>
+                </select> -->
               </span>
             </p>
           </div>
@@ -127,8 +133,8 @@
       </div>
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-success" @click="submitItem">Put item up for bidding!</a>
-      <a class="button" @click="closeThisModal">Cancel</a>
+      <button type="button" class="button is-success" @click="submitItem">Put item up for bidding!</button>
+      <button type="button" class="button" @click="closeThisModal">Cancel</button>
     </footer>
   </div>
 </div>
@@ -136,7 +142,7 @@
 
 <script>
 
-// import { EventBus } from '../../event-bus.js'
+import { EventBus } from '../../event-bus.js'
 import services from '../../services'
 import axios from 'axios'
 import moment from 'moment'
@@ -162,14 +168,21 @@ export default {
         selectedEndTime: '',
         bidStartMS: '',
         bidEndMS: '',
-        receipientCharity: ''
+        receipientCharity: 'Z'
       },
       // showThisModal: false,
       uploadError: null,
       currentStatus: null,
       uploadFieldName: 'photos',
       fullDateRange: [],
-      fullTimeRange: []
+      fullTimeRange: [],
+      selected: 'A',
+      options: [
+        { text: 'One', value: 'A' },
+        { text: 'Two', value: 'B' },
+        { text: 'Three', value: 'C' }
+      ],
+      errorLocation: ''
     }
   },
   computed: {
@@ -217,6 +230,16 @@ export default {
       } else {
         return this.fullTimeRange
       }
+    },
+    validateDetailsToBeSubmitted () {
+      if (!this.itemDetails.name) {
+        this.errorLocation = 'name'
+        return false
+      } else if (this.itemDetails.description.length < 100) {
+        this.errorLocation = 'description'
+        return false
+      }
+      return true
     }
   },
   methods: {
@@ -243,31 +266,36 @@ export default {
       })
     },
     submitItem () {
-      this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
-      this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
-      console.log('item to be submitted is...', this.itemDetails)
-      services.createItem(this.itemDetails)
-      .then(res => {
-        if (res.success) {
-          // this.showThisModal = false
-          this.$router.push('/')
-        } else {
-          console.log('client - error message is ', res.msg)
-        }
-      })
+      if (this.validateDetailsToBeSubmitted) {
+        this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
+        this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
+        console.log('item to be submitted is...', this.itemDetails)
+        services.createItem(this.itemDetails)
+        .then(res => {
+          if (res.success) {
+            EventBus.$emit('flash', 'Item posted successfully')
+            this.$router.push('/#tikam')
+          } else if (!res.success) { // server-side validation
+            console.log('at client side, res.err is ', res.err)
+          }
+        })
+      } else if (!this.validateDetailsToBeSubmitted) {
+        this.$refs[this.errorLocation].focus()
+      }
     },
     closeThisModal () {
-      // this.showThisModal = false
       this.$router.push('/')
+    },
+    test12 () {
+      console.log(12345)
     }
   },
   mounted () {
     this.reset()
+    this.$refs.productName.focus() // this also enables the keyup.esc to work right off the bat
   },
   created () {
-    // EventBus.$on('post-item-modal', (status) => {
-    //   this.showThisModal = status
-    // })
+    console.log('postitemmodal created')
     // generate an array of 31 dates
     for (let i = 0; i < 31; i++) {
       this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))

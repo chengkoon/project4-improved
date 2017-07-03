@@ -60,7 +60,15 @@ const itemController = {
       agenda.start()
       return Sponsor.findOneAndUpdate({_id: req.user.id}, {$push: {itemsPosted: item._id}})
     }).then(sponsor => res.json({success: true}))
-    .catch(err => res.json({success: false, msg: 'Failed to add item, reason - ', err}))
+    .catch(err => {
+      if (err) {
+        console.log('preparing to return err...and err.errors["description"] is ', err.errors["description"]);
+        for (let error in err.errors) {
+          console.log('inside for loop, error is ', err.errors[error].message); // error is description
+        }
+        return res.json({success: false, err: err})
+      }
+    })
   },
 
   bidItem: (req, res, next) => {

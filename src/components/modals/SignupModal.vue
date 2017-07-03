@@ -1,5 +1,5 @@
 <template>
-  <div class="signup-modal modal is-active">
+  <div class="signup-modal modal is-active" tabindex="0" @keyup.esc="closeThisModal">
     <div class="modal-background" @click="closeThisModal"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -11,50 +11,53 @@
           <div class="field">
             <label class="label">Username</label>
             <p class="control has-icons-left has-icons-right">
-              <input class="input is-success" ref="usernameInput" type="text" placeholder="John" v-model="signupCredentials.username">
+              <input name="username" :class="{'input': true, 'is-danger': vErrors.has('username'), 'is-success': !vErrors.has('username')}" type="text" placeholder="john91" v-model="signupCredentials.username">
               <span class="icon is-small is-left">
                 <i class="fa fa-user"></i>
               </span>
               <span class="icon is-small is-right">
-                <i class="fa fa-check"></i>
+                <i class="fa fa-check" v-show="!vErrors.has('username')"></i>
+                <i class="fa fa-warning" v-show="vErrors.has('username')"></i>
               </span>
             </p>
-            <p class="help is-success">This username is available</p>
+            <p class="help is-danger" v-show="vErrors.has('username')">Only alphanumeric characters allowed for username</p>
           </div>
 
           <div class="field">
             <label class="label">Email</label>
             <p class="control has-icons-left has-icons-right">
-              <input class="input is-danger" type="text" placeholder="John@gmail.com"
-               v-model="signupCredentials.email">
+              <!-- <input type="text" placeholder="John@gmail.com" v-model="signupCredentials.email" name="email"> -->
+              <input type="text" name="email" :class="{'input': true, 'is-danger': vErrors.has('email'), 'is-success': !vErrors.has('email')}" placeholder="john@gmail.com" v-model="signupCredentials.email">
               <span class="icon is-small is-left">
                 <i class="fa fa-envelope"></i>
               </span>
               <span class="icon is-small is-right">
-                <i class="fa fa-warning"></i>
+                <i class="fa fa-check" v-show="!vErrors.has('email')"></i>
+                <i class="fa fa-warning" v-show="vErrors.has('email')"></i>
               </span>
             </p>
-            <p class="help is-danger">This email is invalid</p>
+            <p class="help is-danger" v-show="vErrors.has('email')">This email is invalid</p>
           </div>
           <div class="field">
             <label class="label">Password</label>
             <p class="control has-icons-left has-icons-right">
-              <input class="input is-success" type="password" v-model="signupCredentials.password">
+              <input name="password" :class="{'input': true, 'is-danger': vErrors.has('password'), 'is-success': !vErrors.has('password')}" type="password" v-model="signupCredentials.password" @keyup.enter="signinUser">
               <span class="icon is-small is-left">
                 <i class="fa fa-key"></i>
               </span>
               <span class="icon is-small is-right">
-                <i class="fa fa-check"></i>
+                <i class="fa fa-check" v-show="!vErrors.has('password')"></i>
+                <i class="fa fa-warning" v-show="vErrors.has('password')"></i>
               </span>
             </p>
+            <p class="help is-danger" v-show="vErrors.has('password')">Your password is too short (at least 8 characters)</p>
           </div>
           <div class="field">
-            <a class="button is-success is-small" @click="registerNewUser">Sign up</a>
-            <a class="button is-small" @click="closeThisModal">Cancel</a>
+            <button type="button" class="button is-success is-small" @click="signupUser">Sign up</button>
+            <button type="button" class="button is-small" @click="closeThisModal">Cancel</button>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <!-- <a class="button is-success" @click="registerNewUser">Sign up</a> -->
           <a @click="switchTo('signin')">sign in</a>&nbsp;|&nbsp;
           <a @click="switchTo('signup', true)" v-if="type === 'user'">sponsor mode</a>
           <a @click="switchTo('signup', true)" v-if="type === 'sponsor'">user mode</a>
@@ -69,9 +72,12 @@
 
 import auth from '../../auth'
 import { EventBus } from '../../event-bus.js'
+import { Validator } from 'vee-validate'
+import _ from 'lodash'
 
 export default {
-  name: 'signin-modal',
+  name: 'signup-modal',
+  validator: null,
   props: ['type'],
   data () {
     return {
@@ -80,16 +86,16 @@ export default {
         username: '',
         password: ''
       },
-      showThisModal: false,
-      userOrSponsor: ''
+      vErrors: null
     }
   },
   methods: {
-    registerNewUser () {
+    signupUser () {
       event.preventDefault()
       auth.registerNewUser(this.signupCredentials, this.type, isAuthenticated => {
         if (!isAuthenticated) {
           // trigger shake animation instead of below
+          EventBus.$emit('flash-failure', 'Signup failed - either username or email has been taken')
           this.$router.push('/signup?t=user')
         } else {
           if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
@@ -100,7 +106,6 @@ export default {
       })
     },
     closeThisModal () {
-      this.showThisModal = false
       this.$router.push('/')
     },
     switchTo (route, switchMode) {
@@ -109,25 +114,53 @@ export default {
       if (switchMode) this.type === 'user' ? switchType = 'sponsor' : switchType = 'user'
       else this.type === 'user' ? switchType = 'user' : switchType = 'sponsor'
       this.$router.push({path: `/${route}`, query: { t: switchType }})
-    }
+    },
+    validateField: _.debounce(
+      function (field, val) {
+        this.validator.validate(field, val)
+      },
+      800
+    )
   },
   created () {
-    EventBus.$on('signup-modal', (status) => {
-      this.userOrSponsor = 'User'
-      this.showThisModal = status
-    })
-    EventBus.$on('sponsor-signup-modal', (status) => {
-      this.userOrSponsor = 'Sponsor'
-      this.showThisModal = status
-    })
     EventBus.$on('clear-form-data', () => {
       this.signupCredentials.username = ''
       this.signupCredentials.email = ''
       this.signupCredentials.password = ''
     })
+    this.validator = new Validator({
+      username: 'required|alpha_num',
+      email: 'required|email',
+      password: 'required|min:8'
+    })
+    this.$set(this, 'vErrors', this.validator.errorBag)
   },
   mounted () {
-    this.$refs.usernameInput.focus()
+    // this.$refs.username.focus()
+    console.log('signup is mounted')
+  },
+  watch: {
+    '$route.query': function () { // this is needed as mounted does not sense when user clicks to switch mode
+      // this.$refs.username.focus()
+    },
+    'signupCredentials.username' (val) {
+      // this.validator.validate('username', val)
+      this.validateField('username', val)
+    },
+    'signupCredentials.email': function (val) {
+      this.validateField('email', val)
+    },
+    'signupCredentials.password': function (val) {
+      this.validateField('password', val)
+    }
+    // email(value) {
+    //   this.validator.validate('email', value);
+    // },
+    // name(value) {
+    //   this.validator.validate('name', value);
+    // }
+  },
+  destroyed () {
   }
 }
 </script>
