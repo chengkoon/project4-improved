@@ -219,6 +219,9 @@ export default {
           return ('<span style=\'background-color: yellow\' class="overflow-ellipsis">' + matchedTxt + '</span>')
         })
       }
+      if (text.length > 100) {
+        text = text.slice(0, 99).concat('...')
+      }
       return `<span style="overflow: hidden; text-overflow: ellipsis; height:120px;">${text}</span>`
     },
     goToPage (pageNumber) {
@@ -252,6 +255,12 @@ export default {
     itemDetailsLink (itemId) {
       return `item/${itemId}`
     }
+    // truncateDescription (description) {
+    //   if (description.length > 100) {
+    //     let output = description.slice(0,99).concat('...')
+    //     return output
+    //   }
+    // }
   },
   created () {
     this.fetchData()
