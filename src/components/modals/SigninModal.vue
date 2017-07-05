@@ -1,7 +1,8 @@
 <template>
   <div class="signin-modal modal is-active" tabindex="0" @keyup.esc="closeThisModal">
     <div class="modal-background" @click="closeThisModal"></div>
-    <div class="modal-card">
+    <!-- <transition :name="animationType" :enter-active-class="enterClass" :leave-active-class="leaveClass" mode="out-in"> -->
+    <div class="modal-card animated" :class="animationType">
       <header class="modal-card-head">
         <p class="modal-card-title">Sign in <span v-if="type === 'sponsor'">as a sponsor</span></p>
         <!-- <button class="delete" @click="closeThisModal"></button> -->
@@ -44,6 +45,7 @@
         </footer>
       </form>
     </div>
+  <!-- </transition> -->
   </div>
 </template>
 
@@ -54,7 +56,7 @@ import { EventBus } from '../../event-bus.js'
 
 export default {
   name: 'signup-modal',
-  props: ['type'],
+  props: ['type', 'animationTypeReceived'],
   data () {
     return {
       signinCredentials: {
@@ -68,10 +70,13 @@ export default {
       event.preventDefault()
       auth.signinUser(this.signinCredentials, this.type, loggedIn => {
         console.log('we are in client side signinUser')
+        // this.animationType = ''
         if (!loggedIn) {
-          // trigger shake animation instead of below
+          EventBus.$emit('flash-failure', 'Signin failed - either username or password incorrect')
           this.$router.push('/signin?t=user')
         } else {
+          this.animationType = 'fadeOutUp'
+          console.log('this.animationType is ', this.animationType)
           if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
           else if (this.type === 'sponsor') EventBus.$emit('sponsor-signedInStatus', true)
           // this.showThisModal = false
@@ -90,19 +95,19 @@ export default {
       if (switchMode) this.type === 'user' ? switchType = 'sponsor' : switchType = 'user'
       else this.type === 'user' ? switchType = 'user' : switchType = 'sponsor'
       this.$router.push({path: `/${route}`, query: { t: switchType }})
-    },
-    test12 () {
-      console.log('test 12')
     }
   },
   created () {
-    EventBus.$on('clear-form-data', () => {
-      this.signinCredentials.username = ''
-      this.signinCredentials.password = ''
-    })
+    // EventBus.$on('clear-form-data', () => {
+    //   this.signinCredentials.username = ''
+    //   this.signinCredentials.password = ''
+    // })
+    console.log('signin is created')
+    this.animationType = this.animationTypeReceived
   },
   mounted () {
     this.$refs.usernameInput.focus() // this also enables the keyup.esc to work right off the bat
+    console.log('signin is mounted')
   },
   watch: {
     '$route.query': function () { // this is needed as mounted does not sense when user clicks to switch mode

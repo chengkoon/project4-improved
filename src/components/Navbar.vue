@@ -79,7 +79,7 @@ export default {
     signoutUser () {
       this.userSignedIn = false
       this.sponsorSignedIn = false
-      EventBus.$emit('clear-form-data')
+      // EventBus.$emit('clear-form-data')
       EventBus.$emit('flash', 'Signed out successfully!')
       this.$router.push('/signout')
     },

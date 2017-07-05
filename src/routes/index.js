@@ -43,7 +43,8 @@ export const routes = [
     path: '/signin',
     name: 'signin',
     component: SigninModal,
-    props: (route) => ({ type: route.query.t })
+    props: (route) => ({ type: route.query.t }),
+    meta: { reuse: false }
   },
   // {
   //   path: '/about',

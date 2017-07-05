@@ -1,69 +1,71 @@
 <template>
   <div class="signup-modal modal is-active" tabindex="0" @keyup.esc="closeThisModal">
     <div class="modal-background" @click="closeThisModal"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Sign up <span v-if="type === 'sponsor'">as a sponsor</span></p>
-        <!-- <button class="delete" @click="showThisModal = false"></button> -->
-      </header>
-      <form id="signupForm">
-        <section class="modal-card-body">
-          <div class="field">
-            <label class="label">Username</label>
-            <p class="control has-icons-left has-icons-right">
-              <input name="username" :class="{'input': true, 'is-danger': vErrors.has('username'), 'is-success': !vErrors.has('username')}" type="text" placeholder="john91" v-model="signupCredentials.username">
-              <span class="icon is-small is-left">
-                <i class="fa fa-user"></i>
-              </span>
-              <span class="icon is-small is-right">
-                <i class="fa fa-check" v-show="!vErrors.has('username')"></i>
-                <i class="fa fa-warning" v-show="vErrors.has('username')"></i>
-              </span>
-            </p>
-            <p class="help is-danger" v-show="vErrors.has('username')">Only alphanumeric characters allowed for username</p>
-          </div>
+    <!-- <transition name="slide"> -->
+      <div class="modal-card animated" :class="animationType">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Sign up <span v-if="type === 'sponsor'">as a sponsor</span></p>
+          <!-- <button class="delete" @click="showThisModal = false"></button> -->
+        </header>
+        <form id="signupForm">
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label">Username</label>
+              <p class="control has-icons-left has-icons-right">
+                <input name="username" ref="username" :class="{'input': true, 'is-danger': vErrors.has('username'), 'is-success': !vErrors.has('username')}" type="text" placeholder="john91" v-model="signupCredentials.username">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fa fa-check" v-show="!vErrors.has('username')"></i>
+                  <i class="fa fa-warning" v-show="vErrors.has('username')"></i>
+                </span>
+              </p>
+              <p class="help is-danger" v-show="vErrors.has('username')">Only alphanumeric characters allowed for username</p>
+            </div>
 
-          <div class="field">
-            <label class="label">Email</label>
-            <p class="control has-icons-left has-icons-right">
-              <!-- <input type="text" placeholder="John@gmail.com" v-model="signupCredentials.email" name="email"> -->
-              <input type="text" name="email" :class="{'input': true, 'is-danger': vErrors.has('email'), 'is-success': !vErrors.has('email')}" placeholder="john@gmail.com" v-model="signupCredentials.email">
-              <span class="icon is-small is-left">
-                <i class="fa fa-envelope"></i>
-              </span>
-              <span class="icon is-small is-right">
-                <i class="fa fa-check" v-show="!vErrors.has('email')"></i>
-                <i class="fa fa-warning" v-show="vErrors.has('email')"></i>
-              </span>
-            </p>
-            <p class="help is-danger" v-show="vErrors.has('email')">This email is invalid</p>
-          </div>
-          <div class="field">
-            <label class="label">Password</label>
-            <p class="control has-icons-left has-icons-right">
-              <input name="password" :class="{'input': true, 'is-danger': vErrors.has('password'), 'is-success': !vErrors.has('password')}" type="password" v-model="signupCredentials.password" @keyup.enter="signinUser">
-              <span class="icon is-small is-left">
-                <i class="fa fa-key"></i>
-              </span>
-              <span class="icon is-small is-right">
-                <i class="fa fa-check" v-show="!vErrors.has('password')"></i>
-                <i class="fa fa-warning" v-show="vErrors.has('password')"></i>
-              </span>
-            </p>
-            <p class="help is-danger" v-show="vErrors.has('password')">Your password is too short (at least 8 characters)</p>
-          </div>
-          <div class="field">
-            <button type="button" class="button is-success is-small" @click="signupUser">Sign up</button>
-            <button type="button" class="button is-small" @click="closeThisModal">Cancel</button>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <a @click="switchTo('signin')">sign in</a>&nbsp;|&nbsp;
-          <a @click="switchTo('signup', true)" v-if="type === 'user'">sponsor mode</a>
-          <a @click="switchTo('signup', true)" v-if="type === 'sponsor'">user mode</a>
-        </footer>
-      </form>
-    </div>
+            <div class="field">
+              <label class="label">Email</label>
+              <p class="control has-icons-left has-icons-right">
+                <!-- <input type="text" placeholder="John@gmail.com" v-model="signupCredentials.email" name="email"> -->
+                <input type="text" name="email" :class="{'input': true, 'is-danger': vErrors.has('email'), 'is-success': !vErrors.has('email')}" placeholder="john@gmail.com" v-model="signupCredentials.email">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-envelope"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fa fa-check" v-show="!vErrors.has('email')"></i>
+                  <i class="fa fa-warning" v-show="vErrors.has('email')"></i>
+                </span>
+              </p>
+              <p class="help is-danger" v-show="vErrors.has('email')">This email is invalid</p>
+            </div>
+            <div class="field">
+              <label class="label">Password</label>
+              <p class="control has-icons-left has-icons-right">
+                <input name="password" :class="{'input': true, 'is-danger': vErrors.has('password'), 'is-success': !vErrors.has('password')}" type="password" v-model="signupCredentials.password" @keyup.enter="signinUser">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-key"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fa fa-check" v-show="!vErrors.has('password')"></i>
+                  <i class="fa fa-warning" v-show="vErrors.has('password')"></i>
+                </span>
+              </p>
+              <p class="help is-danger" v-show="vErrors.has('password')">Your password is too short (at least 8 characters)</p>
+            </div>
+            <div class="field">
+              <button type="button" class="button is-success is-small" @click="signupUser">Sign up</button>
+              <button type="button" class="button is-small" @click="closeThisModal">Cancel</button>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <a @click="switchTo('signin')">sign in</a>&nbsp;|&nbsp;
+            <a @click="switchTo('signup', true)" v-if="type === 'user'">sponsor mode</a>
+            <a @click="switchTo('signup', true)" v-if="type === 'sponsor'">user mode</a>
+          </footer>
+        </form>
+      </div>
+    <!-- </transition> -->
   </div>
 
 </template>
@@ -78,7 +80,7 @@ import _ from 'lodash'
 export default {
   name: 'signup-modal',
   validator: null,
-  props: ['type'],
+  props: ['type', 'animationTypeReceived'],
   data () {
     return {
       signupCredentials: {
@@ -87,6 +89,11 @@ export default {
         password: ''
       },
       vErrors: null
+    }
+  },
+  computed: {
+    animationType () {
+      return this.animationTypeReceived
     }
   },
   methods: {
@@ -123,25 +130,28 @@ export default {
     )
   },
   created () {
-    EventBus.$on('clear-form-data', () => {
-      this.signupCredentials.username = ''
-      this.signupCredentials.email = ''
-      this.signupCredentials.password = ''
-    })
+    // EventBus.$on('clear-form-data', () => {
+    //   this.signupCredentials.username = ''
+    //   this.signupCredentials.email = ''
+    //   this.signupCredentials.password = ''
+    // })
     this.validator = new Validator({
       username: 'required|alpha_num',
       email: 'required|email',
       password: 'required|min:8'
     })
     this.$set(this, 'vErrors', this.validator.errorBag)
+    console.log('signup is created')
   },
   mounted () {
-    // this.$refs.username.focus()
+    this.$refs.username.focus()
     console.log('signup is mounted')
+    console.log('animationType is ', this.animationType)
   },
   watch: {
     '$route.query': function () { // this is needed as mounted does not sense when user clicks to switch mode
-      // this.$refs.username.focus()
+      this.$refs.username.focus()
+      console.log('signup query watcher activated')
     },
     'signupCredentials.username' (val) {
       // this.validator.validate('username', val)
@@ -159,8 +169,6 @@ export default {
     // name(value) {
     //   this.validator.validate('name', value);
     // }
-  },
-  destroyed () {
   }
 }
 </script>
@@ -220,4 +228,18 @@ li {
 a {
   color: #42b983;
 }
+
+/* animation for modal slide-in */
+.slide-enter {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.slide-enter-to {
+  opacity: 1;
+  transform: translateY(0%);
+}
+.slide-enter-active {
+  transition: all 1s ease;
+}
+
 </style>

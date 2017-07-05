@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <nav-bar :type='typeOfUser'></nav-bar>
-    <router-view></router-view>
+    <router-view :animationTypeReceived="propToBePassed"></router-view>
     <flash-message></flash-message>
     <!-- <signup-modal></signup-modal> -->
     <!-- <signin-modal></signin-modal> -->
@@ -51,12 +51,24 @@ export default {
         scrollTop: 0,
         scrollLeft: 0
       },
-      typeOfUser: ''
+      typeOfUser: '',
+      propToBePassed: ''
     }
   },
   watch: {
     // call again the method if the route changes
-    '$route.hash': 'fetchData'
+    '$route.hash': 'fetchData',
+    '$route' (to, from) {
+      console.log('to is ', to.query['t'])
+      console.log('from is ', from.query['t'])
+      if ((from.path === '/') && (to.path === '/signup' || '/signin')) {
+        console.log(1111111)
+        this.propToBePassed = 'slideInDown'
+      } else if ((to.path === '/signup' || '/signin') && (from.path === '/signup' || '/signin')) {
+        console.log(3333333)
+        this.propToBePassed = 'pulse'
+      }
+    }
   },
   methods: {
     onScroll: function (e, position) {
