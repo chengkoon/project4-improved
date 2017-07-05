@@ -6,17 +6,47 @@
         <p class="modal-card-title">Product: {{item.name}}</p>
         <button class="delete" @click="closeThisModal"></button>
       </header>
-      <section class="modal-card-body">
+      <!-- <section class="modal-card-body">
         <div class="content">
           <div class="card-image">
             <img :src="item.imgURL" :alt="item.name">
           </div>
           <div class="card-content">
             <article class="message is-primary">
-              <div class="message-body">
+              <div class="message-body description">
                 {{item.description}}
               </div>
             </article>
+          </div>
+          <div class="card-content">
+            <div class="content sponsor-details">
+              Item is sponsored by {{item.sponsor}} <br>
+              and all bids will be donated to {{item.receipientCharity}}
+            </div>
+          </div>
+        </div>
+      </section> -->
+      <section class="card modal-card-body">
+        <div class="card-image">
+          <figure class="image is-square">
+            <img :src="item.imgURL" alt="Image">
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="http://bulma.io/images/placeholders/96x96.png" alt="Image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">Company Name</p>
+              <p class="subtitle is-6">Company URL</p>
+            </div>
+          </div>
+
+          <div class="content description">
+            {{item.description}}
           </div>
         </div>
       </section>
@@ -36,7 +66,7 @@
 
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Bid Amount:</label>
+            <label class="label">Amount:</label>
           </div>
           <div class="field-body">
             <div class="field is-grouped">
@@ -61,7 +91,7 @@
                 </span>
               </p>
               <p class="help is-success">This email is correct</p> -->
-              <a class="button is-focused" @click="submitBid(item._id)">Submit Bid!</a>
+              <a class="button" @click="submitBid(item._id)">Donate!</a>
             </div>
           </div>
         </div>
@@ -115,7 +145,7 @@ export default {
   created () {
     services.getItem(this.$route.params.id)
     .then(item => {
-      console.log('returned item is ', item)
+      this.item = item
     }).catch(err => {
       console.log('caughted error from services.getItem is ', err)
     })
@@ -125,6 +155,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.description {
+  width: 100%;
+  word-wrap: break-word;
+  display: inline-block;
+  text-align: left;
+}
 h1, h2 {
   font-weight: normal;
 }

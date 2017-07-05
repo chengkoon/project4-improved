@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 // import Tikam from '@/components/Tikam'
 import About from '@/components/About'
+import ProfileModal from '@/components/modals/ProfileModal'
 import SigninModal from '@/components/modals/SigninModal.vue'
 import SignupModal from '@/components/modals/SignupModal.vue'
 import PostItemModal from '@/components/modals/PostItemModal.vue'
@@ -45,6 +46,11 @@ export const routes = [
     component: SigninModal,
     props: (route) => ({ type: route.query.t }),
     meta: { reuse: false }
+  },
+  {
+    path: '/profile',
+    name: 'profile-modal',
+    component: ProfileModal
   },
   // {
   //   path: '/about',

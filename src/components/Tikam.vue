@@ -91,61 +91,65 @@
         <!-- <div class="card-container columns"> -->
           <transition-group :name="slideLR" tag="div" class="card-container columns">
             <div class="card column is-3" v-for="(item, index) in filteredList" v-if="(index < currentPage * 3) && (index >= (currentPage - 1) * 3)" :key="index">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img :src="item.imgURL" alt="Image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img src="http://bulma.io/images/placeholders/96x96.png" alt="Image">
-                    </figure>
+              <div class="top-half-card">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img :src="item.imgURL" alt="Image">
+                  </figure>
+                </div>
+                <div class="card-content">
+                  <div class="media">
+                    <div class="media-left">
+                      <figure class="image is-48x48">
+                        <img src="http://bulma.io/images/placeholders/96x96.png" alt="Image">
+                      </figure>
+                    </div>
+                    <div class="media-content">
+                      <!-- <a :href="item.productURL"><p class="title is-4">{{item.name}}</p></a> -->
+                      <a :href="item.productURL"><p class="title is-6"><span v-html="highlight(item.name)"></span></p></a>
+                      <p class="subtitle is-6">@johnsmith</p>
+                    </div>
                   </div>
-                  <div class="media-content">
-                    <!-- <a :href="item.productURL"><p class="title is-4">{{item.name}}</p></a> -->
-                    <a :href="item.productURL"><p class="title is-6"><span v-html="highlight(item.name)"></span></p></a>
-                    <p class="subtitle is-6">@johnsmith</p>
+                  <div class="content">
+                    <span v-html="highlight(item.description)"></span>
                   </div>
                 </div>
-                <div class="content">
-                  <span v-html="highlight(item.description)"></span>
-                </div>
-                <div class="content">
-                  <small v-if="item.status === 'pastBid'">Bidding ended at {{item.selectedEndDate}} {{item.selectedEndTime}}</small>
-                  <small v-if="item.status === 'futureBid'">Bidding starts at {{item.selectedStartDate}} {{item.selectedStartTime}}</small>
-                  <small v-if="item.status === 'ongoingBid'">Bidding ongoing! {{countdownTimer(item.bidEndMS)}}</small>
-                </div>
-              </div>
+              </div> <!-- /.top-half-card -->
 
-              <footer class="level">
-                <div class="level-left">
-                  <div class="level-item" data-balloon='All bids will be donated to this charity' data-balloon-pos="down" @mouseover="changeHomeIconColor(item, true)" @mouseout="changeHomeIconColor(item, false)">
-                    <i class="fa fa-lg fa-home" :class="{ 'green': item.homeHovered }"></i><span class="footer-text">SPCA</span>
-                  </div>
-                  <div data-balloon='Suggested retail price' data-balloon-pos="down" class="level-item" @mouseover="changeDollarIconColor(item, true)" @mouseout="changeDollarIconColor(item, false)">
-                    <i class="fa fa-dollar" :class="{ 'green': item.dollarHovered }"></i><span class="footer-text">112</span>
-                  </div>
+              <div class="bottom-half-card">
+                <div class="timing-details">
+                  <small v-if="item.status === 'pastBid'"><strong>Bidding ended:</strong> <br>{{item.selectedEndDate}}{{item.selectedEndTime}}</small>
+                  <small v-if="item.status === 'futureBid'"><strong>Bidding starts:</strong> <br>{{item.selectedStartDate}}{{item.selectedStartTime}}</small>
+                  <small v-if="item.status === 'ongoingBid'"><strong>Bidding ongoing!</strong> <br>{{countdownTimer(item.bidEndMS)}}</small>
                 </div>
-                <div class="level-right" v-if="item.status === 'ongoingBid'">
-                  <div class="level-item" data-balloon='Click to bid!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                    <!-- <a :href="itemDetailsLink(item._id)"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></a> -->
-                    <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></router-link>
-                    <!-- <i class="fa fa-lg fa-commenting-o" v-if="item.userHovered"></i> -->
+                <footer class="level">
+                  <div class="level-left">
+                    <div class="level-item" data-balloon='All bids will be donated to this charity' data-balloon-pos="down" @mouseover="changeHomeIconColor(item, true)" @mouseout="changeHomeIconColor(item, false)">
+                      <i class="fa fa-lg fa-home" :class="{ 'green': item.homeHovered }"></i><span class="footer-text">SPCA</span>
+                    </div>
+                    <div data-balloon='Suggested retail price' data-balloon-pos="down" class="level-item" @mouseover="changeDollarIconColor(item, true)" @mouseout="changeDollarIconColor(item, false)">
+                      <i class="fa fa-dollar" :class="{ 'green': item.dollarHovered }"></i><span class="footer-text">112</span>
+                    </div>
                   </div>
-                </div>
-                <div class="level-right" v-if="item.status === 'pastBid'">
-                  <div class="level-item" data-balloon='Click to see the winner!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                    <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i></router-link>
+                  <div class="level-right" v-if="item.status === 'ongoingBid'">
+                    <div class="level-item" data-balloon='Click to bid!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
+                      <!-- <a :href="itemDetailsLink(item._id)"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></a> -->
+                      <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></router-link>
+                      <!-- <i class="fa fa-lg fa-commenting-o" v-if="item.userHovered"></i> -->
+                    </div>
                   </div>
-                </div>
-                <div class="level-right" v-if="item.status === 'futureBid'">
-                  <div class="level-item" data-balloon='This item is not open for bid yet!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                    <i class="fa fa-lg fa-user-times" :class="{ 'maroon': item.userHovered }"></i>
+                  <div class="level-right" v-if="item.status === 'pastBid'">
+                    <div class="level-item" data-balloon='Click to see the winner!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
+                      <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i></router-link>
+                    </div>
                   </div>
-                </div>
-              </footer>
+                  <div class="level-right" v-if="item.status === 'futureBid'">
+                    <div class="level-item" data-balloon='This item is not open for bid yet!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
+                      <i class="fa fa-lg fa-user-times" :class="{ 'maroon': item.userHovered }"></i>
+                    </div>
+                  </div>
+                </footer>
+              </div> <!-- /.bottom-half-card -->
             </div>
           </transition-group>
       </div>
@@ -308,14 +312,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-div.content>span {
-  /*height: 120px;*/
-}
-span.overflow-ellipsis {
-  /*overflow:hidden;
-  text-overflow:ellipsis;*/
-  /*height: 120px;*/
-}
 .tikam:before {
   display: block;
   content: " ";
@@ -333,17 +329,18 @@ span.overflow-ellipsis {
   margin: 0;
 }
 
-/*div.container.columns {
+div.card {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between; /* resolves the occasional little gap btw footer and btm of card */
   margin: 0px;
-} */
+}
 div.card.column {
   padding: 0;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 div.card-content {
-  padding: 12px;
+  padding: 20px;
 }
 div.card-container {
   display: flex;
@@ -354,12 +351,18 @@ div.card-container {
 
 div.content {
   text-align: left;
+  position: relative;
+  top: 10px;
+}
+div.timing-details {
+  margin-bottom: 12px;
 }
 
 footer.level {
   border-top: 1px solid rgb(219, 219, 219);
   background-color: rgb(245, 245, 245);
   padding: 12px;
+  align-self: flex-end;
 }
 footer i {
   color: rgb(172, 172, 172);

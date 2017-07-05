@@ -113,21 +113,7 @@
                 <select v-model="itemDetails.receipientCharity">
                   <option disabled value="Z">Pick a charity organisation</option>
                   <option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
-                  <!-- <option>Animal Concerns Research and Education Society</option>
-                  <option>Children's Aid Society</option>
-                  <option>Humanitarian Organization for Migration Economics</option>
-                  <option>Make-A-Wish Foundation</option>
-                  <option>Movement for the Intellectually Disabled of Singapore</option>
-                  <option>National Kidney Foundation</option>
-                  <option>Ren Ci Hospital and Medicare Centre</option>
-                  <option>Salvation Army</option>
-                  <option>Singapore Association of the Visually Handicapped</option> -->
                 </select>
-                <!-- <select v-model="selected">
-                  <option v-for="option in options" v-bind:value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select> -->
               </span>
             </p>
           </div>
@@ -181,9 +167,9 @@ export default {
       fullTimeRange: [],
       selected: 'A',
       options: [
-        { text: 'One', value: 'A' },
-        { text: 'Two', value: 'B' },
-        { text: 'Three', value: 'C' }
+        { text: 'Autism Association', value: 'ACRA' },
+        { text: 'Bright Vision Hospital', value: 'BVH' },
+        { text: 'Children Aid Society', value: 'CAS' }
       ],
       errorLocation: ''
     }
@@ -250,7 +236,7 @@ export default {
       // reset form to initial state
       this.currentStatus = STATUS_INITIAL
       this.uploadError = null
-      this.receivedImgURL = ''
+      // this.receivedImgURL = ''
     },
     uploadImg (eventTarget) {
       this.currentStatus = STATUS_SAVING

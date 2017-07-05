@@ -10,7 +10,7 @@
         <form id="signupForm">
           <section class="modal-card-body">
             <div class="field">
-              <label class="label">Username</label>
+              <label class="label"><span v-if="type === 'user'">Username</span><span v-if="type === 'sponsor'">Company name</span></label>
               <p class="control has-icons-left has-icons-right">
                 <input name="username" ref="username" :class="{'input': true, 'is-danger': vErrors.has('username'), 'is-success': !vErrors.has('username')}" type="text" placeholder="john91" v-model="signupCredentials.username">
                 <span class="icon is-small is-left">
@@ -22,6 +22,42 @@
                 </span>
               </p>
               <p class="help is-danger" v-show="vErrors.has('username')">Only alphanumeric characters allowed for username</p>
+            </div>
+
+            <!-- Company Logo Upload -->
+            <!-- <form enctype="multipart/form-data" id="logoForm" @change="uploadImg($event.target)" novalidate v-if="(type === 'sponsor') && (isInitial || isSaving || isImageMounted)" action="http://localhost:3000/newLogo" method="POST"> -->
+            <div class="field media">
+              <div class="media-left">
+                <label class="label">Company Logo<span data-balloon-length="large" data-balloon="Please note 48x48 would be the exact size of the logo display. Also avoid logos with white background." data-balloon-pos="up"><i class="fa fa-info-circle"></i></span><br>
+                  <span v-if="isInitial">(click to upload)</span>
+                  Status:
+                  <span v-if="isSaving">uploading...</span>
+                  <span v-if="isSuccess">uploaded!</span>
+                </label>
+              </div>
+              <div class="media-right">
+                <form enctype="multipart/form-data" id="logoForm" @change="uploadImg($event.target)" novalidate v-if="(type === 'sponsor') && (isInitial || isSaving || isImageMounted)" action="http://localhost:3000/newLogo" method="POST">
+                  <div class="dropbox" v-if="isInitial || isSaving || isImageMounted">
+                    <input type="file" name="myFile"
+                    :disabled="isSaving"
+                    accept="image/*" class="input-file">
+                  </div>
+                </form>
+                <figure class="image is-48x48" v-if="isSuccess">
+                  <img :src="logoURL" alt="">
+                </figure>
+              </div>
+            </div>
+            <!-- </form> -->
+
+            <div class="field" v-if="type === 'sponsor'">
+              <label class="label">Company URL (optional)</label>
+              <p class="control has-icons-left">
+                <input name="companyURL" class="input" type="text" placeholder="www.sony.com.sg" v-model="signupCredentials.companyURL">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-link"></i>
+                </span>
+              </p>
             </div>
 
             <div class="field">
@@ -75,7 +111,14 @@
 import auth from '../../auth'
 import { EventBus } from '../../event-bus.js'
 import { Validator } from 'vee-validate'
+import axios from 'axios'
 import _ from 'lodash'
+
+const STATUS_INITIAL = 0
+const STATUS_SAVING = 1
+const STATUS_SUCCESS = 2
+const STATUS_FAILED = 3
+const STATUS_IMAGE_MOUNTED = 4
 
 export default {
   name: 'signup-modal',
@@ -88,15 +131,37 @@ export default {
         username: '',
         password: ''
       },
-      vErrors: null
+      vErrors: null,
+      logoURL: '',
+      companyURL: '',
+      currentStatus: null
     }
   },
   computed: {
     animationType () {
       return this.animationTypeReceived
+    },
+    isInitial () {
+      return this.currentStatus === STATUS_INITIAL
+    },
+    isImageMounted () {
+      return this.currentStatus === STATUS_IMAGE_MOUNTED
+    },
+    isSaving () {
+      return this.currentStatus === STATUS_SAVING
+    },
+    isSuccess () {
+      return this.currentStatus === STATUS_SUCCESS
+    },
+    isFailed () {
+      return this.currentStatus === STATUS_FAILED
     }
   },
   methods: {
+    reset () {
+      this.currentStatus = STATUS_INITIAL
+      this.uploadError = null
+    },
     signupUser () {
       event.preventDefault()
       auth.registerNewUser(this.signupCredentials, this.type, isAuthenticated => {
@@ -110,6 +175,20 @@ export default {
           this.showThisModal = false
           this.$router.push('/')
         }
+      })
+    },
+    uploadImg (eventTarget) {
+      this.currentStatus = STATUS_SAVING
+
+      const formData = new FormData()
+      formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
+      axios.post('http://localhost:3000/item/newLogo', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      .then(res => {
+        this.logoURL = res.data.url
+        this.currentStatus = STATUS_SUCCESS
+      }).catch(err => {
+        console.log('err is ', err)
+        this.currentStatus = STATUS_FAILED
       })
     },
     closeThisModal () {
@@ -145,6 +224,7 @@ export default {
   },
   mounted () {
     this.$refs.username.focus()
+    this.reset()
     console.log('signup is mounted')
     console.log('animationType is ', this.animationType)
   },
@@ -228,6 +308,34 @@ li {
 a {
   color: #42b983;
 }
+
+.dropbox {
+  outline: 2px dashed grey; /* the dash box */
+  outline-offset: -10px;
+  background: lightcyan;
+  color: dimgray;
+  padding: 10px 10px;
+  height: 48px; /* minimum height */
+  width: 48px;
+  position: relative;
+  cursor: pointer;
+}
+.input-file {
+  opacity: 0; /* invisible but it's there! */
+  width: 100%;
+  height: 48px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  cursor: pointer;
+  z-index: 900;
+}
+.dropbox:hover {
+  background: lightblue; /* when mouse over to the drop zone, change color */
+}
+/*figure.image {
+  border: 1px solid black;
+}*/
 
 /* animation for modal slide-in */
 .slide-enter {

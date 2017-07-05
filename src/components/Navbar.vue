@@ -33,8 +33,13 @@
         </a> -->
         <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign up</router-link>
         <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign in</router-link>
-        <!-- when user is sign in -->
-        <router-link to="/dashboard" active-class="active" exact><a class="nav-item is-tab" v-show="userSignedIn === true">Dashboard</a></router-link>
+        <!-- when user/sponsor is sign in -->
+        <router-link to="/profile" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="sponsorSignedIn" exact>
+          <figure class="image is-16x16" style="margin-right: 8px;">
+            <img src="http://bulma.io/images/jgthms.png">
+          </figure>
+          Profile
+        </router-link>
         <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="sponsorSignedIn" exact>Post Item</router-link>
         <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
       </div>
