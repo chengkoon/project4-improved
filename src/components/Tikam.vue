@@ -112,6 +112,11 @@
                 <div class="content">
                   <span v-html="highlight(item.description)"></span>
                 </div>
+                <div class="content">
+                  <small v-if="item.status === 'pastBid'">Bidding ended at {{item.selectedEndDate}} {{item.selectedEndTime}}</small>
+                  <small v-if="item.status === 'futureBid'">Bidding starts at {{item.selectedStartDate}} {{item.selectedStartTime}}</small>
+                  <small v-if="item.status === 'ongoingBid'">Bidding ongoing! {{countdownTimer(item.bidEndMS)}}</small>
+                </div>
               </div>
 
               <footer class="level">
@@ -169,7 +174,11 @@ export default {
       test: 'hahahehe',
       filter: 'allBids',
       currentPage: 1,
-      slideLR: 'slideLeft'
+      slideLR: 'slideLeft',
+      days: '',
+      // hours: '',
+      // minutes: '',
+      seconds: ''
     }
   },
   computed: {
@@ -190,6 +199,10 @@ export default {
     timeNow () {
       return Date.now()
     }
+    // timer () {
+    //   let timeNoww = Date.now()
+    //   return timeNoww.toString('HH:mm:ss')
+    // }
   },
   methods: {
     fetchData () {
@@ -216,13 +229,31 @@ export default {
       if (this.searchTerm) {
         let iQuery = new RegExp(this.searchTerm, 'ig')
         text = text.toString().replace(iQuery, matchedTxt => {
-          return ('<span style=\'background-color: yellow\' class="overflow-ellipsis">' + matchedTxt + '</span>')
+          return ('<span style=\'background-color: yellow\'>' + matchedTxt + '</span>')
         })
       }
       if (text.length > 100) {
         text = text.slice(0, 99).concat('...')
       }
-      return `<span style="overflow: hidden; text-overflow: ellipsis; height:120px;">${text}</span>`
+      return `<span style="width:100%; word-wrap:break-word; display:inline-block;">${text}</span>` // breaks up even a super long continuous string!
+    },
+    countdownTimer (targetTime) {
+      // let targetTime = new Date('Dec 31, 2017 23:59:59').getTime()
+      let countdownTimerInterval = setInterval(() => {
+        let timeNow = new Date().getTime()
+        let diff = targetTime - timeNow
+
+        this.days = Math.floor(diff / (1000 * 60 * 60 * 24))
+        this.hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        this.minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+        this.seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+        if (diff < 0) {
+          clearInterval(countdownTimerInterval)
+        }
+      }, 1000)
+      console.log('seconds are ', this.seconds)
+      return `${this.days}D ${this.hours}hr ${this.minutes}min ${this.seconds}s left`
     },
     goToPage (pageNumber) {
       if (pageNumber === 'next') {
@@ -255,12 +286,6 @@ export default {
     itemDetailsLink (itemId) {
       return `item/${itemId}`
     }
-    // truncateDescription (description) {
-    //   if (description.length > 100) {
-    //     let output = description.slice(0,99).concat('...')
-    //     return output
-    //   }
-    // }
   },
   created () {
     this.fetchData()

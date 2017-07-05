@@ -46,10 +46,13 @@
           <div class="field">
             <label class="label">Product Description</label>
             <p class="control">
-              <textarea class="textarea" ref="description" placeholder="Minimum of 100 characters..." v-model="itemDetails.description"></textarea>
+              <div class="textarea-container">
+                <textarea class="textarea" ref="description" placeholder="Minimum of 100 characters..." v-model="itemDetails.description"></textarea>
+                <div class="content char-count is-small">min. of 100 characters, current count: {{itemDetails.description.length}}</div>
+              </div>
             </p>
           </div>
-          <div class="columns">
+          <div class="columns start-time">
             <div class="field column is-half">
               <label class="label">Bidding Start Date</label>
               <p class="control">
@@ -382,6 +385,15 @@ div.content {
 }
 input {
   padding-bottom: 0;
+}
+textarea {
+  resize: none;
+}
+.char-count {
+  text-align: right;
+}
+.start-time {
+  margin-top: 10px;
 }
 #bid-dropdown1, #bid-dropdown2 {
   display: inline;
