@@ -22,13 +22,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.about-us:before {
+/*.about-us:before {
   display: block;
   content: " ";
   margin-top: -105px;
-  height: 105px; 
+  height: 105px;
   visibility: hidden;
-}
+}*/
 .big-box {
   height: 1000px;
   border: 2px solid black;

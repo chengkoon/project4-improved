@@ -1,17 +1,20 @@
 <template>
-  <nav class="nav has-shadow" v-bind:class="{ 'nav-fixed-top': fixedBar }">
+  <div id="navbar" class="nav-wrapper">
+  <nav class="nav has-shadow nav-fixed-top">
     <div class="container">
       <div class="nav-left">
         <a class="nav-item" href="/">
           <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
         </a>
 
-        <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link>
-        <!-- <a href="#tikam" class="nav-item is-tab is-hidden-mobile is-active" exact>Tikam!</a> -->
+        <!-- <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link> -->
+        <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isTikamActive}" @click="goTo('Tikam')">Tikam!</a>
+        <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isHowItWorksActive}" @click="goTo('HowItWorks')">How it works</a>
+        <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isAboutUsActive}" @click="goTo('AboutUs')">About Us</a>
 
-        <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link>
-        <router-link to="#about-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>About us</router-link>
-        <router-link to="#sponsor-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Sponsor us!</router-link>
+        <!-- <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link> -->
+        <!-- <router-link to="#about-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>About us</router-link> -->
+        <!-- <router-link to="#sponsor-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Sponsor us!</router-link> -->
         <!-- <a class="nav-item is-tab is-hidden-mobile">How it works</a> -->
         <!-- <a class="nav-item is-tab is-hidden-mobile">About us</a> -->
       </div>
@@ -45,6 +48,7 @@
       </div>
     </div>
   </nav>
+</div>
 </template>
 
 <script>
@@ -54,17 +58,33 @@ import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'navbar',
-  props: ['type'],
+  props: ['type', 'activeTab'],
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
       username: '',
       userSignedIn: false,
       sponsorSignedIn: false,
-      fixedBar: false,
       isactive: {
         tikam: false
       }
+      // scrollPosition: '',
+      // prevScrollPosition: '',
+      // navBarHeight: '',
+      // tikamPos: '',
+      // howItWorksPos: '',
+      // aboutUsPos: ''
+    }
+  },
+  computed: {
+    isTikamActive () {
+      return this.activeTab === 1
+    },
+    isHowItWorksActive () {
+      return this.activeTab === 2
+    },
+    isAboutUsActive () {
+      return this.activeTab === 3
     }
   },
   methods: {
@@ -88,17 +108,31 @@ export default {
       EventBus.$emit('flash', 'Signed out successfully!')
       this.$router.push('/signout')
     },
-    handleScroll () {
-      console.log('current Y position', window.scrollY)
-      if (window.scrollY > 49) {
-        this.fixedBar = true
-      } else {
-        this.fixedBar = false
-      }
+    // handleScroll () {
+    //   this.scrollPosition = window.scrollY
+    //   // this.navBarHeight = document.getElementById('navbar').offsetHeight
+    //   // this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
+    //   // this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
+    //   // this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
+    //   // console.log('current scroll position', this.scrollPosition)
+    //   // console.log('tikamPos ', this.tikamPos)
+    //   // console.log('howItWorksPos ', this.howItWorksPos)
+    //   // console.log('aboutUsPos ', this.aboutUsPos)
+    //   // console.log('navbar height is ', this.navBarHeight)
+    //   if (this.scrollPosition > 49) {
+    //     this.fixedBar = true
+    //   } else {
+    //     this.fixedBar = false
+    //   }
+    // },
+    goTo (location) {
+      EventBus.$emit(`goTo${location}`)
     }
   },
   created () {
     console.log('navbar is reloaded')
+    window.addEventListener('scroll', this.handleScroll)
+
     this.userSignedIn = auth.isUserSignedIn()
     this.sponsorSignedIn = auth.isSponsorSignedIn()
     EventBus.$on('user-signedInStatus', (status) => {
@@ -110,23 +144,50 @@ export default {
       this.sponsorSignedIn = true
       console.log('this.sponsorSignedIn is ', this.sponsorSignedIn)
     })
-    window.addEventListener('scroll', this.handleScroll)
     console.log('navbar has been created and this.userSignedIn is ', this.userSignedIn)
     console.log('auth.sponsor.authenticated is ', auth.sponsor.authenticated)
   },
+  // updated () {
+  //   this.scrollPosition = window.scrollY
+  //   this.navBarHeight = document.getElementById('navbar').offsetHeight
+  //   this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
+  //   this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
+  //   this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
+  //   console.log('current scroll position', this.scrollPosition)
+  //   console.log('tikamPos ', this.tikamPos)
+  //   console.log('howItWorksPos ', this.howItWorksPos)
+  //   console.log('aboutUsPos ', this.aboutUsPos)
+  //   console.log('navbar height is ', this.navBarHeight)
+  // },
   destroyed () {
-    window.removeEventListener('scroll', this.handleScroll)
+    // window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.nav-wrapper {
+  position: relative;
+  height: 52px;
+  display: block;
+}
 .nav-fixed-top {
   position: fixed;
-  right: 0;
-  left: 0;
+  /*right: 0;*/
+  /*left: 0;*/
+  top: 0;
+  width: 100%;
+  /*height: 100%;
+  width: 100%;*/
+  /*background-color: grey;*/
+  /*color: white;*/
   /*z-index: 1030;*/
+}
+a.active-tab {
+  border-bottom: 3px solid #00d1b2;
+  color: #00d1b2;
+  padding-bottom: calc(.75rem - 3px);
 }
 /* ^ since bulma doesnt have a fixed navbar option
 however this needs to be offset by a padding of the body */

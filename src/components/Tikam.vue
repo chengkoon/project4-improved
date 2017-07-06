@@ -222,7 +222,6 @@ export default {
           this.$set(item, 'userHovered', false)
           // item.userHovered = false
         }
-
         this.items = items
       })
     },
@@ -298,6 +297,10 @@ export default {
   mounted () {
     console.log('tikam is mounted')
   },
+  updated () {
+    console.log('tikam is updated')
+    EventBus.$emit('cards-updated')
+  },
   watch: {
     '$route.hash': function () {
       console.log('inside route.hash watcher')
@@ -312,13 +315,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.tikam:before {
+/*.tikam:before {
   display: block;
   content: " ";
   margin-top: -285px;
   height: 285px;
   visibility: hidden;
-}
+}*/
 
 .is-info>div.hero-body {
   padding-top: 18px;

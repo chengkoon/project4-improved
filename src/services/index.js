@@ -2,6 +2,11 @@ import axios from 'axios'
 
 export default {
 
+  getElem () {
+    var map = document.getElementById('map')
+    console.log('map is ...', map)
+  },
+
   isDev: true, // change to false before deployment/production
 
   createItem (itemDetails) {
