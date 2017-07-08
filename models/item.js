@@ -5,6 +5,9 @@ const mongoose = require('mongoose')
 const ItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   sponsor: { type: mongoose.Schema.Types.ObjectId, ref: 'Sponsor' },
+  sponsorName: { type: String, required: true },
+  logoURL: { type: String, required: false },
+  companyURL: { type: String, required: false },
   productURL: { type: String, required: true },
   imgURL: { type: String, required: false },
   description: { type: String, minlength: [100, 'minimum description should be 100 characters long'], required: true },

@@ -31,15 +31,23 @@
             <div class="field">
               <label class="label">Product Name</label>
               <p class="control">
-                <input class="input" type="text" ref="name" placeholder="T138 Headphones" v-model="itemDetails.name">
+                <input class="input" type="text" ref="productName" placeholder="T138 Headphones" v-model="itemDetails.name">
               </p>
             </div>
           </div>
           <div class="content">
-            <div class="field">
-              <label class="label">Product URL</label>
+            <label class="label">Product URL</label>
+            <div class="field has-addons">
               <p class="control">
-                <input class="input" type="text" placeholder="https://www.XYZ.com/t138" v-model="itemDetails.productURL">
+                <span class="select">
+                  <select v-model="protocolHeader">
+                    <option>http://</option>
+                    <option>https://</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <input class="input" type="text" placeholder="www.XYZ.com/t138" v-model="itemDetails.productURL">
               </p>
             </div>
           </div>
@@ -144,6 +152,7 @@ const STATUS_IMAGE_MOUNTED = 4
 
 export default {
   name: 'post-item-modal',
+  props: ['sponsorDetails'],
   data () {
     return {
       itemDetails: {
@@ -162,7 +171,7 @@ export default {
       // showThisModal: false,
       uploadError: null,
       currentStatus: null,
-      uploadFieldName: 'photos',
+      protocolHeader: 'http://',
       fullDateRange: [],
       fullTimeRange: [],
       selected: 'A',
@@ -258,6 +267,10 @@ export default {
       if (this.validateDetailsToBeSubmitted) {
         this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
+        this.itemDetails.productURL = this.protocolHeader + this.itemDetails.productURL
+        this.itemDetails.logoURL = this.sponsorDetails.logoURL
+        this.itemDetails.companyURL = this.sponsorDetails.companyURL
+        this.itemDetails.sponsorName = this.sponsorDetails.username
         console.log('item to be submitted is...', this.itemDetails)
         services.createItem(this.itemDetails)
         .then(res => {
@@ -285,7 +298,6 @@ export default {
   },
   created () {
     console.log('postitemmodal created')
-    // TODO get sponsor profile - logoURL and companyURL
     // generate an array of 31 dates
     for (let i = 0; i < 31; i++) {
       this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))

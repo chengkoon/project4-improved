@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     about page2
-    <router-view></router-view>
+    <router-view :sponsorDetails="sponsorDetails"></router-view>
   </div>
 </template>
 
@@ -9,6 +9,7 @@
 
 export default {
   name: 'about',
+  props: ['sponsorDetails'],
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',

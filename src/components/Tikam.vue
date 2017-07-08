@@ -101,13 +101,13 @@
                   <div class="media">
                     <div class="media-left">
                       <figure class="image is-48x48">
-                        <img src="http://bulma.io/images/placeholders/96x96.png" alt="Image">
+                        <a :href="item.companyURL"><img :src="item.logoURL" alt="Image"></a>
                       </figure>
                     </div>
                     <div class="media-content">
                       <!-- <a :href="item.productURL"><p class="title is-4">{{item.name}}</p></a> -->
                       <a :href="item.productURL"><p class="title is-6"><span v-html="highlight(item.name)"></span></p></a>
-                      <p class="subtitle is-6">@johnsmith</p>
+                      <a :href="item.companyURL"><p class="subtitle is-6">@{{item.sponsorName}}</p></a>
                     </div>
                   </div>
                   <div class="content">
@@ -255,7 +255,7 @@ export default {
           clearInterval(countdownTimerInterval)
         }
       }, 1000)
-      console.log('seconds are ', this.seconds)
+      // console.log('seconds are ', this.seconds)
       return `${this.days}D ${this.hours}hr ${this.minutes}min ${this.seconds}s left`
     },
     goToPage (pageNumber) {
@@ -298,8 +298,8 @@ export default {
     console.log('tikam is mounted')
   },
   updated () {
-    console.log('tikam is updated')
-    EventBus.$emit('cards-updated')
+    // console.log('tikam is updated')
+    // EventBus.$emit('cards-updated')
   },
   watch: {
     '$route.hash': function () {
