@@ -34,17 +34,17 @@
           </figure>
           Profile
         </a> -->
-        <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign up</router-link>
-        <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!userSignedIn && !sponsorSignedIn" exact>Sign in</router-link>
+        <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!type" exact>Sign up</router-link>
+        <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!type" exact>Sign in</router-link>
         <!-- when user/sponsor is sign in -->
-        <router-link to="/profile" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="sponsorSignedIn" exact>
+        <router-link to="/profile" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="type === 'Sponsor'" exact>
           <figure class="image is-16x16" style="margin-right: 8px;">
             <img src="http://bulma.io/images/jgthms.png">
           </figure>
           Profile
         </router-link>
-        <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="sponsorSignedIn" exact>Post Item</router-link>
-        <a class="nav-item is-tab" @click="signoutUser" v-show="userSignedIn || sponsorSignedIn">Sign out</a>
+        <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="type === 'Sponsor'" exact>Post Item</router-link>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="type">Sign out</a>
       </div>
     </div>
   </nav>
@@ -58,13 +58,13 @@ import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'navbar',
-  props: ['type', 'activeTab'],
+  props: ['type', 'activeTab'], // 'type' is from App.vue and determines if user/sponsor is signed in
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      username: '',
-      userSignedIn: false,
-      sponsorSignedIn: false,
+      // username: '',
+      // userSignedIn: false,
+      // sponsorSignedIn: false,
       isactive: {
         tikam: false
       }
@@ -92,39 +92,11 @@ export default {
       if (!auth.sponsor.authenticated) return false
       else return true
     },
-    // showSignupModal () {
-    //   EventBus.$emit('signup-modal', true)
-    // },
-    // showSigninModal () {
-    //   EventBus.$emit('signin-modal', true)
-    // },
-    // showPostItemModal () {
-    //   EventBus.$emit('post-item-modal', true)
-    // },
     signoutUser () {
-      this.userSignedIn = false
-      this.sponsorSignedIn = false
-      // EventBus.$emit('clear-form-data')
       EventBus.$emit('flash', 'Signed out successfully!')
+      EventBus.$emit('signout')
       this.$router.push('/signout')
     },
-    // handleScroll () {
-    //   this.scrollPosition = window.scrollY
-    //   // this.navBarHeight = document.getElementById('navbar').offsetHeight
-    //   // this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
-    //   // this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
-    //   // this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
-    //   // console.log('current scroll position', this.scrollPosition)
-    //   // console.log('tikamPos ', this.tikamPos)
-    //   // console.log('howItWorksPos ', this.howItWorksPos)
-    //   // console.log('aboutUsPos ', this.aboutUsPos)
-    //   // console.log('navbar height is ', this.navBarHeight)
-    //   if (this.scrollPosition > 49) {
-    //     this.fixedBar = true
-    //   } else {
-    //     this.fixedBar = false
-    //   }
-    // },
     goTo (location) {
       EventBus.$emit(`goTo${location}`)
     }
@@ -132,32 +104,8 @@ export default {
   created () {
     console.log('navbar is reloaded')
     window.addEventListener('scroll', this.handleScroll)
-
-    this.userSignedIn = auth.isUserSignedIn()
-    this.sponsorSignedIn = auth.isSponsorSignedIn()
-    EventBus.$on('user-signedInStatus', (status) => {
-      this.userSignedIn = true
-      this.username = auth.user.username
-      console.log('this.userSignedIn and username are ', this.userSignedIn, this.username)
-    })
-    EventBus.$on('sponsor-signedInStatus', (status) => {
-      this.sponsorSignedIn = true
-      console.log('this.sponsorSignedIn is ', this.sponsorSignedIn)
-    })
-    console.log('navbar has been created and this.userSignedIn is ', this.userSignedIn)
-    console.log('auth.sponsor.authenticated is ', auth.sponsor.authenticated)
   },
   // updated () {
-  //   this.scrollPosition = window.scrollY
-  //   this.navBarHeight = document.getElementById('navbar').offsetHeight
-  //   this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
-  //   this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
-  //   this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
-  //   console.log('current scroll position', this.scrollPosition)
-  //   console.log('tikamPos ', this.tikamPos)
-  //   console.log('howItWorksPos ', this.howItWorksPos)
-  //   console.log('aboutUsPos ', this.aboutUsPos)
-  //   console.log('navbar height is ', this.navBarHeight)
   // },
   destroyed () {
     // window.removeEventListener('scroll', this.handleScroll)

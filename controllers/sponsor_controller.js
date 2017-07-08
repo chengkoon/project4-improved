@@ -52,7 +52,15 @@ const sponsorController = {
 
   sponsorProfile: (req, res, next) => {
     console.log('get req from /profile authenticated successfully')
-    res.json({sponsor: req.sponsor})
+    console.log('req is currently...', req.user) // express-jwt default naming
+    Sponsor.findById(req.user.id, (err, sponsor) => {
+      if (err) throw err
+      else if (!sponsor) {
+        return res.json({success: false, msg: 'Sponsor not found'})
+      } else {
+        return res.json({success: true, type: 'Sponsor', username: sponsor.username, logoURL: sponsor.logoURL, companyURL: sponsor.companyURL})
+      }
+    })
   }
 
 }

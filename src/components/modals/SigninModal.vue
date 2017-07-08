@@ -77,8 +77,8 @@ export default {
         } else {
           this.animationType = 'fadeOutUp'
           console.log('this.animationType is ', this.animationType)
-          if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
-          else if (this.type === 'sponsor') EventBus.$emit('sponsor-signedInStatus', true)
+          // if (this.type === 'user') EventBus.$emit('user-signedInStatus', true)
+          // else if (this.type === 'sponsor') EventBus.$emit('sponsor-signedInStatus', true)
           // this.showThisModal = false
           EventBus.$emit('flash', 'Signed in successfully!')
           if (this.$route.query.hasOwnProperty('redirect')) this.$router.push(`/${this.$route.query.redirect}`)

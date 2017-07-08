@@ -3,7 +3,11 @@ const bcrypt   = require('bcryptjs');
 
 // Sponser Schema
 const SponsorSchema = new mongoose.Schema({
-  company: {
+  companyURL: {
+    type: String,
+    required: false
+  },
+  logoURL: {
     type: String,
     required: false
   },

@@ -55,7 +55,14 @@ const userController = {
   userProfile: (req, res, next) => {
     console.log('get req from /profile authenticated successfully')
     console.log('req is currently...', req.user)
-    res.json({user: 'lolol'})
+    User.findById(req.user.id, (err, user) => {
+      if (err) throw err
+      else if (!user) {
+        return res.json({success: false, msg: 'User not found'})
+      } else {
+        return res.json({success: true, type:'User', username: user.username})
+      }
+    })
   }
 
 }

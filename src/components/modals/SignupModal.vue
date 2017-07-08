@@ -26,7 +26,7 @@
 
             <!-- Company Logo Upload -->
             <!-- <form enctype="multipart/form-data" id="logoForm" @change="uploadImg($event.target)" novalidate v-if="(type === 'sponsor') && (isInitial || isSaving || isImageMounted)" action="http://localhost:3000/newLogo" method="POST"> -->
-            <div class="field media">
+            <div class="field media" v-if="type === 'sponsor'">
               <div class="media-left">
                 <label class="label">Company Logo<span data-balloon-length="large" data-balloon="Please note 48x48 would be the exact size of the logo display. Also avoid logos with white background." data-balloon-pos="up"><i class="fa fa-info-circle"></i></span><br>
                   <span v-if="isInitial">(click to upload)</span>
@@ -44,7 +44,7 @@
                   </div>
                 </form>
                 <figure class="image is-48x48" v-if="isSuccess">
-                  <img :src="logoURL" alt="">
+                  <img :src="signupCredentials.logoURL" alt="">
                 </figure>
               </div>
             </div>
@@ -78,7 +78,7 @@
             <div class="field">
               <label class="label">Password</label>
               <p class="control has-icons-left has-icons-right">
-                <input name="password" :class="{'input': true, 'is-danger': vErrors.has('password'), 'is-success': !vErrors.has('password')}" type="password" v-model="signupCredentials.password" @keyup.enter="signinUser">
+                <input name="password" :class="{'input': true, 'is-danger': vErrors.has('password'), 'is-success': !vErrors.has('password')}" type="password" v-model="signupCredentials.password" @keyup.enter="signupUser">
                 <span class="icon is-small is-left">
                   <i class="fa fa-key"></i>
                 </span>
@@ -128,12 +128,12 @@ export default {
     return {
       signupCredentials: {
         email: '',
+        logoURL: '',
+        companyURL: '',
         username: '',
         password: ''
       },
       vErrors: null,
-      logoURL: '',
-      companyURL: '',
       currentStatus: null
     }
   },
@@ -184,7 +184,7 @@ export default {
       formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
       axios.post('http://localhost:3000/item/newLogo', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(res => {
-        this.logoURL = res.data.url
+        this.signupCredentials.logoURL = res.data.url
         this.currentStatus = STATUS_SUCCESS
       }).catch(err => {
         console.log('err is ', err)

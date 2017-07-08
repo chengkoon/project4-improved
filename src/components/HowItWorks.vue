@@ -1,11 +1,9 @@
 <template>
   <div class="how-it-works"> <!-- list of items -->
-    <div class="big-box" v-if="something">
-      <div class="hiwCard div1 animated slideInUp"></div>
+    <div class="big-box">
+      <div class="hiwCard div1 foo"></div>
       <div class="hiwCard div2 animated slideInUp"></div>
       <div class="hiwCard div3 animated slideInUp"></div>
-      <div id="map">im map</div>
-      <button type="button" name="button" @click="getElem">click me</button>
     </div>
   </div>
 </template>
@@ -14,7 +12,8 @@
 
 import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
-import services from '../services'
+// import services from '../services'
+// const sr = require('scrollreveal')()
 
 export default {
   name: 'how-it-works',
@@ -26,9 +25,11 @@ export default {
     }
   },
   methods: {
-    getElem () {
-      services.getElem()
-    }
+  },
+  mounted () {
+    // console.log('sr is ', sr)
+    // sr.reveal('.foo')
+    // sr.reveal('.bar')
   },
   updated () {
     console.log('howitworks is updated')

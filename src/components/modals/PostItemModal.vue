@@ -285,6 +285,7 @@ export default {
   },
   created () {
     console.log('postitemmodal created')
+    // TODO get sponsor profile - logoURL and companyURL
     // generate an array of 31 dates
     for (let i = 0; i < 31; i++) {
       this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))

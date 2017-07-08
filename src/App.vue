@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <nav-bar :type='typeOfUser' :activeTab='activeTab'></nav-bar>
+    <nav-bar :type='profileData.type' :activeTab='activeTab'></nav-bar>
     <router-view :animationTypeReceived="propToBePassed"></router-view>
     <flash-message></flash-message>
     <!-- <signup-modal></signup-modal> -->
@@ -30,6 +30,7 @@ import flashmessage from './components/flashmessage.vue'
 // import SigninModal from './components/modals/SigninModal.vue'
 // import PostItemModal from './components/modals/PostItemModal.vue'
 // import ItemDetailsModal from './components/modals/ItemDetailsModal.vue'
+import auth from './auth'
 
 export default {
   name: 'app',
@@ -49,7 +50,6 @@ export default {
     return {
       scrollPosition: '',
       prevScrollPosition: '',
-      typeOfUser: '',
       propToBePassed: '',
       // fixedBar: false,
       navBarHeight: '',
@@ -57,13 +57,14 @@ export default {
       tikamPos: '',
       howItWorksPos: '',
       aboutUsPos: '',
-      something: false
+      something: false,
+      profileData: {}
     }
   },
   watch: {
     // call again the method if the route changes
-    '$route.hash': 'fetchData',
     '$route' (to, from) {
+      this.fetchProfileData()
       console.log('to is ', to.query['t'])
       console.log('from is ', from.query['t'])
       if ((from.path === '/') && (to.path === '/signup' || '/signin')) {
@@ -79,22 +80,15 @@ export default {
     // onScroll: function (e, position) {
     //   this.position = position
     // },
-    fetchData () {
-      console.log('yes watcher on route.hash change is activated')
-      console.log('$route.hash is...', this.$route.hash)
-      if (this.$route.hash === '#tikam') {
-        // refresh getItems again
+    fetchProfileData () {
+      if (auth.parseTokenForType()) { // to ensure only getProfile when user/sponsor is signed in
+        let type = auth.parseTokenForType()
+        auth.getProfile(type).then((profileData) => {
+          this.profileData = profileData
+        })
+      } else { // user/sponsor not signed in
+        this.profileData.type = false
       }
-      this.typeOfUser = this.parseJwt()
-    },
-    parseJwt () {
-      console.log('parsing token...')
-      let token = window.localStorage.getItem('id_token')
-      if (!token) return false
-      const base64Url = token.split('.')[1]
-      const base64 = base64Url.replace('-', '+').replace('_', '/')
-      let parsedToken = JSON.parse(window.atob(base64))
-      return parsedToken.type
     },
     updateScrollProp () {
       this.scrollPosition = window.scrollY
@@ -109,18 +103,7 @@ export default {
     },
     handleScroll () {
       this.scrollPosition = window.scrollY
-      // this.tikamPos = document.getElementById('tikam').offsetTop
-      // this.howItWorksPos = document.getElementById('how-it-works').offsetTop
-      // this.aboutUsPos = document.getElementById('about-us').offsetTop
       console.log('current scroll position', this.scrollPosition)
-      // console.log('tikamPos ', this.tikamPos)
-      // console.log('howItWorksPos ', this.howItWorksPos)
-      // console.log('aboutUsPos ', this.aboutUsPos)
-      // if (this.scrollPosition > 49) {
-      //   this.fixedBar = true
-      // } else if (this.scrollPosition <= 49) {
-      //   this.fixedBar = false
-      // }
       if (this.scrollPosition > this.prevScrollPosition) { // scrolling down
         if ((this.scrollPosition >= this.tikamPos) && (this.scrollPosition < this.howItWorksPos)) {
           // this.$router.replace('/#tikam')
@@ -142,11 +125,11 @@ export default {
   },
   created () {
     console.log('app.vue has been created')
+    this.fetchProfileData()
     window.addEventListener('scroll', this.handleScroll)
-    this.typeOfUser = this.parseJwt()
-    // this.tikamPos = document.getElementById('tikam').offsetTop
-    // this.howItWorksPos = document.getElementById('how-it-works').offsetTop
-    // this.aboutUsPos = document.getElementById('about-us').offsetTop
+    EventBus.$on('signout', () => {
+      this.profileData.type = false
+    })
     EventBus.$on('cards-updated', () => {
       console.log('received cards updated emission')
       this.updateScrollProp()

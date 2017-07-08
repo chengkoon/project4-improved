@@ -85,14 +85,26 @@ export default {
     else return false
   },
 
-  getProfile () {
-    let ep = this.prepEndpoint('user/profile')
-    console.log('we are at client side getProfile()')
+  parseTokenForType () {
+    let token = window.localStorage.getItem('id_token')
+    if (!token) return false
+    const base64Url = token.split('.')[1]
+    const base64 = base64Url.replace('-', '+').replace('_', '/')
+    let parsedToken = JSON.parse(window.atob(base64))
+    let type = parsedToken.type
+    return type
+  },
+
+  getProfile (type) { // to be called with every refresh after sign in
+    let ep
+    if (type === 'User') {
+      ep = this.prepEndpoint('user/profile')
+    } else if (type === 'Sponsor') {
+      ep = this.prepEndpoint('sponsor/profile')
+    }
     return axios.get(ep, { headers: this.getAuthHeader() })
     .then((response) => {
-      console.log('we have successfully get request from profile')
-      console.log('response.data is ', response.data.user)
-      return response.data.user
+      return response.data
     })
   },
 

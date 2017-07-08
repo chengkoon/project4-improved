@@ -2,12 +2,15 @@
   <div class="about-us">
     About us. how much has the community contributed to charities.
     <div class="big-box">
-      something
+      <div class="hiwCard div1 foo">WOOT</div>
+      <div class="hiwCard div2 animated slideInUp"></div>
+      <div class="hiwCard div3 animated slideInUp"></div>
     </div>
   </div>
 </template>
 
 <script>
+const sr = require('scrollreveal')()
 
 export default {
   name: 'about-us',
@@ -16,6 +19,10 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       thing: ''
     }
+  },
+  mounted () {
+    console.log('sr is ', sr)
+    sr.reveal('.foo')
   }
 }
 </script>
@@ -29,8 +36,22 @@ export default {
   height: 105px;
   visibility: hidden;
 }*/
+.wow {
+  visibility: hidden;
+}
+.about-us {
+  height: 500px;
+}
 .big-box {
-  height: 1000px;
+  height: 100%;
+  border: 2px solid black;
+  display: flex;
+  justify-content: space-around;
+}
+.hiwCard {
+  width: 200px;
+  height: 50%;
+  margin: 30px;
   border: 2px solid black;
 }
 h1, h2 {

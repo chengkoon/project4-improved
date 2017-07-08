@@ -69,8 +69,8 @@ app.use(passport.session());
 // app.use('/users', users);
 // app.use('/sponsors', sponsors);
 // app.use('/', allRoutes);
-app.use('/', sponsorRoutes);
 app.use('/', itemRoutes);
+app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), sponsorRoutes);
 app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), userRoutes);
 
 // Index Route
