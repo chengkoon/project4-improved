@@ -69,14 +69,16 @@
             <label class="label">Amount:</label>
           </div>
           <div class="field-body">
-            <div class="field is-grouped">
+            <div class="field">
+              <p class="help is-danger" v-show="vErrors.has('bidAmount')">Please bid between $1 and $1.99 (inclusive)</p>
               <p class="control is-expanded has-icons-left has-icons-right">
-                <input class="input" :class="checkValidBidOutline" type="text" placeholder="1.00 to 1.99" v-model="bidAmount">
+                <input name="bidAmount" class="input" :class="{'is-danger': vErrors.has('bidAmount'), 'is-success': !vErrors.has('bidAmount')}" type="text" placeholder="1.00 to 1.99" v-model="bidAmount">
                 <span class="icon is-small is-left">
                   <i class="fa fa-dollar"></i>
                 </span>
                 <span class="icon is-small is-right">
-                  <i class="fa" :class="checkValidBidIcon"></i>
+                  <i class="fa fa-check" v-show="!vErrors.has('bidAmount')"></i>
+                  <i class="fa fa-warning" v-show="vErrors.has('bidAmount')"></i>
                 </span>
               </p>
             </div>
@@ -104,8 +106,10 @@
 
 <script>
 
-// import { EventBus } from '../../event-bus.js'
+import { EventBus } from '../../event-bus.js'
 import services from '../../services'
+import { Validator } from 'vee-validate'
+import _ from 'lodash'
 
 export default {
   name: 'item-details-modal',
@@ -113,7 +117,8 @@ export default {
     return {
       // showThisModal: false,
       item: {},
-      bidAmount: ''
+      bidAmount: '',
+      vErrors: null
     }
   },
   computed: {
@@ -136,11 +141,30 @@ export default {
   },
   methods: {
     submitBid (itemId) {
-      services.submitBid(itemId, this.bidAmount)
+      if ((this.bidAmount < 2) && (this.bidAmount >= 1)) {
+        services.submitBid(itemId, this.bidAmount)
+        .then(res => {
+          EventBus.$emit('flash', res.msg)
+          this.$router.push('/')
+        })
+      } else {
+        EventBus.$emit('flash-failure', 'Unable to place bid')
+        this.$router.push('/')
+      }
+      // TODO flash message 'bid successfully!'
+      // TODO create showWinner modal
+      // TODO ensure showWinner moodal displays correct winner and all bids
+      // TODO animation for ^?
     },
     closeThisModal () {
       this.$router.push('/')
-    }
+    },
+    validateField: _.debounce(
+      function (field, val) {
+        this.validator.validate(field, val)
+      },
+      800
+    )
   },
   created () {
     services.getItem(this.$route.params.id)
@@ -149,6 +173,15 @@ export default {
     }).catch(err => {
       console.log('caughted error from services.getItem is ', err)
     })
+    this.validator = new Validator({
+      bidAmount: 'required|min_value:1|max_value:1.99'
+    })
+    this.$set(this, 'vErrors', this.validator.errorBag)
+  },
+  watch: {
+    'bidAmount' (val) {
+      this.validateField('bidAmount', val)
+    }
   }
 }
 </script>

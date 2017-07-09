@@ -298,6 +298,7 @@ export default {
     console.log('tikam is mounted')
   },
   updated () {
+    // TODO to uncomment the following two lines before prod
     // console.log('tikam is updated')
     // EventBus.$emit('cards-updated')
   },

@@ -79,7 +79,7 @@ const itemController = {
       bidder: req.user.id
     })
     Bid.addBid(newBid, (err, bid) => {
-      if (err) console.log('server - bid err is...', err)
+      if (err) res.json({success: false, msg: 'Bid placed unsuccessfully'})
       else {
         Item.findOneAndUpdate({
           _id: req.params.id
@@ -87,7 +87,7 @@ const itemController = {
           $push: { bids: bid._id }
         }, (err, item) => {
           if (err) throw err
-          else console.log('we are done and item is...', item)
+          else res.json({success: true, msg: 'Bid placed successfully'})
         })
       }
     })
