@@ -140,7 +140,7 @@
                   </div>
                   <div class="level-right" v-if="item.status === 'pastBid'">
                     <div class="level-item" data-balloon='Click to see the winner!' data-balloon-pos="down" @mouseover="changeUserIconColor(item, true)" @mouseout="changeUserIconColor(item, false)">
-                      <router-link :to="itemDetailsLink(item._id)" tag="a"><i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i></router-link>
+                      <router-link :to="determineWinner(item._id)" tag="a"><i class="fa fa-lg fa-trophy" :class="{ 'gold': item.userHovered }"></i></router-link>
                     </div>
                   </div>
                   <div class="level-right" v-if="item.status === 'futureBid'">
@@ -159,10 +159,10 @@
 
 <script>
 
-import { EventBus } from '../event-bus.js'
+// import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
 import services from '../services'
-import axios from 'axios'
+// import axios from 'axios'
 // import moment from 'moment'
 
 export default {
@@ -225,9 +225,9 @@ export default {
         this.items = items
       })
     },
-    showItemDetails (itemId) {
-      EventBus.$emit('item-details-modal', itemId)
-    },
+    // showItemDetails (itemId) {
+    //   EventBus.$emit('item-details-modal', itemId)
+    // },
     highlight (text) {
       if (this.searchTerm) {
         let iQuery = new RegExp(this.searchTerm, 'ig')
@@ -274,8 +274,8 @@ export default {
       else return false
     },
     determineWinner (itemId) {
-      console.log('DW client')
-      axios.post('http://localhost:3000/item/determineWinner', { itemId: itemId })
+      // axios.post('http://localhost:3000/item/determineWinner', { itemId: itemId })
+      return `item/winner/${itemId}`
     },
     changeHomeIconColor (item, v) {
       item.homeHovered = v

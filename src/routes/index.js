@@ -8,6 +8,7 @@ import SigninModal from '@/components/modals/SigninModal.vue'
 import SignupModal from '@/components/modals/SignupModal.vue'
 import PostItemModal from '@/components/modals/PostItemModal.vue'
 import ItemDetailsModal from '@/components/modals/ItemDetailsModal.vue'
+import ShowWinnerModal from '@/components/modals/ShowWinnerModal.vue'
 // import User from '@/components/User'
 // import Register from '@/components/Register'
 // import Login from '@/components/Login'
@@ -76,8 +77,13 @@ export const routes = [
       },
       {
         path: ':id',
-        name: 'item-details',
+        name: 'item-details-modal',
         component: ItemDetailsModal
+      },
+      {
+        path: 'winner/:id',
+        name: 'show-winner-modal',
+        component: ShowWinnerModal
       }
     ]
   }

@@ -151,7 +151,6 @@ export default {
         EventBus.$emit('flash-failure', 'Unable to place bid')
         this.$router.push('/')
       }
-      // TODO flash message 'bid successfully!'
       // TODO create showWinner modal
       // TODO ensure showWinner moodal displays correct winner and all bids
       // TODO animation for ^?
