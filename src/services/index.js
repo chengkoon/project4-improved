@@ -52,6 +52,22 @@ export default {
     })
   },
 
+  getWinnerDetails (itemId) {
+    let ep = this.prepEndpoint('item/winner/' + itemId)
+    return axios.get(ep, itemId)
+    .then(res => {
+      return res.data
+    })
+  },
+
+  getAllBidsDetails (itemId) {
+    let ep = this.prepEndpoint('item/bids/' + itemId)
+    return axios.get(ep)
+    .then(res => {
+      return res.data
+    })
+  },
+
   getAuthHeader () {
     return {
       'Authorization': window.localStorage.getItem('id_token')

@@ -138,6 +138,37 @@ const itemController = {
       }
       item.save()
     }).catch(err => err)
+  },
+  getWinnerDetails (req, res) {
+    Item.findOne({_id: req.params.id})
+    .populate({
+      path: 'winningBid',
+      populate: { path: 'bidder' } // 'nested' population
+    })
+    .exec()
+    .then(item => {
+      console.log('getWinnerDetails item is ', item);
+      res.json({winningBid: item.winningBid.amount, winner: item.winningBid.bidder.username})
+    })
+  },
+  getAllBidsDetails (req, res) {
+    Item.findOne({_id: req.params.id})
+    // .populate('bids')
+    .populate({
+      path: 'bids',
+      populate: { path: 'bidder' }
+    })
+    .exec()
+    .then(item => {
+      // console.log('getAllBidsDetails item is ', item);
+      let output = item.bids.map(bid => {
+        let tempObj = {}
+        tempObj.bidAmount = bid.amount
+        tempObj.bidder = bid.bidder.username
+        return tempObj
+      })
+      res.json({allBids: output})
+    })
   }
 }
 

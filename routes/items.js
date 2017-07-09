@@ -36,6 +36,8 @@ router.post('/item/newLogo', upload.single('myFile'), function(req, res) {
     });
 });
 
+router.get('/item/winner/:id', itemController.getWinnerDetails);
+router.get('/item/bids/:id', itemController.getAllBidsDetails);
 router.post('/item/:id/bid', jwt({secret: process.env.secret}), itemController.bidItem);
 router.post('/items/create', jwt({secret: process.env.secret}), itemController.createItem);
 

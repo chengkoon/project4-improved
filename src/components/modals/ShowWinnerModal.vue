@@ -14,16 +14,32 @@
 </template>
 
 <script>
+import services from '../../services'
 export default {
   name: 'show-winner-modal',
   data () {
     return {
+      winner: {},
+      allBids: []
     }
   },
   methods: {
     closeThisModal () {
       this.$router.push('/')
     }
+  },
+  created () {
+    services.getWinnerDetails(this.$route.params.id)
+    .then(res => {
+      console.log('client side getWinner is ', res)
+    })
+    services.getAllBidsDetails(this.$route.params.id)
+    .then(res => {
+      console.log('client side allBids is ', res)
+    })
+    // TODO change Bid model to include bidder's name directly
+    // TODO ensure showWinner moodal displays correct winner and all bids
+    // TODO animation for ^?
   }
 }
 </script>
