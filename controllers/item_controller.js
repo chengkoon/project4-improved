@@ -161,12 +161,18 @@ const itemController = {
     .exec()
     .then(item => {
       // console.log('getAllBidsDetails item is ', item);
-      let output = item.bids.map(bid => {
-        let tempObj = {}
-        tempObj.bidAmount = bid.amount
-        tempObj.bidder = bid.bidder.username
-        return tempObj
+      let output = {}
+      item.bids.map(bid => {
+        if (!output[bid.amount]) {
+          output[bid.amount] = []
+        }
+        output[bid.amount].push(bid.bidder.username)
+        // tempObj.bidAmount = bid.amount
+        // tempObj.bidder = bid.bidder.username
+        // return tempObj
+        console.log('mapped bid is ', bid);
       })
+      console.log('output is ', output);
       res.json({allBids: output})
     })
   }

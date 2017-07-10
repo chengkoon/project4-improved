@@ -21,7 +21,7 @@ export default {
     }
   },
   mounted () {
-    console.log('sr is ', sr)
+    // console.log('sr is ', sr)
     sr.reveal('.foo')
   }
 }

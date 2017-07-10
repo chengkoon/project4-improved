@@ -159,11 +159,12 @@
 
 <script>
 
-// import { EventBus } from '../event-bus.js'
+import { EventBus } from '../event-bus.js'
 // import { directive as onClickaway } from 'vue-clickaway'
 import services from '../services'
 // import axios from 'axios'
 // import moment from 'moment'
+// const sr = require('scrollreveal')()
 
 export default {
   name: 'tikam',
@@ -300,7 +301,7 @@ export default {
   updated () {
     // TODO to uncomment the following two lines before prod
     // console.log('tikam is updated')
-    // EventBus.$emit('cards-updated')
+    EventBus.$emit('cards-updated')
   },
   watch: {
     '$route.hash': function () {
@@ -328,6 +329,9 @@ export default {
   padding-top: 18px;
   padding-bottom: 18px;
 }
+.is-light>div.hero-body {
+  height: 700px;
+}
 
 .pagination-list>li {
   margin: 0;
@@ -351,6 +355,7 @@ div.card-container {
   justify-content: space-around;
   position: relative;
   width: 100%;
+
 }
 
 div.content {

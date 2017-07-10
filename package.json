@@ -35,6 +35,7 @@
     "passport-jwt": "*",
     "scrollreveal": "^3.3.6",
     "vee-validate": "^2.0.0-rc.6",
+    "velocity-animate": "^1.5.0",
     "vue": "^2.3.3",
     "vue-clickaway": "^2.1.0",
     "vue-focus": "^2.1.0",
