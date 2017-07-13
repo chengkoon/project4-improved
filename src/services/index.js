@@ -7,7 +7,7 @@ export default {
     console.log('map is ...', map)
   },
 
-  isDev: true, // change to false before deployment/production
+  isDev: false, // change to false before deployment/production
 
   createItem (itemDetails) {
     let ep = this.prepEndpoint('items/create')
