@@ -1,7 +1,7 @@
 <template>
   <div class="how-it-works"> <!-- list of items -->
     <div class="big-box columns is-gapless">
-      <div class="card column is-3 item-example">
+      <div class="card column is-3 item-example" :class="{'highlight-border': highlightCard}">
         <div class="top-half-card">
           <div class="card-image">
             <figure class="image is-4by3">
@@ -21,22 +21,34 @@
               </div>
             </div>
             <div class="content">
-              Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description
+              Long Description Long Description Long Description
             </div>
           </div>
         </div><!-- /.top-half-card -->
 
         <div class="bottom-half-card">
           <div class="timing-details">
-
+            <small><strong>Bidding ongoing!</strong><br>{{fakeDate}}</small>
           </div>
-          <!-- <footer class="level">
+          <footer class="level">
             <div class="level-left">
-
+              <div class="level-item" data-balloon='All bids will be donated to this charity' data-balloon-pos="down">
+                <i class="fa fa-lg fa-home"></i><span class="footer-text">SPCA</span>
+              </div>
+              <div data-balloon='Suggested retail price' data-balloon-pos="down" class="level-item">
+                <i class="fa fa-dollar"></i><span class="footer-text">112</span>
+              </div>
             </div>
-          </footer> -->
+            <div class="level-right">
+              <div class="level-item" data-balloon='Click to bid!' data-balloon-pos="down">
+                <!-- <a :href="itemDetailsLink(item._id)"><i class="fa fa-lg fa-user" :class="{ 'green': item.userHovered }"></i><span class="footer-text">Bid</span></a> -->
+                <i class="fa fa-lg fa-user" :class="{'gold': highlightBidIcon}"></i><span class="footer-text" :class="{'gold': highlightBidIcon}">Bid</span>
+                <!-- <i class="fa fa-lg fa-commenting-o" v-if="item.userHovered"></i> -->
+              </div>
+            </div>
+          </footer>
         </div>
-        <div class="fade"></div>
+        <!-- <div class="fade"></div> -->
       </div>
       <div class="card column is-3 winner-example">
         <div class="card-content">
@@ -53,13 +65,13 @@
                   <th>Bidder(s)</th>
                 </tr>
               </thead>
-              <tfoot>
+              <!-- <tfoot>
                 <tr>
                   <th>Amount</th>
                   <th>Bidder(s)</th>
                 </tr>
-              </tfoot>
-              <tbody>
+              </tfoot> -->
+              <tbody :class="{'highlight-border': highlightBidAmountTable}">
                 <tr>
                   <th>$1.99</th>
                   <th>
@@ -98,13 +110,13 @@
           <tr>
             <th>How It Works</th>
           </tr>
-          <tr>
+          <tr @mouseover="highlightCard = true" @mouseout="highlightCard = false">
             <th>Sponsors post an item for bidding</th>
           </tr>
-          <tr>
+          <tr @mouseover="highlightBidIcon = true" @mouseout="highlightBidIcon = false">
             <th>Users submit a (or multiple) bids</th>
           </tr>
-          <tr>
+          <tr @mouseover="highlightBidAmountTable = true" @mouseout="highlightBidAmountTable = false">
             <th>ALL bids (regardless of outcome) will be donated to selected charity</th>
           </tr>
           <tr>
@@ -130,14 +142,25 @@ export default {
   },
   data () {
     return {
+      fakeDate: '',
+      highlightCard: false,
+      highlightBidIcon: false,
+      highlightBidAmountTable: false
     }
+  },
+  computed: {
   },
   methods: {
   },
+  created () {
+    let fakeDate = new Date().getTime() + 43200000 // create a fake date that is 12 hours later
+    this.fakeDate = new Date(fakeDate)
+    console.log('this fakeDate is ', this.fakeDate)
+  },
   mounted () {
     // console.log('sr is ', sr)
-    sr.reveal('.item-example', { origin: 'left', duration: 1000, delay: 300 })
-    sr.reveal('.winner-example', { origin: 'left', duration: 1000, delay: 600 })
+    sr.reveal('.item-example', { origin: 'left', duration: 1000, delay: 200 })
+    sr.reveal('.winner-example', { origin: 'left', duration: 1000, delay: 400 })
     // sr.reveal('.bar')
     // TODO reword the HIW
     // TODO attach icons on the left
@@ -176,6 +199,9 @@ export default {
   margin: 30px;
   border: 2px solid black;
 }
+div.card-content {
+  padding: 16px;
+}
 div.fade {
   position: relative;
   top: -105%;
@@ -192,13 +218,27 @@ div.fade {
   100%);
 }
 div.winner-example {
-  height: 90%;
+  height: 82%;
   align-self: center;
   position: relative;
   left: -5%;
 }
 .gold {
   color: gold;
+}
+.highlight-border {
+  border: 2px solid green !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+footer.level {
+  border-top: 1px solid rgb(219, 219, 219);
+  background-color: rgb(245, 245, 245);
+  padding: 12px;
+  align-self: flex-end;
+}
+footer i {
+  color: rgb(172, 172, 172);
+  font-weight: 500;
 }
 
 h1, h2 {
