@@ -37,14 +37,14 @@ mongoose.connection.on('error', (err) => {
 // const allRoutes = require('./routes/allRoutes');
 
 // Port Number
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // heroku will auto-assign a port to the env
 
 // CORS Middleware
 app.use(cors());
 
 // Set Static Folder
-app.use(express.static(path.join(__dirname, './')));
-// app.use(express.static(path.join(__dirname, '/dist/')));
+// app.use(express.static(path.join(__dirname, './'))); //dev env
+app.use(express.static(path.join(__dirname, '/dist/'))); //prod env
 
 // Body Parser Middleware
 app.use(bodyParser.json());
@@ -68,8 +68,8 @@ app.use('/', jwt({secret: process.env.secret}).unless({method: 'POST'}), userRou
 // });
 
 app.get('*', (req, res) => {
-  // res.sendFile(path.join(__dirname, 'dist/index.html'));
-  res.sendFile(path.join(__dirname, 'index.html'));
+  // res.sendFile(path.join(__dirname, 'index.html')); //dev env
+  res.sendFile(path.join(__dirname, 'dist/index.html')); //prod env
 })
 
 // Start Server
