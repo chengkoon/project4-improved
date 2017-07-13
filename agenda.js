@@ -1,6 +1,7 @@
 const Agenda = require('agenda');
 
-const url = 'mongodb://localhost:27017/meanauth';
+// const url = 'mongodb://localhost:27017/meanauth';
+const url = process.env.MONGOLAB_URI;
 
 const agenda = new Agenda({db: {address: url}});
 
