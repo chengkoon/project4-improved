@@ -182,7 +182,8 @@ export default {
 
       const formData = new FormData()
       formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
-      axios.post('http://localhost:3000/item/newLogo', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      // axios.post('http://localhost:3000/item/newLogo', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      axios.post('item/newLogo', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(res => {
         this.signupCredentials.logoURL = res.data.url
         this.currentStatus = STATUS_SUCCESS

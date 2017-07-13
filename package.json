@@ -5,6 +5,7 @@
   "author": "chengkoon <chengkoon@gmail.com>",
   "private": true,
   "scripts": {
+    "postinstall": "npm run build",
     "start": "node server.js",
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",

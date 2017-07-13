@@ -43,8 +43,8 @@ const port = process.env.PORT || 3000; // heroku will auto-assign a port to the 
 app.use(cors());
 
 // Set Static Folder
-// app.use(express.static(path.join(__dirname, './'))); //dev env
-app.use(express.static(path.join(__dirname, '/dist/'))); //prod env
+// app.use(express.static(path.join(__dirname))); //dev env
+app.use(express.static(path.join(__dirname, '/dist'))); //prod env
 
 // Body Parser Middleware
 app.use(bodyParser.json());
