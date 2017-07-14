@@ -65,13 +65,12 @@ export default {
     // call again the method if the route changes
     '$route' (to, from) {
       this.fetchProfileData()
+      console.log('route changed, this.fetchProfileData launched')
       console.log('to is ', to.query['t'])
       console.log('from is ', from.query['t'])
       if ((from.path === '/') && (to.path === '/signup' || '/signin')) {
-        console.log(1111111)
         this.propToBePassed = 'slideInDown'
       } else if ((to.path === '/signup' || '/signin') && (from.path === '/signup' || '/signin')) {
-        console.log(3333333)
         this.propToBePassed = 'pulse'
       }
     }
