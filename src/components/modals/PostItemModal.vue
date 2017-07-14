@@ -169,6 +169,7 @@ export default {
         receipientCharity: 'Z'
       },
       // showThisModal: false,
+      sponsorDetailsSaved: '',
       uploadError: null,
       currentStatus: null,
       protocolHeader: 'http://',
@@ -267,13 +268,13 @@ export default {
     submitItem () {
       console.log('what does validateDetails function return? ', this.validateDetailsToBeSubmitted)
       if (this.validateDetailsToBeSubmitted) {
-        console.log('inside submitItem method and sponsorDetails is ', this.sponsorDetails)
+        console.log('inside submitItem method and sponsorDetailsSaved is ', this.sponsorDetailsSaved)
         this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.productURL = this.protocolHeader + this.itemDetails.productURL
-        this.itemDetails.logoURL = this.sponsorDetails.logoURL
-        this.itemDetails.companyURL = this.sponsorDetails.companyURL
-        this.itemDetails.sponsorName = this.sponsorDetails.username
+        this.itemDetails.logoURL = this.sponsorDetailsSaved.logoURL
+        this.itemDetails.companyURL = this.sponsorDetailsSaved.companyURL
+        this.itemDetails.sponsorName = this.sponsorDetailsSaved.username
         console.log('item to be submitted is...', this.itemDetails)
         services.createItem(this.itemDetails)
         .then(res => {
@@ -297,9 +298,11 @@ export default {
     this.$refs.productName.focus() // this also enables the keyup.esc to work right off the bat
     console.log('this.sponsorDetails is ', this.sponsorDetails)
     console.log('this.sponsorDetails.username is ', this.sponsorDetails.username)
+    this.sponsorDetailsSaved = this.sponsorDetails
   },
   created () {
     console.log('postitemmodal created')
+    this.sponsorDetailsSaved = this.sponsorDetails
     // generate an array of 31 dates
     for (let i = 0; i < 31; i++) {
       this.fullDateRange.push(moment().add(i, 'days').startOf('day').format('ddd DD-MM-YYYY'))
