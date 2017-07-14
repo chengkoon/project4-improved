@@ -265,6 +265,7 @@ export default {
       })
     },
     submitItem () {
+      console.log('what does validateDetails function return? ', this.validateDetailsToBeSubmitted)
       if (this.validateDetailsToBeSubmitted) {
         this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
