@@ -24,8 +24,6 @@ router.post('/item/newImage', upload.single('myFile'), function(req, res) {
     cloudinary.uploader.upload(req.file.path, function(result) {
       console.log('result is...', result);
       res.send(result);
-    }, {
-      eager: { crop: "crop", width: 320, height: 160 }
     });
 });
 router.post('/item/newLogo', upload.single('myFile'), function(req, res) {
