@@ -34,17 +34,17 @@
           </figure>
           Profile
         </a> -->
-        <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!type" exact>Sign up</router-link>
-        <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!type" exact>Sign in</router-link>
+        <router-link to="/signup?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!typeSaved" exact>Sign up</router-link>
+        <router-link to="/signin?t=user" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="!typeSaved" exact>Sign in</router-link>
         <!-- when user/sponsor is sign in -->
-        <router-link to="/profile" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="type === 'Sponsor'" exact>
+        <router-link to="/profile" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="typeSaved === 'Sponsor'" exact>
           <figure class="image is-16x16" style="margin-right: 8px;">
             <img src="http://bulma.io/images/jgthms.png">
           </figure>
           Profile
         </router-link>
-        <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="type === 'Sponsor'" exact>Post Item</router-link>
-        <a class="nav-item is-tab" @click="signoutUser" v-show="type">Sign out</a>
+        <router-link to="/item/new" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" v-show="typeSaved === 'Sponsor'" exact>Post Item</router-link>
+        <a class="nav-item is-tab" @click="signoutUser" v-show="typeSaved">Sign out</a>
       </div>
     </div>
   </nav>
@@ -67,7 +67,8 @@ export default {
       // sponsorSignedIn: false,
       isactive: {
         tikam: false
-      }
+      },
+      typeSaved: ''
       // scrollPosition: '',
       // prevScrollPosition: '',
       // navBarHeight: '',
@@ -104,11 +105,7 @@ export default {
   created () {
     console.log('navbar is reloaded')
     window.addEventListener('scroll', this.handleScroll)
-  },
-  // updated () {
-  // },
-  destroyed () {
-    // window.removeEventListener('scroll', this.handleScroll)
+    this.typeSaved = this.type
   }
 }
 </script>

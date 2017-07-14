@@ -96,10 +96,10 @@ export default {
       this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
       this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
       this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
-      console.log('current scroll position', this.scrollPosition)
-      console.log('tikamPos ', this.tikamPos)
-      console.log('howItWorksPos ', this.howItWorksPos)
-      console.log('aboutUsPos ', this.aboutUsPos)
+      // console.log('current scroll position', this.scrollPosition)
+      // console.log('tikamPos ', this.tikamPos)
+      // console.log('howItWorksPos ', this.howItWorksPos)
+      // console.log('aboutUsPos ', this.aboutUsPos)
     },
     handleScroll () {
       this.scrollPosition = window.scrollY

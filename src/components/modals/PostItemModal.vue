@@ -272,9 +272,9 @@ export default {
         this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.productURL = this.protocolHeader + this.itemDetails.productURL
-        this.itemDetails.logoURL = this.sponsorDetails.logoURL
-        this.itemDetails.companyURL = this.sponsorDetails.companyURL
-        this.itemDetails.sponsorName = this.sponsorDetails.username
+        this.itemDetails.logoURL = this.sponsorDetailsSaved.logoURL
+        this.itemDetails.companyURL = this.sponsorDetailsSaved.companyURL
+        this.itemDetails.sponsorName = this.sponsorDetailsSaved.username
         console.log('item to be submitted is...', this.itemDetails)
         services.createItem(this.itemDetails)
         .then(res => {
