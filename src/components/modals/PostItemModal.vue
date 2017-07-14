@@ -296,6 +296,8 @@ export default {
   mounted () {
     this.reset()
     this.$refs.productName.focus() // this also enables the keyup.esc to work right off the bat
+    console.log('this.sponsorDetails is ', this.sponsorDetails)
+    console.log('this.sponsorDetails.username is ', this.sponsorDetails.username)
   },
   created () {
     console.log('postitemmodal created')
