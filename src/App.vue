@@ -12,7 +12,7 @@
 
     <tikam id="tikam"></tikam>
     <how-it-works id="how-it-works" :something="something"></how-it-works>
-    <about-us id="about-us"></about-us>
+    <!-- <about-us id="about-us"></about-us> -->
     <!-- <sponsor-us id="sponsor-us"></sponsor-us> -->
   </div>
 </template>
@@ -23,7 +23,7 @@ import { EventBus } from './event-bus.js'
 import Navbar from './components/Navbar.vue'
 import Tikam from './components/Tikam.vue'
 import HowItWorks from './components/HowItWorks.vue'
-import AboutUs from './components/AboutUs.vue'
+// import AboutUs from './components/AboutUs.vue'
 // import SponsorUs from './components/SponsorUs.vue'
 import flashmessage from './components/flashmessage.vue'
 // import SignupModal from './components/modals/SignupModal.vue'
@@ -42,8 +42,8 @@ export default {
     // 'post-item-modal': PostItemModal,
     // 'item-details-modal': ItemDetailsModal,
     'tikam': Tikam,
-    'how-it-works': HowItWorks,
-    'about-us': AboutUs
+    'how-it-works': HowItWorks
+    // 'about-us': AboutUs
     // 'sponsor-us': SponsorUs
   },
   data () {
@@ -94,7 +94,7 @@ export default {
       this.navBarHeight = document.getElementById('navbar').offsetHeight
       this.tikamPos = document.getElementById('tikam').offsetTop - this.navBarHeight
       this.howItWorksPos = document.getElementById('how-it-works').offsetTop - this.navBarHeight
-      this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
+      // this.aboutUsPos = document.getElementById('about-us').offsetTop - this.navBarHeight
       // console.log('current scroll position', this.scrollPosition)
       // console.log('tikamPos ', this.tikamPos)
       // console.log('howItWorksPos ', this.howItWorksPos)

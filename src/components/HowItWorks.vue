@@ -17,11 +17,11 @@
               </div>
               <div class="media-content">
                 <p>Product Name</p>
-                <p>@sponsor</p>
+                <p>@sponsor-company-name</p>
               </div>
             </div>
             <div class="content">
-              Long Description Long Description Long Description
+              Sponsor's advert here
             </div>
           </div>
         </div><!-- /.top-half-card -->
@@ -183,7 +183,7 @@ export default {
   visibility: hidden;
 }*/
 .how-it-works {
-  height: 500px;
+  height: 600px;
 }
 .big-box {
   height: 100%;
@@ -199,8 +199,16 @@ export default {
   margin: 30px;
   border: 2px solid black;
 }
+div.card.item-example {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 div.card-content {
   padding: 16px;
+}
+div.timing-details {
+  margin-bottom: 12px;
 }
 div.fade {
   position: relative;

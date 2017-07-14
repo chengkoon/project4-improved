@@ -4,13 +4,13 @@
     <div class="container">
       <div class="nav-left">
         <a class="nav-item" href="/">
-          <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
+          <img src="../assets/tikam-logo.svg" alt="Tikam logo">
         </a>
 
         <!-- <router-link to="#tikam" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>Tikam!</router-link> -->
         <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isTikamActive}" @click="goTo('Tikam')">Tikam!</a>
         <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isHowItWorksActive}" @click="goTo('HowItWorks')">How it works</a>
-        <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isAboutUsActive}" @click="goTo('AboutUs')">About Us</a>
+        <!-- <a class="nav-item is-tab is-hidden-mobile" :class="{'active-tab': isAboutUsActive}" @click="goTo('AboutUs')">About Us</a> -->
 
         <!-- <router-link to="#how-it-works" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>How it works</router-link> -->
         <!-- <router-link to="#about-us" tag="a" active-class="is-active" class="nav-item is-tab is-hidden-mobile" exact>About us</router-link> -->
@@ -99,6 +99,7 @@ export default {
       this.$router.push('/signout')
     },
     goTo (location) {
+      console.log('location is ', location)
       EventBus.$emit(`goTo${location}`)
     }
   },

@@ -13,7 +13,7 @@ export default {
     test: ''
   },
 
-  isDev: false, // change to false before deployment/production
+  isDev: true, // change to false before deployment/production
 
   registerNewUser (signupCredentials, type, cb) {
     let vm = this
