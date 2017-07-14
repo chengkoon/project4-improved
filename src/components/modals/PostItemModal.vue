@@ -267,6 +267,7 @@ export default {
     submitItem () {
       console.log('what does validateDetails function return? ', this.validateDetailsToBeSubmitted)
       if (this.validateDetailsToBeSubmitted) {
+        console.log('inside submitItem method and sponsorDetails is ', this.sponsorDetails)
         this.itemDetails.bidStartMS = moment(this.itemDetails.selectedStartDate + ' ' + this.itemDetails.selectedStartTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.bidEndMS = moment(this.itemDetails.selectedEndDate + ' ' + this.itemDetails.selectedEndTime, 'ddd DD-MM-YYYY HH:mm').valueOf()
         this.itemDetails.productURL = this.protocolHeader + this.itemDetails.productURL
@@ -289,9 +290,6 @@ export default {
     },
     closeThisModal () {
       this.$router.push('/')
-    },
-    test12 () {
-      console.log(12345)
     }
   },
   mounted () {
