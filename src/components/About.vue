@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     about page2
-    <router-view :sponsorDetails="sponsorDetails"></router-view>
+    <router-view :sponsor-details="sponsorDetails"></router-view>
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <nav-bar :type='profileData.type' :activeTab='activeTab'></nav-bar>
-    <router-view :animationTypeReceived="propToBePassed" :sponsorDetails="profileData"></router-view>
+    <router-view :animationTypeReceived="propToBePassed" :sponsor-details="profileData"></router-view>
     <flash-message></flash-message>
     <!-- <signup-modal></signup-modal> -->
     <!-- <signin-modal></signin-modal> -->
