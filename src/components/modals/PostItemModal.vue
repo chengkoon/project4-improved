@@ -254,7 +254,7 @@ export default {
       formData.append(eventTarget.name, eventTarget.files[0], eventTarget.files[0].name)
       console.log('inside uploadImg')
       // axios.post('http://localhost:3000/item/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-      axios.post('item/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      axios.post('/item/newImage', formData, { headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(res => {
         console.log('res is...', res)
         this.itemDetails.imgURL = res.data.url
